@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consultoria Online - Lean & Leo Fit</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header>
+    <img src="img/logo.png" alt="Logo Lean e Leo Fit" class="logo">
+    <nav>
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="consultoria-online.html" class="ativo">Consultoria Online</a></li>
+        <li><a href="produtos-online.html">Produtos Online</a></li>
+        <li><a href="produtos-presenciais.html">Presenciais</a></li>
+        <li><a href="artigos.html">Artigos</a></li>
+        <li><a href="contato.html">Contato</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="banner">
+    <h1>Consultoria Online</h1>
+    <p>Transforme seu corpo com acompanhamento 100% online, leve e personalizado</p>
+  </section>
+
+  <section class="destaques">
+    <h2>Como funciona?</h2>
+    <p>Escolha seu plano: Treino, Dieta ou ambos. Preencha o formulário e inicie seu processo com o suporte completo Lean&Leo.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Plano Treino</h3>
+        <a href="https://forms.gle/PYzQCp983pFzm8tk6" class="btn" target="_blank">Formulário</a>
+      </div>
+      <div class="card">
+        <h3>Plano Dieta</h3>
+        <a href="https://forms.gle/pvaZkinLW2JQBSJ8A" class="btn" target="_blank">Formulário</a>
+      </div>
+      <div class="card">
+        <h3>Treino + Dieta</h3>
+        <a href="https://forms.gle/7XrdA1Q3ksJun2CV9" class="btn" target="_blank">Formulário</a>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 60px;">Pagamento</h2>
+    <p>Finalize sua inscrição clicando no botão abaixo:</p>
+    <a href="https://loja.infinitepay.io/romeland/rsr5851-plano-online" class="btn" target="_blank">Pagar agora</a>
+
+    <h2 style="margin-top: 60px;">Checklist Físico Mensal</h2>
+    <a href="https://forms.gle/fHAe6rMwfNVbhP7f6" class="btn" target="_blank">Checklist Completo</a>
+    <a href="https://forms.gle/D9pkFRVcawymAAUYA" class="btn" target="_blank">Checklist Rápido</a>
+
+    <h2 style="margin-top: 60px;">Cadastro no App MFit</h2>
+    <a href="https://client.mfitpersonal.com.br/out/signup-link/MjM4MjE5" class="btn" target="_blank">Acessar App</a>
+
+    <h2 style="margin-top: 60px;">Bônus: Verão Sem Lesão ☀️</h2>
+    <a href="https://forms.gle/Zybco5mhUHMxhKNY7" class="btn" target="_blank">Formulário Inicial</a>
+    <a href="https://forms.gle/XJmRBtwwfdpLXMR7A" class="btn" target="_blank">Formulário Final</a>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Lean & Leo Fit. Todos os direitos reservados.</p>
+    <div class="redes">
+      <a href="https://www.instagram.com/leaneleofit/" target="_blank">Instagram</a>
+      <a href="https://www.youtube.com/@leaneleofit" target="_blank">YouTube</a>
+      <a href="https://www.facebook.com/leaneleofit" target="_blank">Facebook</a>
+    </div>
+  </footer>
+
+</body>
+</html>
