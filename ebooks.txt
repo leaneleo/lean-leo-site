@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-books Lean & Leo Fit</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <section class="ebooks">
+    <h2>Nossos E-books</h2>
+    <p class="subtitulo">Aprenda em casa com conteúdo direto e leve.</p>
+
+    <div class="cards-ebooks">
+      <div class="ebook">
+        <img src="img/ebook-lorenna.png" alt="Receitas Doces e Salgadas">
+        <h3>Receitas Doces e Salgadas</h3>
+        <p>Receitas práticas, gostosas e fitness para o dia a dia.</p>
+        <p class="preco">R$ 14,99</p>
+        <a href="https://wa.me/5562992141313" class="botao">Quero esse</a>
+      </div>
+
+      <div class="ebook">
+        <img src="img/ebook-segredos.png" alt="5 Segredos do Emagrecimento">
+        <h3>5 Segredos do Emagrecimento</h3>
+        <p>Dicas validadas para perder peso sem sofrimento.</p>
+        <p class="preco">R$ 9,99</p>
+        <a href="https://wa.me/5562992141313" class="botao">Quero esse</a>
+      </div>
+
+      <div class="ebook">
+        <img src="img/ebook-combo.png" alt="Combo">
+        <h3>Combo: Doces + Segredos</h3>
+        <p>Leve os dois por um precinho especial!</p>
+        <p class="preco">R$ 12,99</p>
+        <a href="https://wa.me/5562992141313" class="botao">Quero o combo</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="mensagem-final">
+      <img src="img/foto-leo-leandro.png" alt="Le & Leo">
+      <p>Se você chegou até aqui, já é uma Diva Leve em potencial.<br> Obrigado pela visita — com amor, Le & Leo.</p>
+    </div>
+    <div class="redes">
+      <a href="https://www.instagram.com/leaneleofit/" target="_blank">Instagram</a>
+      <a href="https://www.youtube.com/@leaneleofit" target="_blank">YouTube</a>
+      <a href="https://www.facebook.com/leaneleofit" target="_blank">Facebook</a>
+    </div>
+    <p class="copy">&copy; 2025 Lean & Leo Fit. Todos os direitos reservados.</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #fff;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* TOPO COM VÍDEO */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  text-align: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+
+.conteudo-topo {
+  position: relative;
+  z-index: 3;
+  max-width: 800px;
+}
+
+.logo-topo {
+  max-width: 150px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.botao {
+  background-color: #ff7e00;
+  color: white;
+  padding: 12px 24px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  display: inline-block;
+}
+
+.botao:hover {
+  background-color: #e56600;
+}
+
+/* GALERIA */
+.galeria-instagram {
+  padding: 60px 20px;
+  background-color: #fdf7f1;
+  text-align: center;
+}
+
+.galeria-instagram h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #ff7e00;
+}
+
+.grade-fotos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.grade-fotos img {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.grade-fotos img:hover {
+  transform: scale(1.05);
+}
+
+/* HUMOR & LEVEZA */
+.humor-leveza {
+  background-color: #fffaf3;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.humor-leveza h2 {
+  font-size: 2rem;
+  color: #ff7e00;
+  margin-bottom: 15px;
+}
+
+.humor-leveza p {
+  max-width: 700px;
+  margin: 0 auto 30px;
+  font-size: 1rem;
+  color: #444;
+}
+
+.imagens-humor {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.imagens-humor img {
+  max-width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* RESULTADOS */
+.depoimentos {
+  background: url('../img/textura-laranja.png') no-repeat center center;
+  background-size: cover;
+  padding: 60px 20px;
+  color: white;
+  text-align: center;
+}
+
+.depoimentos h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.carrossel {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 10px;
+}
+
+.depoimento {
+  flex: 0 0 auto;
+  width: 250px;
+  background-color: rgba(0,0,0,0.4);
+  border-radius: 10px;
+  padding: 15px;
+  scroll-snap-align: center;
+}
+
+.depoimento img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.depoimento p {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+/* CONSULTORIA */
+.consultoria-online {
+  padding: 60px 20px;
+  background-color: #fffaf3;
+  text-align: center;
+}
+
+.consultoria-online h2 {
+  font-size: 2rem;
+  color: #ff7e00;
+  margin-bottom: 10px;
+}
+
+.consultoria-online .subtitulo {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color: #555;
+}
+
+.planos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+}
+
+.plano {
+  max-width: 300px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.plano img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.plano h3 {
+  color: #ff7e00;
+  margin-bottom: 10px;
+}
+
+.plano p {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.bonus h3 {
+  color: #333;
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+
+.bonus ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.bonus ul li {
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+/* FAQ */
+.faq {
+  background-color: #fffaf3;
+  padding: 60px 20px;
+  text-align: left;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq h2 {
+  text-align: center;
+  color: #ff7e00;
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.pergunta {
+  margin-bottom: 25px;
+}
+
+.pergunta h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.pergunta p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* CONTATO */
+.contato {
+  background-color: #fdf7f1;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.contato h2 {
+  font-size: 2rem;
+  color: #ff7e00;
+  margin-bottom: 10px;
+}
+
+.contato p {
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+form button {
+  background-color: #ff7e00;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #e56600;
+}
+
+/* RODAPÉ */
+footer {
+  background-color: #ff7e00;
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+footer img {
+  max-width: 150px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+}
+
+footer p {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.redes a {
+  margin: 0 10px;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.redes a:hover {
+  text-decoration: underline;
+}
+
+.copy {
+  margin-top: 20px;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* ANIMAÇÕES */
+.antes-aparecer {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.6s ease;
+}
+
+.aparecendo {
+  opacity: 1;
+  transform: translateY(0);
+}
