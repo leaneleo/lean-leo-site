@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lean & Leo Fit</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap">
+</head>
+<body>
+
+  <!-- TOPO COM VÍDEO -->
+  <header class="hero">
+    <video class="background-video" autoplay muted loop playsinline>
+      <source src="videos/video-topo.mp4" type="video/mp4" />
+    </video>
+    <div class="overlay"></div>
+    <div class="conteudo-topo">
+      <img src="img/logo-com-fundo.png" class="logo-topo" alt="Lean & Leo Logo" />
+      <h1>Alcance sua perda de peso de forma leve</h1>
+      <p>Treinos e consultorias pensadas para mulheres reais, ou seja, com uma vida caótica e apocalíptica.</p>
+      <a href="#consultoria" class="botao">Comece sua jornada</a>
+    </div>
+  </header>
+
+  <!-- MOSAICO DE IMAGENS -->
+  <section class="galeria-instagram reveal">
+    <h2>Mulheres reais, resultados reais</h2>
+    <div class="grade-fotos">
+      <img src="img/corpo-le-leo.jpg" alt="Corpo Lean & Leo" />
+      <img src="img/le-van-dan.jpg" alt="Treino" />
+      <img src="img/leandro-e-leo.jpg" alt="Personal" />
+    </div>
+  </section>
+
+  <!-- QUEM SOMOS -->
+  <section class="humor-leveza reveal" id="sobre">
+    <h2>Quem somos na fila do pão?</h2>
+    <p>Não é sobre sofrimento, é sobre rir, dançar, tropeçar no step e mesmo assim continuar. Aqui a gente emagrece mulher com acolhimento, humor e verdade.</p>
+    <h4>Emagrecimento com leveza e bom humor</h4>
+    <div class="imagens-humor">
+      <img src="img/marcelina-shampoo.png" alt="Marcelina" />
+      <img src="img/praia-step-shirley.png" alt="Shirley no step" />
+    </div>
+  </section>
+
+  <!-- +150 ALUNAS TRANSFORMADAS -->
+  <section class="depoimentos" style="background-image: url('img/textura-laranja.png');">
+    <h2>+150 ALUNAS TRANSFORMADAS</h2>
+    <p>Elas emagreceram e emagrecem até hoje com a gente, vejam o que estão dizendo.</p>
+    <div class="carrossel">
+      <div class="depoimento">
+        <video controls>
+          <source src="videos/carolzinha.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="depoimento">
+        <img src="img/print-ana.png" alt="Print Ana" />
+      </div>
+      <div class="depoimento">
+        <video controls>
+          <source src="videos/sarahekaell.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </div>
+    <p class="texto-final">Já teve uma conexão assim com seu personal?</p>
+  </section>
+
+  <!-- CONSULTORIA ONLINE -->
+  <section class="consultoria-online reveal" id="consultoria">
+    <h2>Consultoria Online Lean & Leo Fit</h2>
+    <p class="subtitulo">Treino sob medida pra você emagrecer com leveza</p>
+    <div class="planos">
+      <div class="plano">
+        <img src="img/le-co-mfit.png" alt="App MFIT" />
+        <h3>Só Treino</h3>
+        <p>Plano com treino individualizado no app MFIT, grupo de suporte e ajustes mensais.</p>
+        <a href="https://loja.infinitepay.io/romeland/rsr5851-plano-online" class="botao">Quero esse plano</a>
+      </div>
+      <div class="plano">
+        <img src="img/le-co-mfit.png" alt="App MFIT" />
+        <h3>Treino + Dieta</h3>
+        <p>Inclui dieta personalizada com a nutricionista Lorenna Mendanha + nossa consultoria completa.</p>
+        <a href="https://loja.infinitepay.io/romeland/rsr5851-plano-online" class="botao">Quero esse combo</a>
+      </div>
+    </div>
+    <div class="bonus">
+      <h3>Bônus exclusivos</h3>
+      <ul>
+        <li>Verão sem lesão (acesso gratuito)</li>
+        <li>E-book 5 segredos do emagrecimento</li>
+        <li>Checklist mensal e grupo no WhatsApp</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq reveal" id="faq">
+    <h2>Perguntas Frequentes</h2>
+    <div class="pergunta">
+      <h3 class="faq-toggle">Essa consultoria é pra quem?</h3>
+      <p class="faq-resposta">Pra mulheres que querem perder peso com leveza, no seu tempo. Nada de pressão ou modinha.</p>
+    </div>
+    <div class="pergunta">
+      <h3 class="faq-toggle">É possível dividir o valor?</h3>
+      <p class="faq-resposta">Sim! Pode parcelar no cartão em até 6x via InfinitePay.</p>
+    </div>
+    <div class="pergunta">
+      <h3 class="faq-toggle">Nunca treinei. Consigo acompanhar?</h3>
+      <p class="faq-resposta">Consegue sim! Os treinos são adaptáveis e pensados para iniciantes.</p>
+    </div>
+    <div class="pergunta">
+      <h3 class="faq-toggle">Tem acompanhamento mesmo?</h3>
+      <p class="faq-resposta">Sim! Você fala com a gente no WhatsApp e recebe feedback real, direto no app e nos formulários.</p>
+    </div>
+  </section>
+
+  <!-- RODAPÉ -->
+  <footer id="rodape">
+    <img src="img/logo-com-fundo.png" alt="Lean & Leo Logo">
+    <p>Entre em contato com a gente nas redes sociais:</p>
+    <div class="redes">
+      <a href="https://www.instagram.com/leaneleofit/" target="_blank"><img src="img/icone-instagram.png" alt="Instagram" /></a>
+      <a href="https://www.youtube.com/@leaneleofit" target="_blank"><img src="img/icone-youtube.png" alt="YouTube" /></a>
+      <a href="https://www.facebook.com/leaneleofit" target="_blank"><img src="img/icone-facebook.png" alt="Facebook" /></a>
+    </div>
+    <p class="copy">© 2025 Lean & Leo Fit – Todos os direitos reservados</p>
+  </footer>
+
+  <!-- BOTÃO WHATSAPP (SOMENTE NO FINAL) -->
+  <div id="whatsapp-botao">
+    <a href="https://wa.me/5562992141313" target="_blank">
+      <img src="img/whatsapp-icon.png" alt="WhatsApp" />
+    </a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
