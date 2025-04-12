@@ -1,0 +1,329 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #fff;
+  color: #333;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  color: #ff6600;
+  text-align: center;
+  margin: 20px 0 10px;
+}
+
+p {
+  max-width: 800px;
+  margin: 0 auto 20px;
+  text-align: center;
+}
+
+/* BOTÃO */
+.botao {
+  display: inline-block;
+  padding: 12px 25px;
+  margin-top: 20px;
+  background: linear-gradient(90deg, #ff8a00, #ff6600);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.botao:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.conteudo-topo {
+  position: relative;
+  z-index: 2;
+}
+.logo-topo {
+  width: 120px;
+  margin-bottom: 15px;
+}
+
+/* GALERIA */
+.grade-fotos {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+.grade-fotos img {
+  width: 30%;
+  border-radius: 10px;
+}
+
+/* HUMOR */
+.humor-leveza {
+  padding: 40px 20px;
+}
+.imagens-humor {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+.imagens-humor img {
+  width: 150px;
+  border-radius: 10px;
+}
+
+/* DEPOIMENTOS */
+.depoimentos {
+  padding: 60px 20px;
+  color: white;
+  background-size: cover;
+  background-position: center;
+}
+.carrossel {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.depoimento video,
+.depoimento img {
+  width: 220px;
+  height: 390px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.texto-final {
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-top: 30px;
+}
+
+/* CONSULTORIA */
+.consultoria-online {
+  padding: 60px 20px;
+}
+.planos {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+.plano {
+  background: #fef3e7;
+  border-radius: 15px;
+  padding: 25px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(255, 102, 0, 0.2);
+  text-align: center;
+}
+.plano img {
+  width: 100px;
+  margin-bottom: 15px;
+}
+
+/* BÔNUS */
+.bonus {
+  margin-top: 40px;
+  text-align: center;
+}
+.bonus ul {
+  list-style: none;
+  margin-top: 10px;
+}
+.bonus li {
+  padding: 5px 0;
+}
+
+/* FAQ */
+.faq {
+  background: #fff6f0;
+  padding: 40px 20px;
+}
+.pergunta {
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+.faq-toggle {
+  background-color: #ff6600;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.faq-resposta {
+  display: none;
+  padding: 10px;
+  background: #ffe5d1;
+  border-radius: 5px;
+}
+
+/* RODAPÉ */
+footer {
+  text-align: center;
+  padding: 40px 20px;
+  background: #222;
+  color: white;
+}
+footer img {
+  width: 100px;
+  margin-bottom: 10px;
+}
+.redes {
+  margin-top: 10px;
+}
+.redes img {
+  width: 32px;
+  margin: 0 10px;
+}
+
+/* WHATSAPP */
+#whatsapp-botao {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  z-index: 1000;
+}
+#whatsapp-botao img {
+  width: 55px;
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.8s ease;
+}
+.reveal.ativo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* RESPONSIVO */
+@media screen and (max-width: 768px) {
+  .grade-fotos img {
+    width: 90%;
+  }
+  .planos {
+    flex-direction: column;
+    align-items: center;
+  }
+  .carrossel {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+/* === Estilos para os cards de e-books === */
+.cards-ebooks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 2rem;
+}
+
+.card-ebook {
+  flex: 1 1 300px;
+  max-width: 320px;
+  padding: 2rem;
+  border-radius: 12px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.card-ebook:hover {
+  transform: translateY(-5px);
+}
+
+/* Variações de cor laranja */
+.card-laranja-claro {
+  background-color: #fcae5b;
+}
+
+.card-laranja-medio {
+  background-color: #f9873a;
+}
+
+.card-laranja-escuro {
+  background-color: #e35c17;
+}
+
+/* Botão nos cards */
+.botao-ebook {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.8rem 1.5rem;
+  background-color: #fff;
+  color: #e35c17;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.botao-ebook:hover {
+  background-color: #e35c17;
+  color: #fff;
+  border: 1px solid #fff;
+}
+
+/* WhatsApp no final da página */
+.whatsapp-fim {
+  position: relative;
+  display: block;
+  width: fit-content;
+  margin: 3rem auto;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.whatsapp-fim img {
+  width: 60px;
+}
+
+/* Animação suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
