@@ -8,7 +8,7 @@ const options = {
 const observer = new IntersectionObserver(function(entries, observer) {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('aparecendo');
+      entry.target.classList.add('ativo');
     }
   });
 }, options);
