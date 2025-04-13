@@ -1,18 +1,18 @@
-// Animações ao rolar a página
-const elements = document.querySelectorAll('section, .depoimento, .plano, .pessoa, .post');
-
-const options = {
-  threshold: 0.1
-};
-
-const observer = new IntersectionObserver(function(entries, observer) {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('ativo');
+document.addEventListener("DOMContentLoaded", function () {
+  function revelarElementos() {
+    const reveals = document.querySelectorAll(".reveal");
+    for (let i = 0; i < reveals.length; i++) {
+      const windowHeight = window.innerHeight;
+      const elementTop = reveals[i].getBoundingClientRect().top;
+      const elementVisible = 100;
+      if (elementTop < windowHeight - elementVisible) {
+        reveals[i].classList.add("ativo");
+      } else {
+        reveals[i].classList.remove("ativo");
+      }
     }
-  });
-}, options);
+  }
 
-elements.forEach(el => {
-  observer.observe(el);
+  window.addEventListener("scroll", revelarElementos);
+  revelarElementos();
 });
