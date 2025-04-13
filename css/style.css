@@ -303,19 +303,6 @@ footer img {
   border: 1px solid #fff;
 }
 
-/* WhatsApp no final da página */
-.whatsapp-fim {
-  position: relative;
-  display: block;
-  width: fit-content;
-  margin: 3rem auto;
-  animation: fadeIn 1s ease-in-out;
-}
-
-.whatsapp-fim img {
-  width: 60px;
-}
-
 /* Animação suave */
 @keyframes fadeIn {
   from {
