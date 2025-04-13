@@ -1,91 +1,72 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lean & Leo Fit</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
 </head>
 <body>
-
-  <!-- TOPO COM VÍDEO -->
-  <header class="hero">
-    <video class="background-video" autoplay muted loop playsinline>
-      <source src="videos/topo.mp4" type="video/mp4" />
-    </video>
-    <div class="overlay"></div>
-    <div class="conteudo-topo">
-      <img src="img/logo-com-fundo.png" class="logo-topo" alt="Lean & Leo Logo" />
-      <h1>Alcance sua perda de peso de forma leve</h1>
-      <p>Treinos e consultorias pensadas para mulheres reais, ou seja, com uma vida caótica e apocalíptica.</p>
-      <a href="#consultoria" class="botao">Comece sua jornada</a>
+  <header>
+    <div class="topo">
+      <img src="img/logo-avatar-com-fundo.png" alt="Logo Lean & Leo" class="logo" />
+      <nav class="menu">
+        <a href="index.html">Início</a><span class="dot">•</span>
+        <a href="#resultados">Resultados</a><span class="dot">•</span>
+        <a href="#consultoria">Consultoria Online</a><span class="dot">•</span>
+        <a href="ebooks.html">E-books</a><span class="dot">•</span>
+        <a href="veraosemlesao.html">Verão sem Lesão</a><span class="dot">•</span>
+        <a href="produtos-presenciais.html">Produtos presenciais</a><span class="dot">•</span>
+        <a href="blog.html">Blog</a><span class="dot">•</span>
+        <a href="sobre.html">Sobre nós</a><span class="dot">•</span>
+        <a href="#contato">Contato</a>
+      </nav>
     </div>
   </header>
 
-  <!-- SOBRE O HUMOR -->
-  <section class="sobre reveal">
-    <h2>Quem somos na fila do pão?</h2>
-    <p>Não é sobre sofrimento, é sobre rir, dançar, tropeçar no step e mesmo assim continuar. Aqui a gente emagrece mulher com acolhimento, humor e verdade.</p>
-    <h3>Emagrecimento com leveza e bom humor</h3>
-    <div class="grade-fotos">
-      <img src="img/marcelina-shampoo.png" alt="Marcelina no shampoo">
-      <img src="img/praia-step-shirley.png" alt="Praia com step da Shirley">
-    </div>
-  </section>
+  <main>
+    <section class="video-topo reveal">
+      <video autoplay muted loop playsinline poster="img/textura-laranja.png">
+        <source src="videos/topo.mp4" type="video/mp4" />
+        Seu navegador não suporta vídeo.
+      </video>
+    </section>
 
-  <!-- +150 ALUNAS TRANSFORMADAS -->
-  <section class="depoimentos" style="background-image: url('img/textura-laranja.png');">
-    <h2>+150 ALUNAS TRANSFORMADAS</h2>
-    <p>Elas emagreceram e emagrecem até hoje com a gente, vejam o que estão dizendo.</p>
-    <div class="carrossel">
-      <div class="depoimento reveal">
-        <video controls>
-          <source src="videos/carolzinha.mp4" type="video/mp4" />
-        </video>
-      </div>
-      <div class="depoimento reveal">
-        <img src="img/print-ana.png" alt="Print Ana" />
-      </div>
-      <div class="depoimento reveal">
-        <video controls>
-          <source src="videos/sarahekaell.mp4" type="video/mp4" />
-        </video>
-      </div>
-    </div>
-    <p class="texto-final">Já teve uma conexão assim com seu personal?</p>
-  </section>
+    <section id="resultados" class="reveal">
+      <!-- Conteúdo com antes/depois e depoimentos -->
+    </section>
 
-  <!-- CONSULTORIA ONLINE -->
-  <section class="consultoria-online reveal" id="consultoria">
-    <h2>Consultoria Online Lean & Leo Fit</h2>
-    <p class="subtitulo">Treino sob medida pra você emagrecer com leveza</p>
-    <div class="planos">
-      <div class="plano">
-        <img src="img/le-co-mfit.png" alt="App MFIT" />
-        <h3>Só Treino</h3>
-        <p>Plano com treino individualizado no app MFIT, grupo de suporte e mais.</p>
-        <a href="https://loja.infinitepay.io/romeland/rsr5851-plano-online" class="botao">Quero esse</a>
-      </div>
-      <div class="plano">
-        <img src="img/le-co-mfit.png" alt="App MFIT" />
-        <h3>Treino + Dieta</h3>
-        <p>Inclui dieta personalizada com a nutricionista Lorenna Medanha.</p>
-        <a href="https://loja.infinitepay.io/romeland/rsr5851-plano-online-dieta" class="botao">Quero esse</a>
-      </div>
-    </div>
-  </section>
+    <section id="consultoria" class="reveal">
+      <!-- Explicações da consultoria online -->
+    </section>
 
-  <!-- RODAPÉ -->
-  <footer>
-    <p class="copy">© 2025 Lean & Leo Fit – Todos os direitos reservados.</p>
+    <section id="ebooks" class="reveal">
+      <!-- Cards de ebooks com botão "quero!" -->
+    </section>
+
+    <section id="faq" class="reveal">
+      <!-- Perguntas frequentes -->
+    </section>
+
+    <section id="contato" class="reveal">
+      <!-- Formulário de contato, sem formspree ou similares -->
+    </section>
+  </main>
+
+  <footer class="reveal">
+    <div class="redes">
+      <a href="#"><img src="img/whatsapp-icon.png" alt="WhatsApp" /></a>
+      <!-- Ícones das redes sociais -->
+    </div>
+    <p>&copy; 2025 Lean & Leo Fit. Todos os direitos reservados.</p>
   </footer>
 
-  <!-- BOTÃO WHATSAPP (SOMENTE NO FINAL) -->
-  <div id="whatsapp-botao">
-    <a href="https://wa.me/5562992141313" target="_blank">
-      <img src="img/whatsapp-icon.png" alt="WhatsApp" />
+  <div id="whatsapp-botao" class="reveal">
+    <a href="https://wa.me/5599999999999" target="_blank">
+      <img src="img/whatsapp-icon.png" alt="Fale conosco no WhatsApp" />
     </a>
   </div>
 
