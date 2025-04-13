@@ -14,6 +14,5 @@ const observer = new IntersectionObserver(function(entries, observer) {
 }, options);
 
 elements.forEach(el => {
-  el.classList.add('antes-aparecer');
   observer.observe(el);
 });
