@@ -1,18 +1,19 @@
 document.addEventListener("DOMContentLoaded", function () {
   function revelarElementos() {
     const reveals = document.querySelectorAll(".reveal");
-    reveals.forEach(el => {
+    reveals.forEach(function (elemento) {
       const windowHeight = window.innerHeight;
-      const elementTop = el.getBoundingClientRect().top;
-      const elementVisible = 150;
+      const elementTop = elemento.getBoundingClientRect().top;
+      const elementVisible = 100;
+
       if (elementTop < windowHeight - elementVisible) {
-        el.classList.add("ativo");
+        elemento.classList.add("ativo");
       } else {
-        el.classList.remove("ativo");
+        elemento.classList.remove("ativo");
       }
     });
   }
 
   window.addEventListener("scroll", revelarElementos);
-  revelarElementos();
+  revelarElementos(); // ativa na primeira carga
 });
