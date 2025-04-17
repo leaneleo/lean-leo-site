@@ -1,23 +1,37 @@
-body {
+/* Reset básico */
+* {
   margin: 0;
-  font-family: 'Comfortaa', sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Comfortaa', cursive;
   background-color: #fff;
   color: #333;
+  line-height: 1.6;
+}
+
+img, video {
+  max-width: 100%;
+  display: block;
+  border-radius: 10px;
 }
 
 a {
   text-decoration: none;
 }
 
+/* Topo */
 .topo {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 5%;
-  background-color: #fff;
+  background: #fff;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .logo {
@@ -25,8 +39,8 @@ a {
 }
 
 .menu a {
-  color: #333;
   margin: 0 5px;
+  color: #333;
   font-size: 14px;
   transition: 0.3s ease;
 }
@@ -41,15 +55,15 @@ a {
   margin: 0 4px;
 }
 
+/* Vídeo com texto sobreposto */
 .video-topo {
   position: relative;
-  overflow: hidden;
 }
 
 .video-topo video {
   width: 100%;
   height: auto;
-  filter: brightness(0.6) blur(2px);
+  filter: brightness(0.6) blur(1px);
 }
 
 .overlay-text {
@@ -57,9 +71,8 @@ a {
   top: 30%;
   left: 50%;
   transform: translate(-50%, -30%);
-  color: white;
   text-align: center;
-  z-index: 10;
+  color: #fff;
 }
 
 .overlay-text h1 {
@@ -68,24 +81,25 @@ a {
 }
 
 .overlay-text p {
-  font-size: 1rem;
+  font-size: 1.1rem;
   margin-bottom: 20px;
 }
 
 .botao {
   background: linear-gradient(45deg, #f47825, #ff8a00);
+  color: #fff;
   padding: 12px 24px;
   border-radius: 30px;
-  color: white;
   font-weight: bold;
   transition: 0.3s ease;
 }
 
 .botao:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(244,120,37,0.4);
+  box-shadow: 0 0 10px rgba(244, 120, 37, 0.4);
 }
 
+/* Grade de imagens reais */
 .grade-imagens {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -93,11 +107,7 @@ a {
   padding: 40px 5%;
 }
 
-.grade-imagens img {
-  width: 100%;
-  border-radius: 8px;
-}
-
+/* Seção "Quem somos" */
 .quemsomos {
   text-align: center;
   padding: 60px 5%;
@@ -110,40 +120,56 @@ a {
   margin-top: 20px;
 }
 
-.quemsomos img {
-  width: 200px;
-  border-radius: 10px;
-}
-
+/* Carrossel de antes e depois */
 .carrossel {
   display: flex;
   overflow-x: auto;
   gap: 20px;
   padding: 40px 5%;
+  scroll-snap-type: x mandatory;
 }
 
 .card {
-  min-width: 300px;
-  background: url("../img/textura-branca.png");
+  min-width: 280px;
+  scroll-snap-align: start;
+  background: url("../img/textura-branca.png") no-repeat center;
+  background-size: cover;
   padding: 20px;
   border-radius: 10px;
 }
 
-.transformadas .banner {
-  background: url("../img/textura-laranja.png") center/cover;
+/* Mockups celulares */
+.mockup-videos {
+  padding: 60px 5%;
   text-align: center;
-  padding: 80px 5%;
-  color: white;
 }
 
-.video-card {
-  max-width: 300px;
-  margin: 20px auto;
+.mockup-cards {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
 }
 
+.mockup-card {
+  width: 280px;
+  border: 10px solid #eee;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.texto-conexao {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Rodapé */
 footer {
-  padding: 30px 5%;
-  background: #f8f8f8;
+  background-color: #f8f8f8;
+  padding: 40px 5%;
   text-align: center;
 }
 
@@ -158,6 +184,7 @@ footer .redes img {
   color: #666;
 }
 
+/* WhatsApp fixo ao final */
 #whatsapp-botao {
   display: flex;
   justify-content: center;
@@ -168,6 +195,7 @@ footer .redes img {
   width: 40px;
 }
 
+/* Scroll Reveal */
 .reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -177,4 +205,37 @@ footer .redes img {
 .reveal.ativo {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .topo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu {
+    margin-top: 10px;
+  }
+
+  .overlay-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .mockup-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mockup-card {
+    width: 90%;
+  }
+
+  .quemsomos .imagens {
+    flex-direction: column;
+  }
+
+  .carrossel {
+    padding: 20px 2%;
+  }
 }
