@@ -15,5 +15,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   window.addEventListener("scroll", revelarElementos);
-  revelarElementos(); // ativa na primeira carga
+  revelarElementos();
 });
