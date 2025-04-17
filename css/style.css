@@ -161,7 +161,6 @@ a {
   }
 }
 
-/* Seção "Quem somos" */
 .quemsomos {
   text-align: center;
   padding: 60px 5%;
@@ -292,4 +291,37 @@ footer .redes img {
   .carrossel {
     padding: 20px 2%;
   }
+}
+/* Seção: Quem somos na fila do pão */
+.quemsomos {
+  padding: 60px 5%;
+  text-align: center;
+}
+
+.quemsomos h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #333;
+}
+
+.quemsomos p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.imagens-quemsomos {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.imagens-quemsomos img {
+  width: 300px;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
