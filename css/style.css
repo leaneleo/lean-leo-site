@@ -419,8 +419,13 @@ footer .redes img {
 .carrossel-track {
   display: flex;
   gap: 20px;
+  width: 100%;
+  padding-right: 5%;
   animation: scrollLoop 120s linear infinite;
-  width: max-content;
+}
+
+.transformacoes {
+  overflow-x: hidden;
 }
 
 @keyframes scrollLoop {
