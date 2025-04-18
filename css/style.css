@@ -527,3 +527,62 @@ footer .redes img {
     font-size: 1rem;
   }
 }
+.mockup-videos {
+  padding: 60px 5%;
+  text-align: center;
+}
+
+.mockup-videos h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #f47825;
+}
+
+.mockup-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.mockup-card {
+  width: 280px;
+  background: #fff;
+  border: 10px solid #f1f1f1;
+  border-radius: 40px;
+  padding: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.mockup-card:hover {
+  transform: translateY(-5px);
+}
+
+.mockup-card video,
+.mockup-card img {
+  border-radius: 30px;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.texto-conexao {
+  margin-top: 40px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .mockup-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mockup-card {
+    width: 90%;
+  }
+}
