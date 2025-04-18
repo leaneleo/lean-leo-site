@@ -421,7 +421,7 @@ footer .redes img {
   gap: 20px;
   width: 100%;
   padding-right: 5%;
-  animation: scrollLoop 120s linear infinite;
+  animation: scrollLoop 60s linear infinite;
 }
 
 .transformacoes {
