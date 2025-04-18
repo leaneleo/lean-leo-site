@@ -423,11 +423,16 @@ footer .redes img {
   }
 
   .imagens-transformacao {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .imagens-transformacao img {
-    width: 100%;
+    width: 48%;
     height: auto;
+  }
+
+  .card-transformacao {
+    flex: 0 0 85vw;
+    margin-right: 10px;
   }
 }
