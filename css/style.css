@@ -242,7 +242,7 @@ a {
 .card {
   min-width: 280px;
   scroll-snap-align: start;
-  background: url("../img/textura-laranja.png") no-repeat center;
+  background: url("../img/textura-branca.png") no-repeat center;
   background-size: cover;
   padding: 20px;
   border-radius: 10px;
@@ -408,6 +408,12 @@ footer .redes img {
   width: 100%;
   overflow: hidden;
   position: relative;
+}
+
+.transformacoes {
+  background: url("../img/textura-laranja.png") repeat;
+  background-size: contain;
+  padding: 60px 0;
 }
 
 .carrossel-track {
