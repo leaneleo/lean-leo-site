@@ -327,6 +327,34 @@ footer .redes img {
 }
 
 /* Cards de depoimentos com antes e depois */
+.depoimentos {
+  padding: 60px 5%;
+  background: url("../img/textura-branca.png") repeat;
+  text-align: center;
+}
+
+.depoimentos h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+/* 🔥 AQUI ESTÁ O CARROSSEL FUNCIONANDO */
+.carrossel-cards {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.carrossel-cards::-webkit-scrollbar {
+  display: none;
+}
+
 .card-depoimento {
   min-width: 300px;
   background-color: #fff;
@@ -366,6 +394,10 @@ footer .redes img {
 }
 
 @media (max-width: 768px) {
+  .carrossel-cards {
+    padding: 10px;
+  }
+
   .fotos {
     flex-direction: column;
   }
