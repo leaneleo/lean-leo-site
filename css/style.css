@@ -340,69 +340,87 @@ footer .redes img {
 }
 
 /* 🔥 AQUI ESTÁ O CARROSSEL FUNCIONANDO */
-.carrossel-cards {
+.transformacoes-carrossel {
+  overflow: hidden;
+  position: relative;
+  padding: 60px 0;
+  background: #fff;
+}
+
+.container-carrossel {
   display: flex;
   gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  width: max-content;
+  animation: scrollCarrossel 60s linear infinite;
 }
 
-.carrossel-cards::-webkit-scrollbar {
-  display: none;
+@keyframes scrollCarrossel {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* ajuste baseado no tamanho total */
 }
 
-.card-depoimento {
-  min-width: 300px;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+.card-transformacao {
+  flex: 0 0 320px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   padding: 20px;
-  scroll-snap-align: start;
-  flex-shrink: 0;
-  text-align: left;
+  font-family: 'Comfortaa', sans-serif;
 }
 
-.card-depoimento h3 {
+.topo-nome {
+  background-color: #f47825;
+  color: white;
+  font-weight: bold;
   font-size: 1.1rem;
-  margin-bottom: 10px;
-  color: #f47825;
-  font-weight: 700;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-.card-depoimento p {
-  font-size: 0.95rem;
-  color: #444;
-}
-
-.fotos {
+.imagens-transformacao {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
-.fotos img {
+.imagens-transformacao img {
   width: 48%;
-  height: 320px;
+  height: 300px;
   object-fit: cover;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
+.peso-tempo {
+  font-weight: bold;
+  color: #f47825;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.depoimento-transformacao {
+  background: #fff8f1;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Responsivo */
 @media (max-width: 768px) {
-  .carrossel-cards {
-    padding: 10px;
+  .container-carrossel {
+    animation-duration: 90s;
   }
 
-  .fotos {
+  .imagens-transformacao {
     flex-direction: column;
   }
 
-  .fotos img {
+  .imagens-transformacao img {
     width: 100%;
     height: auto;
   }
