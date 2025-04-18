@@ -562,11 +562,14 @@ footer .redes img {
 
 .mockup-card video,
 .mockup-card img {
-  border-radius: 30px;
   width: 100%;
   height: auto;
+  border-radius: 30px;
   display: block;
+  object-fit: cover;
+  aspect-ratio: 9 / 16; /* mantém o formato celular */
 }
+
 
 .texto-conexao {
   margin-top: 40px;
