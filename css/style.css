@@ -446,3 +446,9 @@ footer .redes img {
   height: auto;
   object-fit: contain;
 }
+@media (max-width: 768px) {
+  .imagens-transformacao.unica img {
+    width: 100%;
+    max-width: 90vw;
+  }
+}
