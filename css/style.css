@@ -594,6 +594,29 @@ footer .redes img {
     width: 90%;
   }
 }
+/* Corrige "buraco" entre o vídeo e a próxima seção */
+.video-topo {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.mockup-videos,
+.grade-imagens,
+.quemsomos,
+.transformacoes {
+  margin-top: 0;
+  padding-top: 40px;
+}
+
+@media (max-width: 768px) {
+  .mockup-videos,
+  .grade-imagens,
+  .quemsomos,
+  .transformacoes {
+    padding-top: 20px;
+  }
+}
+
 .card-consultoria.styled {
   background: linear-gradient(160deg, rgba(255,138,0,0.95), rgba(244,120,37,0.95));
   color: #fff;
