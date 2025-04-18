@@ -340,23 +340,29 @@ footer .redes img {
 }
 
 /* 🔥 AQUI ESTÁ O CARROSSEL FUNCIONANDO */
-.transformacoes-carrossel {
+.transformacoes {
   overflow: hidden;
   position: relative;
   padding: 60px 0;
   background: #fff;
 }
 
-.container-carrossel {
-  display: flex;
-  gap: 20px;
-  width: max-content;
-  animation: scrollCarrossel 60s linear infinite;
+.container-transformacoes {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-@keyframes scrollCarrossel {
+.carrossel-track {
+  display: flex;
+  gap: 20px;
+  animation: scrollLoop 60s linear infinite;
+  width: max-content;
+}
+
+@keyframes scrollLoop {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* ajuste baseado no tamanho total */
+  100% { transform: translateX(-50%); } /* Ajustável conforme o total duplicado */
 }
 
 .card-transformacao {
@@ -412,7 +418,7 @@ footer .redes img {
 
 /* Responsivo */
 @media (max-width: 768px) {
-  .container-carrossel {
+  .carrossel-track {
     animation-duration: 90s;
   }
 
