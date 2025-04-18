@@ -589,3 +589,55 @@ footer .redes img {
     width: 90%;
   }
 }
+.card-consultoria {
+  background: linear-gradient(135deg, #f47825, #ff8a00);
+  color: white;
+  border-radius: 20px;
+  padding: 25px 20px;
+  text-align: center;
+  width: 300px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.card-consultoria:hover {
+  transform: translateY(-8px);
+}
+
+.card-topo h3 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.preco {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.beneficios {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.beneficios li {
+  margin: 5px 0;
+}
+
+.botao-card {
+  background: #fff;
+  color: #f47825;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.botao-card:hover {
+  background: #ffe6d0;
+}
