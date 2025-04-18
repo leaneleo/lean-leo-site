@@ -17,3 +17,11 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("scroll", revelarElementos);
   revelarElementos();
 });
+
+// Menu Hamburguer
+const hamburger = document.getElementById('hamburger');
+const menu = document.getElementById('menu');
+
+hamburger.addEventListener('click', () => {
+  menu.classList.toggle('active');
+});
