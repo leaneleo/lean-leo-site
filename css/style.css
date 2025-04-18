@@ -436,3 +436,13 @@ footer .redes img {
     margin-right: 10px;
   }
 }
+.imagens-transformacao.unica {
+  justify-content: center;
+}
+
+.imagens-transformacao.unica img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  object-fit: contain;
+}
