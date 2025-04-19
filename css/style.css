@@ -276,6 +276,13 @@ a {
   font-size: 1.1rem;
 }
 
+/* /sessão: depoimentos - ajuste de velocidade no mobile */
+@media (max-width: 768px) {
+  .carrossel-track {
+    animation-duration: 120s !important;
+  }
+}
+
 /* Rodapé */
 footer {
   background-color: #f8f8f8;
