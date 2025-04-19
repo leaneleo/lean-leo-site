@@ -230,15 +230,6 @@ a {
   margin-top: 20px;
 }
 
-/* Carrossel de antes e depois */
-.carrossel {
-  display: flex;
-  overflow-x: auto;
-  gap: 20px;
-  padding: 40px 5%;
-  scroll-snap-type: x mandatory;
-}
-
 .card {
   min-width: 280px;
   scroll-snap-align: start;
@@ -274,13 +265,6 @@ a {
   margin-top: 20px;
   font-weight: bold;
   font-size: 1.1rem;
-}
-
-/* /sessão: depoimentos - ajuste de velocidade no mobile */
-@media (max-width: 768px) {
-  .carrossel-track {
-    animation-duration: 10s !important;
-  }
 }
 
 /* Rodapé */
@@ -423,13 +407,6 @@ footer .redes img {
   padding: 60px 0;
 }
 
-.carrossel-track {
-  display: flex;
-  gap: 20px;
-  animation: scrollLoop 10s linear infinite;
-  width: max-content; /* ← ESSENCIAL pra fazer a animação respeitar a largura real */
-}
-
 .transformacoes {
   overflow-x: hidden;
 }
@@ -488,16 +465,6 @@ footer .redes img {
   color: #444;
   line-height: 1.4;
   text-align: center;
-}
-
-/* /sessão: depoimentos - força largura completa no mobile */
-@media (max-width: 768px) {
-  .carrossel-track {
-    width: calc(200% + 20px); /* 100% + 100% dos cards duplicados + gap */
-    animation-duration: 10s !important;
-    animation-name: scrollLoop;
-    display: flex;
-  }
 }
 
   .imagens-transformacao {
@@ -588,6 +555,29 @@ footer .redes img {
   display: block;
   object-fit: cover;
   aspect-ratio: 9 / 16; /* mantém o formato celular */
+}
+
+/* /sessão: depoimentos - carrossel infinito funcional e responsivo */
+
+.carrossel-track {
+  display: flex;
+  gap: 20px;
+  animation: scrollLoop 60s linear infinite; /* Velocidade padrão para PC */
+  width: max-content; /* Essencial para o loop funcionar */
+}
+
+@media (max-width: 768px) {
+  .carrossel-track {
+    animation-duration: 10s !important; /* Mais rápido no celular */
+    animation-name: scrollLoop;
+    display: flex;
+    width: max-content;
+  }
+}
+
+@keyframes scrollLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 
