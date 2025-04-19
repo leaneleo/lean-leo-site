@@ -496,6 +496,17 @@ footer .redes img {
   .carrossel-track {
     animation-duration: 30s;
   }
+  
+/* /sessão: depoimentos - força largura completa no mobile */
+
+@media (max-width: 768px) {
+  .carrossel-track {
+    width: calc(200% + 20px); /* 100% + 100% dos cards duplicados + gap */
+    animation-duration: 10s !important;
+    animation-name: scrollLoop;
+    display: flex;
+  }
+}
 
   .imagens-transformacao {
     flex-direction: row;
