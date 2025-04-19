@@ -568,7 +568,7 @@ footer .redes img {
 
 @media (max-width: 768px) {
   .carrossel-track {
-    animation-duration: 10s !important; /* Mais rápido no celular */
+    animation-duration: 60s !important; /* Mais rápido no celular */
     animation-name: scrollLoop;
     display: flex;
     width: max-content;
