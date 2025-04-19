@@ -1,3 +1,4 @@
+/* RESET GERAL */
 * {
   margin: 0;
   padding: 0;
@@ -15,7 +16,19 @@ a {
   color: #333;
 }
 
-/* TOPO GERAL */
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.reveal.ativo {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TOPO DO SITE */
 .topo {
   display: flex;
   justify-content: space-between;
@@ -25,7 +38,6 @@ a {
   position: relative;
 }
 
-/* LOGO + TEXTO */
 .logo-container {
   display: flex;
   flex-direction: column;
@@ -42,11 +54,10 @@ a {
   font-size: 14px;
   font-weight: bold;
   color: #000;
-  font-family: 'Comfortaa', sans-serif;
   margin-top: 4px;
+  font-family: 'Comfortaa', sans-serif;
 }
 
-/* HAMBURGUER */
 .hamburger {
   font-size: 26px;
   cursor: pointer;
@@ -55,7 +66,6 @@ a {
   right: 5%;
 }
 
-/* MENU PADRÃO */
 .menu {
   display: flex;
   flex-wrap: wrap;
@@ -75,7 +85,7 @@ a {
   transform: scale(1.05);
 }
 
-/* MOBILE */
+/* MENU MOBILE */
 @media (max-width: 768px) {
   .hamburger {
     display: block;
@@ -115,11 +125,14 @@ a {
   }
 }
 
+/* SECÃO VIDEO TOPO */
 .video-topo {
   position: relative;
   width: 100%;
   height: 100svh;
   overflow: hidden;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .bg-video {
@@ -150,7 +163,7 @@ a {
 .video-overlay p {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #ffffff;
+  color: #fff;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
   margin-bottom: 25px;
 }
@@ -170,6 +183,7 @@ a {
   box-shadow: 0 0 10px rgba(244,120,37,0.4);
 }
 
+/* SECÃO IMAGENS LE E LEO */
 .grade-imagens {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -182,42 +196,7 @@ a {
   border-radius: 10px;
 }
 
-/* ScrollReveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
-}
-
-.reveal.ativo {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .topo {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .menu {
-    justify-content: center;
-  }
-
-  .video-overlay h1 {
-    font-size: 1.5rem;
-  }
-
-  .video-overlay p {
-    font-size: 0.95rem;
-  }
-
-  .botao {
-    font-size: 0.95rem;
-  }
-}
-
+/* SECÃO QUEM SOMOS */
 .quemsomos {
   text-align: center;
   padding: 60px 5%;
@@ -230,254 +209,13 @@ a {
   margin-top: 20px;
 }
 
-.card {
-  min-width: 280px;
-  scroll-snap-align: start;
-  background: url("../img/textura-branca.png") no-repeat center;
-  background-size: cover;
-  padding: 20px;
-  border-radius: 10px;
-}
-
-/* Mockups celulares */
-.mockup-videos {
-  padding: 60px 5%;
-  text-align: center;
-}
-
-.mockup-cards {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
-
-.mockup-card {
-  width: 280px;
-  border: 10px solid #eee;
-  border-radius: 40px;
-  overflow: hidden;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
-}
-
-.texto-conexao {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
-/* Rodapé */
-footer {
-  background-color: #f8f8f8;
-  padding: 40px 5%;
-  text-align: center;
-}
-
-footer .redes img {
-  width: 30px;
-  margin: 0 10px;
-}
-
-.rodape-frase {
-  margin-top: 15px;
-  font-size: 0.9rem;
-  color: #666;
-}
-
-/* WhatsApp fixo ao final */
-#whatsapp-botao {
-  display: flex;
-  justify-content: center;
-  padding: 20px 0;
-}
-
-#whatsapp-botao img {
-  width: 40px;
-}
-
-/* Scroll Reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
-}
-
-.reveal.ativo {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Responsivo */
 @media (max-width: 768px) {
-  .topo {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .menu {
-    margin-top: 10px;
-  }
-
-  .overlay-text h1 {
-    font-size: 1.5rem;
-  }
-
-  .mockup-cards {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .mockup-card {
-    width: 90%;
-  }
-
   .quemsomos .imagens {
     flex-direction: column;
   }
-
-  .carrossel {
-    padding: 20px 2%;
-  }
-}
-/* /sessão: depoimentos - container da seção */
-.depoimentos {
-  padding: 60px 5%;
-  background: url("../img/textura-branca.png") repeat;
-  text-align: center;
 }
 
-.depoimentos h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  font-weight: 700;
-}
-
-/* /sessão: depoimentos - carrossel com textura laranja */
-.transformacoes {
-  overflow-x: hidden;
-  position: relative;
-  padding: 60px 0;
-  background: url("../img/textura-laranja.png") repeat;
-  background-size: contain;
-}
-
-/* /sessão: depoimentos - container de trilha */
-.container-transformacoes {
-  overflow: hidden;
-  width: 100%;
-  position: relative;
-}
-
-/* /sessão: depoimentos - faixa com rolagem infinita */
-.carrossel-track {
-  display: flex;
-  gap: 20px;
-  width: max-content;
-  animation: scrollLoop 60s linear infinite;
-}
-
-@media (max-width: 768px) {
-  .carrossel-track {
-    animation-duration: 10s !important;
-    animation-name: scrollLoop;
-    width: max-content;
-    display: flex;
-  }
-}
-
-@keyframes scrollLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* /sessão: depoimentos - card individual */
-.card-transformacao {
-  flex: 0 0 320px;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-  padding: 20px;
-  font-family: 'Comfortaa', sans-serif;
-}
-
-/* /sessão: depoimentos - nome no topo */
-.topo-nome {
-  background-color: #f47825;
-  color: white;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* /sessão: depoimentos - imagens lado a lado */
-.imagens-transformacao {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.imagens-transformacao img {
-  width: 48%;
-  height: 300px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.peso-tempo {
-  font-weight: bold;
-  color: #f47825;
-  margin: 10px 0;
-  text-align: center;
-}
-
-.depoimento-transformacao {
-  background: #fff8f1;
-  padding: 15px;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  color: #444;
-  line-height: 1.4;
-  text-align: center;
-}
-
-/* /sessão: depoimentos - suporte a 1 imagem */
-.imagens-transformacao.unica {
-  justify-content: center;
-}
-
-.imagens-transformacao.unica img {
-  width: 100%;
-  max-width: 320px;
-  height: auto;
-  object-fit: contain;
-}
-
-@media (max-width: 768px) {
-  .card-transformacao {
-    flex: 0 0 85vw;
-  }
-
-  .imagens-transformacao {
-    flex-direction: row;
-  }
-
-  .imagens-transformacao img {
-    width: 48%;
-    height: auto;
-  }
-
-  .imagens-transformacao.unica img {
-    width: 100%;
-    max-width: 90vw;
-  }
-}
-
-/* /sessão: mockups - vídeos e prints */
+/* SECÃO DEPOIMENTOS */
 .mockup-videos {
   padding: 60px 5%;
   text-align: center;
@@ -539,29 +277,120 @@ footer .redes img {
   }
 }
 
-/* /layout geral - suavizar transições entre sessões */
-.video-topo {
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.mockup-videos,
-.grade-imagens,
-.quemsomos,
+/* CARROSSEL */
 .transformacoes {
+  overflow-x: hidden;
+  position: relative;
+  padding: 60px 0;
+  background: url("../img/textura-laranja.png") repeat;
+  background-size: contain;
   margin-top: 0;
   padding-top: 40px;
 }
 
+.container-transformacoes {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.carrossel-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scrollLoop 60s linear infinite;
+}
+
 @media (max-width: 768px) {
-  .mockup-videos,
-  .grade-imagens,
-  .quemsomos,
-  .transformacoes {
-    padding-top: 20px;
+  .carrossel-track {
+    animation-duration: 10s !important;
+    animation-name: scrollLoop;
   }
 }
 
+@keyframes scrollLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.card-transformacao {
+  flex: 0 0 320px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  padding: 20px;
+  font-family: 'Comfortaa', sans-serif;
+}
+
+.topo-nome {
+  background-color: #f47825;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.imagens-transformacao {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.imagens-transformacao img {
+  width: 48%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.peso-tempo {
+  font-weight: bold;
+  color: #f47825;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.depoimento-transformacao {
+  background: #fff8f1;
+  padding: 15px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.imagens-transformacao.unica {
+  justify-content: center;
+}
+
+.imagens-transformacao.unica img {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .card-transformacao {
+    flex: 0 0 85vw;
+  }
+
+  .imagens-transformacao img {
+    width: 48%;
+    height: auto;
+  }
+
+  .imagens-transformacao.unica img {
+    max-width: 90vw;
+  }
+}
+
+/* CONSULTORIA CARD PERSOALIZADO */
 .card-consultoria.styled {
   background: linear-gradient(160deg, rgba(255,138,0,0.95), rgba(244,120,37,0.95));
   color: #fff;
@@ -616,4 +445,33 @@ footer .redes img {
 
 .botao-card-glass:hover {
   background: #ffe2cc;
+}
+
+/* RODAPÉ */
+footer {
+  background-color: #f8f8f8;
+  padding: 40px 5%;
+  text-align: center;
+}
+
+footer .redes img {
+  width: 30px;
+  margin: 0 10px;
+}
+
+.rodape-frase {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* WTP FINAL */
+#whatsapp-botao {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+#whatsapp-botao img {
+  width: 40px;
 }
