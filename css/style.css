@@ -426,9 +426,8 @@ footer .redes img {
 .carrossel-track {
   display: flex;
   gap: 20px;
-  width: 100%;
-  padding-right: 5%;
-  animation: scrollLoop 60s linear infinite;
+  animation: scrollLoop 10s linear infinite;
+  width: max-content; /* ← ESSENCIAL pra fazer a animação respeitar a largura real */
 }
 
 .transformacoes {
@@ -491,14 +490,7 @@ footer .redes img {
   text-align: center;
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-  .carrossel-track {
-    animation-duration: 30s;
-  }
-  
 /* /sessão: depoimentos - força largura completa no mobile */
-
 @media (max-width: 768px) {
   .carrossel-track {
     width: calc(200% + 20px); /* 100% + 100% dos cards duplicados + gap */
