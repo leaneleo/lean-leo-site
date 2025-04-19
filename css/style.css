@@ -340,41 +340,7 @@ footer .redes img {
     padding: 20px 2%;
   }
 }
-/* Seção: Quem somos na fila do pão */
-.quemsomos {
-  padding: 60px 5%;
-  text-align: center;
-}
-
-.quemsomos h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  font-weight: 700;
-  color: #333;
-}
-
-.quemsomos p {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-  color: #444;
-}
-
-.imagens-quemsomos {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  margin-top: 30px;
-  flex-wrap: wrap;
-}
-
-.imagens-quemsomos img {
-  width: 300px;
-  max-width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-}
-
-/* Cards de depoimentos com antes e depois */
+/* /sessão: depoimentos - container da seção */
 .depoimentos {
   padding: 60px 5%;
   background: url("../img/textura-branca.png") repeat;
@@ -387,35 +353,45 @@ footer .redes img {
   font-weight: 700;
 }
 
-/* 🔥 AQUI ESTÁ O CARROSSEL FUNCIONANDO */
-.transformacoes {
-  overflow: hidden;
-  position: relative;
-  padding: 60px 0;
-  background: #fff;
-}
-
-.container-transformacoes {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
-.transformacoes {
-  background: url("../img/textura-laranja.png") repeat;
-  background-size: contain;
-  padding: 60px 0;
-}
-
+/* /sessão: depoimentos - carrossel com textura laranja */
 .transformacoes {
   overflow-x: hidden;
+  position: relative;
+  padding: 60px 0;
+  background: url("../img/textura-laranja.png") repeat;
+  background-size: contain;
+}
+
+/* /sessão: depoimentos - container de trilha */
+.container-transformacoes {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* /sessão: depoimentos - faixa com rolagem infinita */
+.carrossel-track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+  animation: scrollLoop 60s linear infinite;
+}
+
+@media (max-width: 768px) {
+  .carrossel-track {
+    animation-duration: 10s !important;
+    animation-name: scrollLoop;
+    width: max-content;
+    display: flex;
+  }
 }
 
 @keyframes scrollLoop {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); } /* Ajustável conforme o total duplicado */
+  100% { transform: translateX(-50%); }
 }
 
+/* /sessão: depoimentos - card individual */
 .card-transformacao {
   flex: 0 0 320px;
   background: white;
@@ -425,6 +401,7 @@ footer .redes img {
   font-family: 'Comfortaa', sans-serif;
 }
 
+/* /sessão: depoimentos - nome no topo */
 .topo-nome {
   background-color: #f47825;
   color: white;
@@ -436,6 +413,7 @@ footer .redes img {
   text-align: center;
 }
 
+/* /sessão: depoimentos - imagens lado a lado */
 .imagens-transformacao {
   display: flex;
   justify-content: center;
@@ -467,20 +445,7 @@ footer .redes img {
   text-align: center;
 }
 
-  .imagens-transformacao {
-    flex-direction: row;
-  }
-
-  .imagens-transformacao img {
-    width: 48%;
-    height: auto;
-  }
-
-  .card-transformacao {
-    flex: 0 0 85vw;
-    margin-right: 10px;
-  }
-}
+/* /sessão: depoimentos - suporte a 1 imagem */
 .imagens-transformacao.unica {
   justify-content: center;
 }
@@ -491,29 +456,28 @@ footer .redes img {
   height: auto;
   object-fit: contain;
 }
+
 @media (max-width: 768px) {
+  .card-transformacao {
+    flex: 0 0 85vw;
+  }
+
+  .imagens-transformacao {
+    flex-direction: row;
+  }
+
+  .imagens-transformacao img {
+    width: 48%;
+    height: auto;
+  }
+
   .imagens-transformacao.unica img {
     width: 100%;
     max-width: 90vw;
   }
 }
-@media (max-width: 768px) {
-  .video-topo {
-    height: 50vh; /* reduz a altura do vídeo pela metade */
-  }
 
-  .video-overlay {
-    padding: 40px 20px;
-  }
-
-  .video-overlay h1 {
-    font-size: 1.3rem;
-  }
-
-  .video-overlay p {
-    font-size: 1rem;
-  }
-}
+/* /sessão: mockups - vídeos e prints */
 .mockup-videos {
   padding: 60px 5%;
   text-align: center;
@@ -554,32 +518,8 @@ footer .redes img {
   border-radius: 30px;
   display: block;
   object-fit: cover;
-  aspect-ratio: 9 / 16; /* mantém o formato celular */
+  aspect-ratio: 9 / 16;
 }
-
-/* /sessão: depoimentos - carrossel infinito funcional e responsivo */
-
-.carrossel-track {
-  display: flex;
-  gap: 20px;
-  animation: scrollLoop 60s linear infinite; /* Velocidade padrão para PC */
-  width: max-content; /* Essencial para o loop funcionar */
-}
-
-@media (max-width: 768px) {
-  .carrossel-track {
-    animation-duration: 60s !important; /* Mais rápido no celular */
-    animation-name: scrollLoop;
-    display: flex;
-    width: max-content;
-  }
-}
-
-@keyframes scrollLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
 
 .texto-conexao {
   margin-top: 40px;
@@ -588,7 +528,6 @@ footer .redes img {
   color: #333;
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .mockup-cards {
     flex-direction: column;
@@ -599,7 +538,8 @@ footer .redes img {
     width: 90%;
   }
 }
-/* Corrige "buraco" entre o vídeo e a próxima seção */
+
+/* /layout geral - suavizar transições entre sessões */
 .video-topo {
   margin-bottom: 0;
   padding-bottom: 0;
