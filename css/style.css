@@ -494,7 +494,7 @@ footer .redes img {
 /* Responsivo */
 @media (max-width: 768px) {
   .carrossel-track {
-    animation-duration: 160s;
+    animation-duration: 30s;
   }
 
   .imagens-transformacao {
