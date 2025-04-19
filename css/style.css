@@ -279,7 +279,7 @@ a {
 /* /sessão: depoimentos - ajuste de velocidade no mobile */
 @media (max-width: 768px) {
   .carrossel-track {
-    animation-duration: 30s !important;
+    animation-duration: 10s !important;
   }
 }
 
