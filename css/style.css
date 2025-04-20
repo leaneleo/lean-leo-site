@@ -197,12 +197,7 @@ a {
 }
 
 /* SECÃO QUEM SOMOS */
-.quemsomos {
-  text-align: center;
-  padding: 60px 5%;
-}
-
-.quemsomos .imagens {
+.imagens-quemsomos {
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -210,18 +205,21 @@ a {
   flex-wrap: wrap;
 }
 
-.quemsomos .imagens img {
-  max-width: 320px;
-  width: 100%;
+.imagens-quemsomos img {
+  width: 300px;
+  max-width: 100%;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  height: auto;
-  object-fit: cover;
 }
 
 @media (max-width: 768px) {
-  .quemsomos .imagens {
+  .imagens-quemsomos {
     flex-direction: column;
+    align-items: center;
+  }
+
+  .imagens-quemsomos img {
+    max-width: 90vw;
   }
 }
 
