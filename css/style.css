@@ -223,6 +223,14 @@ a {
   }
 }
 
+.quemsomos h2,
+.quemsomos p {
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* SECÃO DEPOIMENTOS */
 .mockup-videos {
   padding: 60px 5%;
