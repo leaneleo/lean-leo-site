@@ -41,8 +41,8 @@ a {
 .logo-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start; /* alinha à esquerda */
+  text-align: left;
   flex: 1;
 }
 
@@ -83,6 +83,11 @@ a {
 .menu a:hover {
   color: #f47825;
   transform: scale(1.05);
+}
+
+.dot {
+  color: #f47825;
+  margin: 0 4px;
 }
 
 /* MENU MOBILE */
