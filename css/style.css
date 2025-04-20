@@ -231,7 +231,7 @@ a {
   margin-right: auto;
 }
 
-/* SECÃO DEPOIMENTOS */
+/* SECÃO DEPOIMENTOS CARDS */
 .mockup-videos {
   padding: 60px 5%;
   text-align: center;
@@ -293,7 +293,7 @@ a {
   }
 }
 
-/* CARROSSEL */
+/* EMAGRECIMENTO CARROSSEL INFINITO */
 .transformacoes {
   overflow-x: hidden;
   position: relative;
@@ -309,17 +309,17 @@ a {
   width: 100%;
   position: relative;
 }
-
+/* VELOCIDADE NO PC */
 .carrossel-track {
   display: flex;
   gap: 20px;
   width: max-content;
-  animation: scrollLoop 60s linear infinite;
+  animation: scrollLoop 120s linear infinite;
 }
-
+/* VELOCIDADE NO CELULAR */
 @media (max-width: 768px) {
   .carrossel-track {
-    animation-duration: 10s !important;
+    animation-duration: 60s !important;
     animation-name: scrollLoop;
   }
 }
