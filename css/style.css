@@ -92,6 +92,17 @@ a {
   right: 5%;
 }
 
+@media (min-width: 769px) {
+  .topo {
+    justify-content: space-between;
+  }
+
+  .menu {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+
 /* MENU MOBILE */
 @media (max-width: 768px) {
   .topo {
@@ -100,8 +111,10 @@ a {
   }
 
   .logo-container {
+    order: 1;
     align-items: center;
     text-align: center;
+    margin-bottom: 10px;
   }
 
   .hamburger {
@@ -126,6 +139,10 @@ a {
 
   .menu.active {
     display: flex;
+  }
+  
+}  .menu a {
+    margin: 8px 0;
   }
 }
 /* SECÃO VIDEO TOPO */
