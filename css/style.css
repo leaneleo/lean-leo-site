@@ -28,6 +28,117 @@ a {
   transform: translateY(0);
 }
 
+/* SECÃO VIDEO TOPO */
+.video-topo {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* CAMADA ESCURA EM CIMA DO VÍDEO */
+.video-overlay-dark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.35); /* AQUI você ajusta a intensidade */
+  z-index: 1;
+}
+
+/* TEXTO EM CIMA DO VÍDEO */
+.video-overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 80px 20px;
+  color: #fff;
+}
+
+.video-overlay {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 80px 20px;
+  color: #fff;
+}
+
+.video-overlay h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  margin-bottom: 15px;
+}
+
+.video-overlay p {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  margin-bottom: 25px;
+}
+
+.botao {
+  background: linear-gradient(45deg, #f47825, #ff8a00);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  display: inline-block;
+  transition: 0.3s ease;
+}
+
+.botao:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(244,120,37,0.4);
+}
+
+@media (max-width: 768px) {
+  .video-topo {
+    height: 100vh;
+    position: relative;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .bg-video {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .video-overlay h1 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    line-height: 1.2;
+  }
+
+  .video-overlay p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .botao {
+    font-size: 1rem;
+  }
+}
+
 /* TOPO DO SITE */
 .topo {
   display: flex;
@@ -82,7 +193,11 @@ a {
 .dot {
   color: #f47825;
   margin: 0 4px;
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: middle;
 }
+
 /* HAMBURGUER */
 .hamburger {
   font-size: 26px;
@@ -145,64 +260,6 @@ a {
     margin: 8px 0;
   }
 }
-/* SECÃO VIDEO TOPO */
-.video-topo {
-  position: relative;
-  width: 100%;
-  height: 100svh;
-  overflow: hidden;
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.video-overlay {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: 80px 20px;
-  color: #fff;
-}
-
-.video-overlay h1 {
-  font-size: 2.8rem;
-  font-weight: 800;
-  text-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  margin-bottom: 15px;
-}
-
-.video-overlay p {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fff;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-  margin-bottom: 25px;
-}
-
-.botao {
-  background: linear-gradient(45deg, #f47825, #ff8a00);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: bold;
-  display: inline-block;
-  transition: 0.3s ease;
-}
-
-.botao:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 10px rgba(244,120,37,0.4);
-}
-
 /* SECÃO IMAGENS LE E LEO */
 .grade-imagens {
   display: grid;
