@@ -524,6 +524,11 @@ a {
   max-width: 180px;
   border-radius: 12px;
 }
+/* LE E LEO NO MEIO 1:1 */
+.imagens-consultoria img:nth-child(2) {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
 
 /* 🔶 CARDS DE CONSULTORIA */
 .cards-planos {
