@@ -609,6 +609,30 @@ a {
   }
 }
 
+.planos-consultoria {
+  background: url("../img/textura-laranja.png") repeat;
+  background-size: contain;
+  padding: 60px 5%;
+  text-align: center;
+}
+
+.planos-consultoria h2 {
+  font-size: 2rem;
+  color: #f47825;
+  margin-bottom: 30px;
+}
+
+.selo-preco {
+  margin: 20px 0;
+  font-size: 1rem;
+  background: #fff8f1;
+  color: #d35400;
+  padding: 8px 15px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
 /* RODAPÉ */
 footer {
   background-color: #f8f8f8;
