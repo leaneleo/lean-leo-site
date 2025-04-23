@@ -1,118 +1,31 @@
-/* TOPO DO SITE */
-.topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 5%;
+/* RESET GERAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Comfortaa', sans-serif;
   background: #fff;
-  position: relative;
-  flex-wrap: wrap;
-}
-
-.logo-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* para desktop */
-  text-align: left;
-}
-
-.logo {
-  height: 60px;
-}
-
-.logo-text {
-  font-size: 14px;
-  font-weight: bold;
-  color: #000;
-  font-family: 'Comfortaa', sans-serif;
-  margin-top: 4px;
-}
-
-/* MENU DESKTOP */
-.menu {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  flex-grow: 1;
-}
-
-.menu a {
-  font-size: 14px;
-  font-family: 'Comfortaa', sans-serif;
   color: #333;
+}
+
+a {
   text-decoration: none;
-  transition: 0.3s ease;
+  color: #333;
 }
 
-.menu a:hover {
-  color: #f47825;
-  transform: scale(1.05);
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
 }
 
-.dot {
-  font-size: 14px;
-  color: #f47825;
-  line-height: 1;
-  vertical-align: middle;
-  position: relative;
-  top: -1px; /* Alinha com o texto */
-}
-
-/* MENU MOBILE */
-@media (max-width: 768px) {
-  .topo {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .logo-container {
-    order: 1;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-
-  .hamburger {
-    display: block;
-    order: 2;
-    align-self: flex-end;
-    font-size: 26px;
-    cursor: pointer;
-    position: absolute;
-    right: 5%;
-  }
-
-  .menu {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    background: #fff;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 999;
-    padding: 20px 0;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  }
-
-  .menu.active {
-    display: flex;
-  }
-
-  .menu a {
-    margin: 8px 0;
-  }
-
-  .dot {
-    display: none; /* oculta as bolinhas no menu mobile */
-  }
-
-  .section {
-    margin-bottom: 60px; /* Espaçamento entre seções */
-  }
+.reveal.ativo {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* SECÃO VIDEO TOPO */
@@ -198,7 +111,7 @@
     margin-bottom: 0;
     padding-bottom: 0;
   }
-  
+
   .bg-video {
     height: 100%;
     width: 100%;
@@ -208,8 +121,6 @@
   .video-overlay {
     padding: 40px 20px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.4); /* novo: camada escura */
-   
   }
 
   .video-overlay h1 {
@@ -228,123 +139,167 @@
   }
 }
 
-/* RESET GERAL */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Comfortaa', sans-serif;
+/* TOPO DO SITE */
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 5%;
   background: #fff;
-  color: #333;
+  position: relative;
+  flex-wrap: wrap;
 }
 
-a {
-  text-decoration: none;
-  color: #333;
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* para desktop */
+  text-align: left;
+  flex: 1;
 }
 
-/* SECÃO IMAGENS LE E LEO */
-/* Layout geral – margens verticais padronizadas */
-section {
-  margin-top: 0;
-  padding-top: 60px;
-  padding-bottom: 60px;
+.logo {
+  height: 60px;
 }
 
-/* Para as primeiras seções, sem espaçamento extra acima */
-section:first-of-type {
-  padding-top: 40px;
+.logo-text {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  font-family: 'Comfortaa', sans-serif;
+  margin-top: 4px;
 }
 
-/* SECÃO: IMAGENS EM GRADE RESPONSIVA */
-.grade-dupla {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
+.menu {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  padding: 0 5%;
+  gap: 10px;
 }
 
-.grade-dupla img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+.menu a {
+  font-size: 14px;
+  font-family: 'Comfortaa', sans-serif;
+  color: #333;
+  text-decoration: none;
+  transition: 0.3s ease;
 }
 
-/* LAYOUT GERAL – RESPIRO ENTRE SEÇÕES MOBILE */
+.menu a:hover {
+  color: #f47825;
+  transform: scale(1.05);
+}
+
+.dot {
+  color: #f47825;
+  margin: 0 4px;
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* HAMBURGUER */
+.hamburger {
+  font-size: 26px;
+  cursor: pointer;
+  display: none;
+  position: absolute;
+  right: 5%;
+}
+
+@media (min-width: 769px) {
+  .topo {
+    justify-content: space-between;
+  }
+
+  .menu {
+    flex-grow: 1;
+    justify-content: center;
+  }
+}
+
+/* MENU MOBILE */
 @media (max-width: 768px) {
-  section,
-  .mockup-videos,
-  .grade-dupla,
-  .quemsomos,
-  .transformacoes,
-  .planos-consultoria,
-  .sessao-consultoria {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+  .topo {
+    flex-direction: column;
+    align-items: center;
   }
 
-  section:first-of-type {
-    padding-top: 20px;
+  .logo-container {
+    order: 1;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .hamburger {
+    display: block;
+    order: 2;
+    align-self: flex-end;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background: #fff;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+    padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+
+  .menu.active {
+    display: flex;
+  }
+  
+}  .menu a {
+    margin: 8px 0;
   }
 }
-
-/* SCROLL REVEAL */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.6s ease;
+/* SECÃO IMAGENS LE E LEO */
+.grade-imagens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  padding: 40px 5%;
 }
 
-.reveal.ativo {
-  opacity: 1;
-  transform: translateY(0);
+.grade-imagens img {
+  width: 100%;
+  border-radius: 10px;
 }
 
 /* SECÃO QUEM SOMOS */
 .imagens-quemsomos {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 30px;
+  margin-top: 30px;
   flex-wrap: wrap;
 }
 
-.quemsomos {
-  text-align: center;
-  padding: 60px 5%;
-}
-
 .imagens-quemsomos img {
-  max-width: 320px;
-  width: 100%;
+  width: 300px;
+  max-width: 100%;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 768px) {
   .imagens-quemsomos {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: center;
   }
 
   .imagens-quemsomos img {
-    width: 45%;
-    max-width: 150px;
-    height: auto;
-    margin: 10px 5px;
+    max-width: 90vw;
   }
 }
 
-/* centraliza e limita largura PC e Mobile*/
 .quemsomos h2,
 .quemsomos p {
   text-align: center;
@@ -353,7 +308,69 @@ section:first-of-type {
   margin-right: auto;
 }
 
-/* SEÇÃO CARROSSEL INFINITO */
+/* SECÃO DEPOIMENTOS CARDS */
+.mockup-videos {
+  padding: 60px 5%;
+  text-align: center;
+}
+
+.mockup-videos h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #f47825;
+}
+
+.mockup-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.mockup-card {
+  width: 280px;
+  background: #fff;
+  border: 10px solid #f1f1f1;
+  border-radius: 40px;
+  padding: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.mockup-card:hover {
+  transform: translateY(-5px);
+}
+
+.mockup-card video,
+.mockup-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 30px;
+  display: block;
+  object-fit: cover;
+  aspect-ratio: 9 / 16;
+}
+
+.texto-conexao {
+  margin-top: 40px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .mockup-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mockup-card {
+    width: 90%;
+  }
+}
+
+/* EMAGRECIMENTO CARROSSEL INFINITO */
 .transformacoes {
   overflow-x: hidden;
   position: relative;
@@ -369,7 +386,6 @@ section:first-of-type {
   width: 100%;
   position: relative;
 }
-
 /* VELOCIDADE NO PC */
 .carrossel-track {
   display: flex;
@@ -377,33 +393,17 @@ section:first-of-type {
   width: max-content;
   animation: scrollLoop 120s linear infinite;
 }
-/* PAUSA NO HOVER (PC) */
-.carrossel-track:hover,
-.carrossel-track:active {
-  animation-play-state: paused;
-}
-
 /* VELOCIDADE NO CELULAR */
 @media (max-width: 768px) {
   .carrossel-track {
-    animation: scrollLoop 90s linear infinite !important;
-  }
-}
-/* PAUSA NO TOQUE (MOBILE) */
-@media (hover: none) and (pointer: coarse) {
-  .carrossel-track:active {
-    animation-play-state: paused;
+    animation-duration: 90s !important;
+    animation-name: scrollLoop;
   }
 }
 
-/* Animação de loop infinito */
 @keyframes scrollLoop {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .card-transformacao {
@@ -480,78 +480,6 @@ section:first-of-type {
 
   .imagens-transformacao.unica img {
     max-width: 90vw;
-  }
-}
-
-/* SECÃO +150 ALUNAS */
-.mockup-videos {
-  padding: 60px 5%;
-  text-align: center;
-}
-
-.mockup-videos h2 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: #f47825;
-}
-
-.mockup-cards {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-}
-
-.mockup-card {
-  width: 280px;
-  background: #fff;
-  border: 10px solid #f1f1f1;
-  border-radius: 40px;
-  padding: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease;
-}
-
-.mockup-card:hover {
-  transform: translateY(-5px);
-}
-
-.mockup-card video,
-.mockup-card img {
-  width: 100%;
-  height: auto;
-  border-radius: 30px;
-  display: block;
-  object-fit: cover;
-  aspect-ratio: 9 / 16;
-}
-
-.texto-conexao {
-  margin-top: 40px;
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #333;
-}
-
-/* SECÃO: MOCKUP VIDEOS – MOBILE - 150 ALUNAS */
-@media (max-width: 768px) {
-  .mockup-cards {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .mockup-card {
-    width: 45%;
-    margin-bottom: 20px;
-  }
-
-  .mockup-card video,
-  .mockup-card img {
-    border-radius: 25px;
-    aspect-ratio: 9 / 16;
   }
 }
 
@@ -661,106 +589,79 @@ section:first-of-type {
   font-size: 1.05rem;
 }
 
-.consultoria-fotos {
+.imagens-consultoria {
   display: flex;
   justify-content: center;
   gap: 20px;
-  padding: 40px 5%;
+  margin-bottom: 40px;
   flex-wrap: wrap;
 }
 
-.consultoria-fotos img {
-  width: 300px;
+.imagens-consultoria img {
+  max-width: 180px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  object-fit: cover;
 }
-
 /* LE E LEO NO MEIO 1:1 */
 .imagens-consultoria img:nth-child(2) {
   aspect-ratio: 1 / 1;
   object-fit: cover;
 }
 
-/* SECÃO: CONSULTORIA FOTOS – MOBILE */
-@media (max-width: 768px) {
-  .consultoria-fotos {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .consultoria-fotos img {
-    width: 45%;
-    max-width: 150px;
-  }
-
-  .consultoria-fotos img:nth-child(2) {
-    aspect-ratio: 1 / 1;
-  }
-}
-
-/* 🔶 CARDS PREÇOS DE CONSULTORIA */
-.cards-consultoria {
-  background: url('../img/textura-laranja.png') repeat;
-  background-size: cover;
-  padding: 60px 5%;
+/* 🔶 CARDS DE CONSULTORIA */
+.cards-planos {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 30px;
-  flex-wrap: wrap;
 }
 
-.card-consultoria.styled {
-  background: linear-gradient(160deg, rgba(255,138,0,0.95), rgba(244,120,37,0.95));
-  color: #fff;
+.card-consultoria {
+  background: linear-gradient(180deg, #f47825, #ff8a00);
   border-radius: 25px;
+  color: #fff;
   padding: 30px 20px;
-  width: 320px;
-  text-align: center;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  transition: transform 0.3s ease;
+  width: 300px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  position: relative;
 }
 
-.card-consultoria.styled:hover {
-  transform: translateY(-8px);
-}
-
-.card-header h3 {
-  font-size: 1.4rem;
-  margin-bottom: 5px;
-  letter-spacing: 0.5px;
-  color: #fffdd0;
-}
-
-.card-header .preco {
-  font-size: 2rem;
+.card-topo {
+  background: #fff;
+  color: #f47825;
   font-weight: bold;
-  color: #fffdd0;
+  padding: 10px;
+  border-radius: 20px 20px 0 0;
+  font-size: 1.2rem;
+  margin: -30px -20px 20px;
 }
 
-.card-header .preco .rs {
-  font-size: 1rem;
-  vertical-align: top;
-}
-
-.card-header .preco .mes {
-  font-size: 1rem;
-  margin-left: 4px;
+.card-preco {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .beneficios {
   list-style: none;
   padding: 0;
-  font-size: 1rem;
-  line-height: 1.6;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .beneficios li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.beneficios s {
+  font-size: 0.95rem;
+  color: #ffe2cc;
+}
+
+.preco-final {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 15px 0;
+  color: #fffdd0;
 }
 
 .botao-card-glass {
@@ -779,16 +680,10 @@ section:first-of-type {
 }
 
 @media (max-width: 768px) {
-  .cards-consultoria {
+  .cards-planos {
     flex-direction: column;
     align-items: center;
-    padding: 40px 5%;
   }
-}
-
-.card-consultoria.styled {
-  width: 90%;
-  margin-bottom: 30px;
 }
 
 .planos-consultoria {
@@ -813,17 +708,6 @@ section:first-of-type {
   border-radius: 12px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-@media (max-width: 768px) {
-  .card-header .preco {
-    font-size: 1.6rem;
-  }
-
-  .card-header .preco .rs,
-  .card-header .preco .mes {
-    font-size: 0.9rem;
-  }
 }
 
 /* RODAPÉ */
