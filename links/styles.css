@@ -1,0 +1,79 @@
+/* Reset padrão */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body */
+body {
+  font-family: 'Comfortaa', sans-serif;
+  background-color: #C54930; /* Cor principal da identidade visual */
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+/* Header */
+header {
+  padding: 20px;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+/* Main Content */
+main {
+  width: 100%;
+  max-width: 600px;
+}
+
+.buttons-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.button {
+  display: inline-block;
+  padding: 15px 30px;
+  background-color: #f0b570; /* Cor laranja clara */
+  color: #FFFFFF; /* Texto branco */
+  text-decoration: none; /* Remover sublinhado */
+  font-size: 1.2rem; /* Tamanho da fonte */
+  border-radius: 8px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Efeito de transição suave */
+}
+
+.button:hover {
+  background-color: #e0a5f0; /* Cor ao passar o mouse */
+}
+
+/* Footer */
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  background-color: #FFFFFF; /* Fundo branco */
+  color: #333; /* Texto cinza escuro */
+  text-align: center;
+  width: 100%;
+}
