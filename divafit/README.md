@@ -6,6 +6,8 @@ Aplicação de gestão independente do site institucional Lean & Leo Fit. Interf
 
 Implementados: alunos, modelos e contagem manual de novos treinos, fichas com múltiplas origens, distribuição semanal de VSSAM, validade, tarefas, planos compartilhados, pagamentos, avisos assistidos pelo WhatsApp, backup JSON e prévia de importação de alunos.
 
+Importação provisória: datas finais anteriores às iniciais são aceitas e sinalizadas como “Datas a revisar”. A coluna `import_data` preserva evidências, alternativas e frequências capturadas manualmente; `import_key` evita repetir o mesmo lote. Fichas importadas podem ser marcadas como conferidas no editor. Históricos substituídos não geram alertas de vencimento atual. A frequência importada aparece na página do aluno, sem cálculo de adesão ou sincronização com Mfit.
+
 Banco Supabase criado no plano Free, em São Paulo; migrações aplicadas e permissões testadas no banco. Os e-mails da equipe ficam em uma lista privada de ativação. A interface permite ativação de conta, confirmação de e-mail e definição/redefinição de senha pelo próprio usuário. A confirmação depende da configuração do serviço de e-mail do projeto, que ainda precisa ser validada. A publicação será em um **segundo projeto** Netlify. Mfit e envio automático de WhatsApp não estão conectados. O WhatsApp abre uma conversa; confirmação manual não comprova entrega.
 
 O site institucional existente e seu domínio não devem ser substituídos. Não é necessário alterar seu `index.html` nesta etapa. Este diretório deve ser a base de um segundo projeto Netlify. Dados reais, arquivos de alunos e credenciais administrativas nunca devem entrar no GitHub ou no diretório publicado.
