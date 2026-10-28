@@ -70,3 +70,15 @@ VSSAM representa as séries informadas por grupo muscular em cada dia da semana.
 - Testar os lembretes na virada do dia de São Paulo, substituição/prorrogação e cancelamento de consentimento.
 
 O envio automático futuro precisará da WhatsApp Business Platform, modelos aprovados, consentimento, fila idempotente e confirmação de entrega por webhook. Nenhum envio automático está habilitado neste código.
+# Produção e renovação
+
+- **Produção de treinos**: abra um atendimento de entrada ou renovação por aluno; siga documentos, planejamento, revisão, entrega e feedback em sete dias. O progresso fica compartilhado com a equipe.
+- **Biblioteca**: contagem por nível de volume, busca por formato, projeção da programação semanal e sugestões sem uso registrado. Conferir equipamentos, queixas e experiência antes de copiar. A ausência de registro não prova ausência de uso.
+- **Cálculos do aluno**: original soma A–G uma vez; esperado incorpora as repetições semanais. ABCD em seis sessões corresponde a ABCDAB. Peso e fator de proteína são definidos pelo profissional; a calculadora não escolhe uma prescrição.
+- **Instruções**: modelos compartilhados editáveis, personalização por aluno e cópia manual. Os dez modelos iniciais são rascunhos baseados no fluxograma. Google Keep e Mfit não têm sincronização automática.
+- **Métodos**: nível dos métodos é registrado separadamente do nível do VSSAM. Não é inferido pela volumetria. Os dados e rótulos importados ficam preservados nas evidências e na auditoria.
+- O critério de frequência para sugerir avaliação de progressão é **75% ou mais**, com realizados e previstos do mesmo período. Nenhuma progressão ou liberação na Mfit ocorre automaticamente.
+
+Aplicar também as migrações de produção de 28/10/2026. As tabelas novas têm RLS, permissões da equipe e auditoria. A cópia de treino é transacional, valida a versão da origem, mantém proveniência e cria uma adaptação separada em elaboração.
+
+Verificação: testes de domínio, renderização das telas e ensaios transacionais de acesso e cópia. Não houve validação visual completa nesta atualização: o controle de navegador foi interrompido ao não conseguir verificar a URL de uma janela do Keep. A meta de 400 atendimentos/mês depende também da operação e ainda não foi validada em uso real.
