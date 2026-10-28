@@ -20,3 +20,5 @@ export async function save(table,data,previous){const {id,version,created_at,upd
 export async function receipt(assignment,kind){return request('/rest/v1/message_receipts',{method:'POST',body:JSON.stringify({assignment_id:assignment.id,assignment_version:assignment.version,kind,event_date:today(),status:'Confirmado manualmente'}),headers:{Prefer:'return=representation'}})}
 
 export async function prepareCopy(args){return request('/rest/v1/rpc/prepare_training_copy',{method:'POST',body:JSON.stringify(args)})}
+
+export async function saveStudentRoutine(args){return request('/rest/v1/rpc/save_student_routine',{method:'POST',body:JSON.stringify(args)})}

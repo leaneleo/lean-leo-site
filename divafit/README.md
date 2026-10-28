@@ -1,84 +1,25 @@
 # Consultoria Online DivaFit
 
-Aplicação de gestão independente do site institucional Lean & Leo Fit. Interface estática sem dependências de produção; dados em PostgreSQL/Supabase com autenticação e regras de acesso no banco.
+Aplicativo estático de gestão em Netlify, separado do site institucional; autenticação e dados privados no Supabase. Somente chaves públicas podem ser incluídas no cliente.
 
-## Estado da entrega
+## Rotina da equipe
 
-Implementados: alunos, modelos e contagem manual de novos treinos, fichas com múltiplas origens, distribuição semanal de VSSAM, validade, tarefas, planos compartilhados, pagamentos, avisos assistidos pelo WhatsApp, backup JSON e prévia de importação de alunos.
+Visão Geral é a entrada principal. Alunos aparecem em ordem alfabética; Inativos lista quem não possui início de rotina nos três últimos meses de calendário. A data da importação não determina atividade.
 
-Importação provisória: datas finais anteriores às iniciais são aceitas e sinalizadas como “Datas a revisar”. A coluna `import_data` preserva evidências, alternativas e frequências capturadas manualmente; `import_key` evita repetir o mesmo lote. Fichas importadas podem ser marcadas como conferidas no editor. Históricos substituídos não geram alertas de vencimento atual. A frequência importada aparece na página do aluno, sem cálculo de adesão ou sincronização com Mfit.
+Cada aluno tem cabeçalho editável com nascimento (idade calculada em São Paulo), objetivo, peso, altura, academia, disponibilidade, outras atividades, limitações, preferências e regiões de interesse. Modalidade aparece somente no cadastro e no cabeçalho. Dados ausentes ficam não informados, sem estimar nascimento a partir de idade antiga.
 
-Banco Supabase criado no plano Free, em São Paulo; migrações aplicadas e permissões testadas no banco. Os e-mails da equipe ficam em uma lista privada de ativação. A interface permite ativação de conta, confirmação de e-mail e definição/redefinição de senha pelo próprio usuário. A confirmação depende da configuração do serviço de e-mail do projeto, que ainda precisa ser validada. A publicação será em um **segundo projeto** Netlify. Mfit e envio automático de WhatsApp não estão conectados. O WhatsApp abre uma conversa; confirmação manual não comprova entrega.
+Registrar Nova Rotina cria o histórico do próprio aluno. O resumo contém datas, frequência prevista, VSSAM original e esperado, nível por volume esperado, métodos e originalidade. A validade editada atualiza os próximos passos. Observações da equipe e relatos dos alunos são anexados na mesma tela, com data e auditoria.
 
-O site institucional existente e seu domínio não devem ser substituídos. Não é necessário alterar seu `index.html` nesta etapa. Este diretório deve ser a base de um segundo projeto Netlify. Dados reais, arquivos de alunos e credenciais administrativas nunca devem entrar no GitHub ou no diretório publicado.
+Nova aumenta a contagem na biblioteca; Igual mantém o histórico sem aumentar essa contagem. Todas as 125 rotinas anteriores foram inicializadas como Nova por solicitação do usuário em 28/10/2026. A referência bruta e os valores anteriores permanecem preservados no banco.
 
-## Rodar e verificar
+Produção, Fila e Fichas e Entregas saíram da navegação. Biblioteca conserva sugestões por formato, programação semanal e uso anterior. Cálculos, Instruções e Financeiro ficam por último. Proteína usa fator informado pelo profissional; original soma cada sessão uma vez e esperado incorpora repetições na semana. Métodos e volume têm classificações independentes.
 
-Com Node 22 ou superior:
+## Fontes e integração
 
-```sh
-npm test
-npm run dev
-node scripts/build.mjs
-```
+**Prioridade autorizada: MFIT > Word/Excel do Drive para dados atuais de alunos e rotinas.** Preservar divergências e proveniência; nunca sobrescrever a MFIT usando controles antigos. O servidor fornecido pelo suporte é https://mcp.mfitpersonal.com.br/mcp, com OAuth. Instalar o plugin no ChatGPT não ativa por si só uma integração persistente do site; a conexão ao plugin foi verificada por uma consulta pontual em 28/10/2026. O plugin restringe exportação e migração em lote; não usar consultas repetidas para contornar essa restrição. Não colocar tokens ou senhas no código, banco público, GitHub ou navegador cliente.
 
-Sem configuração, a aplicação mostra uma apresentação vazia, não uma base de alunos fictícios. Cadastros e alterações ficam bloqueados até conectar o banco e entrar com uma conta autorizada. Preferências e sessões ficam na aba do navegador; registros de negócio são salvos no banco.
+## Segurança e validação
 
-## Banco e equipe
+Aplicar as migrações em ordem. Todas as tabelas operacionais têm RLS, permissões de equipe, controle de versão e auditoria; pagamentos são restritos ao administrador. A gravação do resumo de rotina e o espelhamento do modelo exclusivo são transacionais. A cópia mantém origem e marca Igual quando a equipe não escolhe contá-la como Nova.
 
-1. Criar ou selecionar projeto Supabase exclusivamente para a consultoria; não reaproveitar banco desconhecido.
-2. Aplicar `supabase/migrations/001_divafit.sql` uma única vez por meio da administração. É uma transação; manter migrações aplicadas imutáveis.
-3. Aplicar a migração de ativação da equipe. Inserir os dois e-mails verificados em `private.approved_team_emails`, com `admin` para Leandro e `trainer` para Elisângela. A lista não pode ser lida ou alterada pelo navegador e não é versionada com e-mails reais.
-4. A criação de conta é restrita a essa lista. O gatilho só cria o vínculo em `team_members` após confirmação do e-mail; não há privilégio automático para o primeiro visitante. Cada pessoa define sua própria senha.
-5. Configurar envio de e-mail e URLs de redirecionamento no Supabase Auth; validar o fluxo real de ativação das duas contas antes de importar dados. O provedor padrão do Supabase tem restrições de destinatários e pode exigir SMTP próprio para a prescritora.
-6. Os testes transacionais de RLS já passaram no banco, incluindo restrição financeira, auditoria, conta sem vínculo, visitante, conflito de versão e restrição/ativação de e-mail. Todos os registros artificiais foram revertidos. O arquivo `supabase/tests/access.sql` documenta a estratégia de verificação.
-
-O financeiro tem políticas exclusivamente para `admin`. A consulta da equipe retorna só o próprio vínculo. O navegador não tem permissão para criar ou alterar membros, apagar registros ou alterar o log de auditoria. Modificações geram autor, data e versão; atualizações usam comparação de versão para evitar perda silenciosa de edições simultâneas.
-
-A interface atualiza os dados a cada 60 segundos quando a aba está visível. A atualização é suspensa enquanto houver formulário aberto, operação em andamento ou prévia de importação em revisão.
-
-## Netlify
-
-Criar um novo projeto Netlify conectado ao mesmo repositório, apontando a pasta base para `divafit`. Na cópia local, este diretório é o próprio projeto.
-
-- Comando: `node scripts/build.mjs`
-- Diretório publicado: `public` (relativo à pasta base)
-- Variáveis: `DIVAFIT_SUPABASE_URL` e `DIVAFIT_SUPABASE_PUBLIC_KEY`
-- Use somente a chave pública anon/publishable. Nunca `service_role` ou `sb_secret_`.
-- HTTPS e proteção de dados dependem também de aplicar corretamente as políticas do banco.
-- Definir o endereço do projeto no Supabase Auth. Validar entrada/saída e recuperação de senha.
-- Depois de testar o endereço `.netlify.app`, configurar `consultoria.leaneleo.com.br` no novo projeto e o registro DNS no provedor atual; preservar os registros existentes de site e e-mail.
-- O botão no site institucional só deve ser adicionado após haver uma URL de destino funcional.
-
-Em desenvolvimento, copiar `config.example.js` para `config.js` e preencher somente dados públicos de conexão. O arquivo é ignorado no Git. O build gera configuração a partir das variáveis do Netlify.
-
-## Migração dos controles
-
-Começar com importação de alunos via JSON no formato `{ "students": [{ "name": "...", "source_url": "..." }] }`, revisada pelo administrador. A aplicação ignora nomes idênticos já cadastrados e marca os novos como “A revisar”. Isso não resolve homônimos nem abreviações: devem ser reconciliados antes de importar.
-
-A importação completa de fichas e pagamentos dos documentos Word ainda requer extrair suas tabelas, reconciliar divergências e validar uma amostra com o responsável. Não preencher valores financeiros ausentes, consentimento ou classificações por inferência. O arquivo de backup completo ainda não possui um restaurador automático; a importação de alunos não restaura fichas/pagamentos.
-
-VSSAM representa as séries informadas por grupo muscular em cada dia da semana. A soma não é multiplicada novamente pela frequência. Não há classificação científica automática nem cálculo de gasto calórico nesta versão.
-
-## Antes de colocar dados reais
-
-- Testar consultas e alterações como Leandro, Elisângela, visitante sem login e conta sem vínculo.
-- Confirmar que Elisângela não lê pagamentos nem histórico de auditoria.
-- Validar cópia idêntica, adaptação contada como nova e mix de múltiplas origens.
-- Validar conflito de edição em duas sessões.
-- Ensaiar backup, importar uma amostra e conferir contagens.
-- Testar os lembretes na virada do dia de São Paulo, substituição/prorrogação e cancelamento de consentimento.
-
-O envio automático futuro precisará da WhatsApp Business Platform, modelos aprovados, consentimento, fila idempotente e confirmação de entrega por webhook. Nenhum envio automático está habilitado neste código.
-# Produção e renovação
-
-- **Produção de treinos**: abra um atendimento de entrada ou renovação por aluno; siga documentos, planejamento, revisão, entrega e feedback em sete dias. O progresso fica compartilhado com a equipe.
-- **Biblioteca**: contagem por nível de volume, busca por formato, projeção da programação semanal e sugestões sem uso registrado. Conferir equipamentos, queixas e experiência antes de copiar. A ausência de registro não prova ausência de uso.
-- **Cálculos do aluno**: original soma A–G uma vez; esperado incorpora as repetições semanais. ABCD em seis sessões corresponde a ABCDAB. Peso e fator de proteína são definidos pelo profissional; a calculadora não escolhe uma prescrição.
-- **Instruções**: modelos compartilhados editáveis, personalização por aluno e cópia manual. Os dez modelos iniciais são rascunhos baseados no fluxograma. Google Keep e Mfit não têm sincronização automática.
-- **Métodos**: nível dos métodos é registrado separadamente do nível do VSSAM. Não é inferido pela volumetria. Os dados e rótulos importados ficam preservados nas evidências e na auditoria.
-- O critério de frequência para sugerir avaliação de progressão é **75% ou mais**, com realizados e previstos do mesmo período. Nenhuma progressão ou liberação na Mfit ocorre automaticamente.
-
-Aplicar também as migrações de produção de 28/10/2026. As tabelas novas têm RLS, permissões da equipe e auditoria. A cópia de treino é transacional, valida a versão da origem, mantém proveniência e cria uma adaptação separada em elaboração.
-
-Verificação: testes de domínio, renderização das telas e ensaios transacionais de acesso e cópia. Não houve validação visual completa nesta atualização: o controle de navegador foi interrompido ao não conseguir verificar a URL de uma janela do Keep. A meta de 400 atendimentos/mês depende também da operação e ainda não foi validada em uso real.
+Executar npm test, node --check app.js e node scripts/build.mjs. Testes transacionais de produção devem sempre ser revertidos. A revisão de perfis consultou 53 cadastros e encontrou 28 nascimentos explícitos; os demais precisam ser preenchidos pela equipe ou pela integração autorizada.
