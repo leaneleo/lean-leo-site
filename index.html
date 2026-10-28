@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lean & Leo Fit</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/consultoria.css" />
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -16,9 +17,9 @@
       <span class="logo-text">Lean&Leofit</span>
     </div>
 
-    <div class="hamburger" onclick="toggleMenu()">☰</div>
+    <button class="hamburger" type="button" aria-label="Abrir menu" aria-controls="menu" aria-expanded="false">☰</button>
 
-    <nav class="menu">
+    <nav class="menu" id="menu" aria-label="Menu principal">
       <a href="index.html">Início</a><span class="dot">•</span>
       <a href="#resultados">Resultados</a><span class="dot">•</span>
       <a href="#consultoria">Consultoria Online</a><span class="dot">•</span>
@@ -32,6 +33,7 @@
   </div>
 </header>
 
+  <main>
   <section class="video-topo reveal">
     <video autoplay muted loop playsinline class="bg-video">
       <source src="videos/topo.mp4" type="video/mp4" />
@@ -44,17 +46,14 @@
   </section>
 
  <section class="grade-imagens reveal">
-  <img src="img/corpo-le-leo.png" alt="Leandro e Leonardo posando lado a lado" />
-  <img src="img/le-van-dan.jpg" alt="Leandro com Vanessa e Dani" />
-  <img src="img/leo-hellen-jess.png" alt="Leandro com Hellen e Jess" />
-  <img src="img/le-leo-emcasa.jpg" alt="Leandro e Leonardo em casa" />
-  <img src="img/leo-goiania.png" alt="Leandro em Goiânia" />
-  <img src="img/le-danca.png" alt="Leandro dançando" />
+  <img loading="lazy" decoding="async" src="img/corpo-le-leo.png" alt="Leandro e Leonardo posando lado a lado" />
+  <img loading="lazy" decoding="async" src="img/le-van-dan.jpg" alt="Leandro com Vanessa e Dani" />
+  <img loading="lazy" decoding="async" src="img/leo-hellen-jess.png" alt="Leandro com Hellen e Jess" />
+  <img loading="lazy" decoding="async" src="img/le-leo-emcasa.jpg" alt="Leandro e Leonardo em casa" />
+  <img loading="lazy" decoding="async" src="img/leo-goiania.png" alt="Leandro em Goiânia" />
+  <img loading="lazy" decoding="async" src="img/le-danca.png" alt="Leandro dançando" />
 </section>
 
-  <script src="js/main.js"></script>
-</body>
-</html>
 
     <section class="quemsomos reveal">
       
@@ -64,14 +63,14 @@
   <p>Aqui a gente emagrece mulheres com acolhimento, humor e verdade. É leve, é real.</p>
 
   <div class="imagens-quemsomos">
-   <img src="img/marcelina-shampoo.jpg" alt="Leandro e Leonardo vestidos como Marcelina e Dona Hermínia" />
-   <img src="img/praia-step-shirley.png" alt="Leandro e Leonardo vestidos como Shirley e Stefany na praia" />
+   <img loading="lazy" decoding="async" src="img/marcelina-shampoo.jpg" alt="Leandro e Leonardo vestidos como Marcelina e Dona Hermínia" />
+   <img loading="lazy" decoding="async" src="img/praia-step-shirley.png" alt="Leandro e Leonardo vestidos como Shirley e Stefany na praia" />
   </div>
 
 </section>
 
   <!-- Seção: Transformações (Carrossel Infinito) -->
-<section class="transformacoes">
+<section class="transformacoes" id="resultados" aria-label="Resultados das alunas">
   <div class="container-transformacoes">
   
     <div class="carrossel-track">
@@ -81,8 +80,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ANDRESSA</div>
       <div class="imagens-transformacao">
-        <img src="img/andressa-antes.png" alt="Andressa antes" />
-        <img src="img/andressa-depois.png" alt="Andressa depois" />
+        <img loading="lazy" decoding="async" src="img/andressa-antes.png" alt="Andressa antes" />
+        <img loading="lazy" decoding="async" src="img/andressa-depois.png" alt="Andressa depois" />
       </div>
       <div class="peso-tempo">–2,5kg em 45 dias</div>
       <p class="depoimento-transformacao">“Entrei no desafio na praça, adorei! Fiz no outro ano de novo e amei! Hoje faço a consultoria online, não largo de mão jamais.”</p>
@@ -92,8 +91,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ANNE</div>
       <div class="imagens-transformacao">
-        <img src="img/anne-antes.png" alt="Anne antes" />
-        <img src="img/anne-depois.png" alt="Anne depois" />
+        <img loading="lazy" decoding="async" src="img/anne-antes.png" alt="Anne antes" />
+        <img loading="lazy" decoding="async" src="img/anne-depois.png" alt="Anne depois" />
       </div>
       <div class="peso-tempo">–5kg em 45 dias</div>
       <p class="depoimento-transformacao">“Descobri que sou capaz de mudar minha saúde sem me cobrar demais. Nunca fui tão feliz no meu corpo.”</p>
@@ -103,8 +102,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">IASMIN</div>
       <div class="imagens-transformacao">
-        <img src="img/iasmin-antes.png" alt="Iasmin antes" />
-        <img src="img/iasmin-depois.png" alt="Iasmin depois" />
+        <img loading="lazy" decoding="async" src="img/iasmin-antes.png" alt="Iasmin antes" />
+        <img loading="lazy" decoding="async" src="img/iasmin-depois.png" alt="Iasmin depois" />
       </div>
       <div class="peso-tempo">–4,2kg em 45 dias</div>
       <p class="depoimento-transformacao">“Achei que seria difícil, mas fui acolhida desde o começo. Hoje me olho no espelho com orgulho do que conquistei.”</p>
@@ -114,8 +113,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">CARITA</div>
       <div class="imagens-transformacao">
-        <img src="img/carita-antes.png" alt="Carita antes" />
-        <img src="img/carita-depois.png" alt="Carita depois" />
+        <img loading="lazy" decoding="async" src="img/carita-antes.png" alt="Carita antes" />
+        <img loading="lazy" decoding="async" src="img/carita-depois.png" alt="Carita depois" />
       </div>
       <div class="peso-tempo">–2kg em 30 dias</div>
       <p class="depoimento-transformacao">“Nunca imaginei que 30 dias pudessem fazer tanta diferença. Me senti respeitada e motivada o tempo todo.”</p>
@@ -125,8 +124,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">MARIANA</div>
       <div class="imagens-transformacao">
-        <img src="img/mariana-antes.png" alt="Mariana antes" />
-        <img src="img/mariana-depois.png" alt="Mariana depois" />
+        <img loading="lazy" decoding="async" src="img/mariana-antes.png" alt="Mariana antes" />
+        <img loading="lazy" decoding="async" src="img/mariana-depois.png" alt="Mariana depois" />
       </div>
       <div class="peso-tempo">–3,5kg em 45 dias</div>
       <p class="depoimento-transformacao">“A leveza de vocês mudou meu jeito de me cuidar. Pela primeira vez, não senti culpa nem cobrança.”</p>
@@ -136,8 +135,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ELIARA</div>
       <div class="imagens-transformacao">
-        <img src="img/eliara-antes.png" alt="Eliara antes" />
-        <img src="img/eliara-depois.png" alt="Eliara depois" />
+        <img loading="lazy" decoding="async" src="img/eliara-antes.png" alt="Eliara antes" />
+        <img loading="lazy" decoding="async" src="img/eliara-depois.png" alt="Eliara depois" />
       </div>
       <div class="peso-tempo">–1,5kg em 30 dias</div>
       <p class="depoimento-transformacao">“Achei que meu resultado não seria visível, mas me surpreendi com a diferença e com a motivação que recebi.”</p>
@@ -147,7 +146,7 @@
     <div class="card-transformacao">
       <div class="topo-nome">DANI</div>
      <div class="imagens-transformacao unica">
-  <img src="img/resultado-dani.jpg" alt="Resultado da Dani" />
+  <img loading="lazy" decoding="async" src="img/resultado-dani.jpg" alt="Resultado da Dani" />
 </div>
       <div class="peso-tempo">–5kg em 40 dias</div>
       <p class="depoimento-transformacao">“Foram 40 dias que mudaram minha relação com o espelho. O apoio e o acolhimento fizeram toda a diferença.”</p>
@@ -157,8 +156,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ANDRESSA</div>
       <div class="imagens-transformacao">
-        <img src="img/andressa-antes.png" alt="Andressa antes" />
-        <img src="img/andressa-depois.png" alt="Andressa depois" />
+        <img loading="lazy" decoding="async" src="img/andressa-antes.png" alt="Andressa antes" />
+        <img loading="lazy" decoding="async" src="img/andressa-depois.png" alt="Andressa depois" />
       </div>
       <div class="peso-tempo">–2,5kg em 45 dias</div>
       <p class="depoimento-transformacao">“Entrei no desafio na praça, adorei! Fiz no outro ano de novo e amei! Hoje faço a consultoria online, não largo de mão jamais.”</p>
@@ -168,8 +167,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ANNE</div>
       <div class="imagens-transformacao">
-        <img src="img/anne-antes.png" alt="Anne antes" />
-        <img src="img/anne-depois.png" alt="Anne depois" />
+        <img loading="lazy" decoding="async" src="img/anne-antes.png" alt="Anne antes" />
+        <img loading="lazy" decoding="async" src="img/anne-depois.png" alt="Anne depois" />
       </div>
       <div class="peso-tempo">–5kg em 45 dias</div>
       <p class="depoimento-transformacao">“Descobri que sou capaz de mudar minha saúde sem me cobrar demais. Nunca fui tão feliz no meu corpo.”</p>
@@ -179,8 +178,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">IASMIN</div>
       <div class="imagens-transformacao">
-        <img src="img/iasmin-antes.png" alt="Iasmin antes" />
-        <img src="img/iasmin-depois.png" alt="Iasmin depois" />
+        <img loading="lazy" decoding="async" src="img/iasmin-antes.png" alt="Iasmin antes" />
+        <img loading="lazy" decoding="async" src="img/iasmin-depois.png" alt="Iasmin depois" />
       </div>
       <div class="peso-tempo">–4,2kg em 45 dias</div>
       <p class="depoimento-transformacao">“Achei que seria difícil, mas fui acolhida desde o começo. Hoje me olho no espelho com orgulho do que conquistei.”</p>
@@ -190,8 +189,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">CARITA</div>
       <div class="imagens-transformacao">
-        <img src="img/carita-antes.png" alt="Carita antes" />
-        <img src="img/carita-depois.png" alt="Carita depois" />
+        <img loading="lazy" decoding="async" src="img/carita-antes.png" alt="Carita antes" />
+        <img loading="lazy" decoding="async" src="img/carita-depois.png" alt="Carita depois" />
       </div>
       <div class="peso-tempo">–2kg em 30 dias</div>
       <p class="depoimento-transformacao">“Nunca imaginei que 30 dias pudessem fazer tanta diferença. Me senti respeitada e motivada o tempo todo.”</p>
@@ -201,8 +200,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">MARIANA</div>
       <div class="imagens-transformacao">
-        <img src="img/mariana-antes.png" alt="Mariana antes" />
-        <img src="img/mariana-depois.png" alt="Mariana depois" />
+        <img loading="lazy" decoding="async" src="img/mariana-antes.png" alt="Mariana antes" />
+        <img loading="lazy" decoding="async" src="img/mariana-depois.png" alt="Mariana depois" />
       </div>
       <div class="peso-tempo">–3,5kg em 45 dias</div>
       <p class="depoimento-transformacao">“A leveza de vocês mudou meu jeito de me cuidar. Pela primeira vez, não senti culpa nem cobrança.”</p>
@@ -212,8 +211,8 @@
     <div class="card-transformacao">
       <div class="topo-nome">ELIARA</div>
       <div class="imagens-transformacao">
-        <img src="img/eliara-antes.png" alt="Eliara antes" />
-        <img src="img/eliara-depois.png" alt="Eliara depois" />
+        <img loading="lazy" decoding="async" src="img/eliara-antes.png" alt="Eliara antes" />
+        <img loading="lazy" decoding="async" src="img/eliara-depois.png" alt="Eliara depois" />
       </div>
       <div class="peso-tempo">–1,5kg em 30 dias</div>
       <p class="depoimento-transformacao">“Achei que meu resultado não seria visível, mas me surpreendi com a diferença e com a motivação que recebi.”</p>
@@ -223,12 +222,13 @@
     <div class="card-transformacao">
       <div class="topo-nome">DANI</div>
      <div class="imagens-transformacao unica">
-  <img src="img/resultado-dani.jpg" alt="Resultado da Dani" />
+  <img loading="lazy" decoding="async" src="img/resultado-dani.jpg" alt="Resultado da Dani" />
 </div>
       <div class="peso-tempo">–5kg em 40 dias</div>
       <p class="depoimento-transformacao">“Foram 40 dias que mudaram minha relação com o espelho. O apoio e o acolhimento fizeram toda a diferença.”</p>
     </div>
-      
+  </div>
+  </div>
 </section>
 
     <section class="mockup-videos reveal">
@@ -238,7 +238,7 @@
       <video src="videos/carolzinha.mp4" controls playsinline></video>
     </div>
     <div class="mockup-card">
-      <img src="img/print-ana.png" alt="Depoimento Ana" />
+      <img loading="lazy" decoding="async" src="img/print-ana.png" alt="Depoimento Ana" />
     </div>
     <div class="mockup-card">
       <video src="videos/sarahekaell.mp4" controls playsinline></video>
@@ -247,18 +247,20 @@
   <p class="texto-conexao">Já teve uma conexão assim com seu personal?</p>
 </section>
 
-  </main>
 
-<section class="sessao-consultoria reveal">
-  <h2>CONSULTORIA ONLINE</h2>
-  <img src="img/banner-co-forms.png" alt="Banner Consultoria" class="banner-consultoria" />
+<section class="sessao-consultoria reveal" id="consultoria" aria-labelledby="titulo-consultoria">
+  <h2 id="titulo-consultoria">CONSULTORIA ONLINE</h2>
+  <nav class="consultoria-nav" aria-label="Nesta seção">
+    <a href="#como-funciona">Como funciona</a><a href="#acompanhamento">Acompanhamento</a><a href="#planos-consultoria">Planos</a>
+  </nav>
+  <img loading="lazy" decoding="async" src="img/banner-co-forms.png" alt="Banner Consultoria" class="banner-consultoria" />
 
-  <p class="texto-consultoria">
+  <p class="texto-consultoria" id="como-funciona">
     Nosso acompanhamento é 100% online e é ideal pra você que quer emagrecer de forma leve, realista e com orientação de verdade.<br />
     Treinos acessíveis com linguagem SIMPLES, no seu ritmo, com foco no que importa: resultados reais sem pressa e sem neura.
   </p>
 
-  <ul class="lista-consultoria">
+  <ul class="lista-consultoria" id="acompanhamento">
     <li>Treinos personalizados com vídeos explicativos</li>
     <li>Opções pra treinar em casa, na academia ou ao ar livre</li>
     <li>Planilhas mensais ajustadas conforme sua evolução</li>
@@ -269,12 +271,12 @@
   <p class="convite-final">“Estamos esperando seu clique para treinar com a gente.”</p>
 
   <div class="imagens-consultoria">
-    <img src="img/le-co-mfit.jpg" alt="Consultoria 1" />
-    <img src="img/le-leo-branco.jpg" alt="Consultoria 2" />
-    <img src="img/le-leo-emcasa.jpg" alt="Consultoria 3" />
+    <img loading="lazy" decoding="async" src="img/le-co-mfit.jpg" alt="Consultoria 1" />
+    <img loading="lazy" decoding="async" src="img/le-leo-branco.jpg" alt="Consultoria 2" />
+    <img loading="lazy" decoding="async" src="img/le-leo-emcasa.jpg" alt="Consultoria 3" />
   </div>
 
- <div class="cards-consultoria">
+ <div class="cards-consultoria" id="planos-consultoria" aria-label="Planos da consultoria">
     <!-- Plano Mensal -->
     <div class="card-consultoria styled">
       <div class="card-header">
@@ -292,7 +294,7 @@
         <li>✓ Brinde surpresa entregue na sua casa</li>
       </ul>
       <div class="selo-preco">De R$ 129,99<br><strong>Por R$ 100,00</strong></div>
-      <a href="#" class="botao-card-glass">Quero esse!</a>
+      <a href="https://wa.me/5562992141313?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Plano%20Mensal%20da%20consultoria%20online." target="_blank" rel="noopener noreferrer" class="botao-card-glass">Quero esse!</a>
     </div>
 
     <!-- Plano Trimestral -->
@@ -312,7 +314,7 @@
         <li>✓ Brinde surpresa entregue na sua casa</li>
       </ul>
       <div class="selo-preco">De R$ 349,98<br><strong>Por R$ 270,00</strong></div>
-      <a href="#" class="botao-card-glass">Quero esse!</a>
+      <a href="https://wa.me/5562992141313?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Plano%20Trimestral%20da%20consultoria%20online." target="_blank" rel="noopener noreferrer" class="botao-card-glass">Quero esse!</a>
     </div>
 
     <!-- Plano Semestral -->
@@ -333,27 +335,25 @@
         <li>✓ VSL “Verão sem Lesão” (Treino HIIT em casa) – R$ 89,90</li>
       </ul>
       <div class="selo-preco">De R$ 669,97<br><strong>Por R$ 500,00</strong></div>
-      <a href="#" class="botao-card-glass">Quero esse!</a>
+      <a href="https://wa.me/5562992141313?text=Ol%C3%A1!%20Quero%20saber%20mais%20sobre%20o%20Plano%20Semestral%20da%20consultoria%20online." target="_blank" rel="noopener noreferrer" class="botao-card-glass">Quero esse!</a>
     </div>
   </div>
 </section>
+  </main>
 
-  </div>
-</section>
-
-  <footer class="reveal">
+  <footer class="reveal" id="contato">
     <div class="redes">
-      <a href="https://www.instagram.com/leaneleofit/" target="_blank"><img src="img/instagram.png" alt="Instagram" /></a>
-      <a href="https://www.youtube.com/@leaneleofit" target="_blank"><img src="img/youtube.png" alt="YouTube" /></a>
-      <a href="https://www.facebook.com/leaneleofit" target="_blank"><img src="img/facebook.png" alt="Facebook" /></a>
+      <a href="https://www.instagram.com/leaneleofit/" target="_blank"><img loading="lazy" decoding="async" src="img/instagram.png" alt="Instagram" /></a>
+      <a href="https://www.youtube.com/@leaneleofit" target="_blank"><img loading="lazy" decoding="async" src="img/youtube.png" alt="YouTube" /></a>
+      <a href="https://www.facebook.com/leaneleofit" target="_blank"><img loading="lazy" decoding="async" src="img/facebook.png" alt="Facebook" /></a>
     </div>
     <p>&copy; 2025 Lean & Leo Fit. Todos os direitos reservados.</p>
     <p class="rodape-frase">Se você chegou até aqui, já é uma Diva Leve em potencial. Obrigado pela visita. 🧡 Le & Leo.</p>
   </footer>
 
   <div id="whatsapp-botao" class="reveal">
-    <a href="https://wa.me/5599999999999" target="_blank">
-      <img src="img/whatsapp-icon.png" alt="Fale conosco no WhatsApp" />
+    <a href="https://wa.me/5562992141313" target="_blank">
+      <img loading="lazy" decoding="async" src="img/whatsapp-icon.png" alt="Fale conosco no WhatsApp" />
     </a>
   </div>
 
