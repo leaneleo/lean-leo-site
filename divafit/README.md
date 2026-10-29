@@ -8,6 +8,14 @@ Identidade do sistema: DIVAFIT, com logo completa e silhueta feminina no ícone.
 Versão instalável pelo navegador, no mesmo endereço do sistema e sem lojas.
 Android: abrir no Chrome e usar Instalar DivaFit ou o menu Adicionar à tela
 inicial. iPhone: abrir no Safari, Compartilhar, Adicionar à Tela de Início.
+O botão de instalação fica no final da página, visível quando aberta no navegador,
+mesmo após uma instalação ou quando o convite nativo não está disponível.
+Na janela instalada, o rodapé é ocultado. A ajuda apresenta o ícone atual e os
+passos para revisar a atualização ou reinstalar uma instalação antiga.
+O navegador/Android controla o ícone e a abertura já instalados; o site não pode
+substituí-los no aparelho sem a atualização aceita ou uma nova instalação.
+Os arquivos de ícones têm URLs versionadas; caminhos antigos servem também a
+silhueta atual. A identidade do app e o endereço de início permanecem estáveis.
 Ao abrir pelo ícone, o sistema usa uma janela própria. Acesso restrito à equipe
 existente; esta versão não cria acesso para alunos nem altera permissões.
 

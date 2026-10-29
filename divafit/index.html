@@ -7,27 +7,32 @@
   <meta name="description" content="Gestão da Consultoria Online DivaFit: alunos, rotinas e prazos em um só lugar.">
   <title>DIVAFIT · Consultoria Online</title>
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" type="image/png" href="icons/divafit-192.png">
-  <link rel="apple-touch-icon" href="icons/divafit-apple.png">
+  <link rel="icon" type="image/png" href="icons/divafit-silhueta-20261029-192.png">
+  <link rel="apple-touch-icon" href="icons/divafit-silhueta-20261029-apple.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="student-style.css">
   <link rel="stylesheet" href="mobile.css">
   <link rel="stylesheet" href="brand.css">
 </head>
 <body>
-  <section id="app-install" class="app-install" aria-label="DivaFit no celular" hidden>
-    <img src="icons/divafit-192.png" width="40" height="40" alt="">
-    <div><strong>DivaFit no celular</strong><span>Abra pelo ícone na sua tela inicial.</span></div>
-    <button id="install-app" type="button" class="primary">Instalar DivaFit</button>
-    <button id="install-help" type="button" class="text-button">Como instalar</button>
-  </section>
   <div id="connection-state" class="connection-state" role="status" hidden>Sem conexão. Os dados na tela podem estar desatualizados. Para salvar alterações, conecte-se à internet.</div>
   <div id="app"></div>
+  <section id="app-install" class="app-install install-footer" aria-label="DivaFit no celular">
+    <img src="icons/divafit-silhueta-20261029-192.png" width="40" height="40" alt="">
+    <div><strong>DivaFit no celular</strong><span>Instale com a silhueta feminina na tela inicial.</span></div>
+    <button id="install-app" type="button" class="primary">Instalar DivaFit no celular</button>
+    <button id="install-help" type="button" class="text-button">Como instalar / atualizar ícone</button>
+  </section>
   <dialog id="install-guide" aria-labelledby="install-title">
     <div class="dialog-heading"><h2 id="install-title">DivaFit na tela inicial</h2><button id="close-install-guide" class="secondary" type="button" aria-label="Fechar instruções">Fechar</button></div>
     <p>Use o mesmo endereço do sistema e entre com seu acesso habitual. Os dados continuam compartilhados com a equipe.</p>
+    <div class="current-app-icon"><img src="icons/divafit-silhueta-20261029-192.png" width="72" height="72" alt="Ícone atual do DivaFit: silhueta feminina branca em fundo laranja e dourado"><p>Este é o ícone atual do DivaFit.</p></div>
     <h3>Android · Chrome</h3>
     <ol><li>Abra o DivaFit no Chrome do celular.</li><li>Toque no menu <strong>⋮</strong> e escolha <strong>Adicionar à tela inicial</strong> ou <strong>Instalar aplicativo</strong>.</li><li>Confirme a instalação. Depois, abra pelo ícone DivaFit.</li></ol>
+    <h3>Seu ícone ou a abertura ainda estão roxos?</h3>
+    <p>A instalação antiga pode manter o ícone e a imagem de abertura anteriores, mesmo com o sistema atualizado.</p>
+    <ol><li>Salve qualquer alteração em andamento e abra o DivaFit conectado à internet.</li><li>Se o menu do aplicativo oferecer <strong>Revisar atualização do app</strong>, revise e confirme a mudança para a silhueta.</li><li>Se essa opção não aparecer ou o ícone continuar antigo, desinstale a versão antiga do DivaFit no Android. Depois abra este endereço no Chrome e use <strong>Instalar DivaFit no celular</strong>, no final da página.</li></ol>
+    <p>Reinstalar exige entrar novamente. Os cadastros e as rotinas já salvos no sistema continuam no banco de dados da consultoria.</p>
     <h3>iPhone · Safari</h3>
     <ol><li>Abra o DivaFit no Safari.</li><li>Toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.</li><li>Confirme em <strong>Adicionar</strong>.</li></ol>
     <p>Se estiver dentro de outro aplicativo, abra o link no Chrome ou Safari. A instalação é feita pelo navegador; esta versão não exige download pela loja.</p>

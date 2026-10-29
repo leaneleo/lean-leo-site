@@ -13,7 +13,7 @@ window.addEventListener('beforeinstallprompt',event=>{
   event.preventDefault();pendingInstall=event;updateCard();
 });
 window.addEventListener('appinstalled',()=>{
-  pendingInstall=null;card.hidden=true;guide.close();
+  pendingInstall=null;updateCard();guide.close();
 });
 function showGuide(){if(!guide.open)guide.showModal();}
 help.addEventListener('click',showGuide);
@@ -21,7 +21,7 @@ document.querySelector('#close-install-guide').addEventListener('click',()=>guid
 install.addEventListener('click',async()=>{
   if(!pendingInstall){showGuide();return;}
   const prompt=pendingInstall;pendingInstall=null;install.disabled=true;
-  try{await prompt.prompt();const choice=await prompt.userChoice;if(choice.outcome==='accepted')card.hidden=true;}
+  try{await prompt.prompt();const choice=await prompt.userChoice;if(choice.outcome==='accepted')updateCard();}
   catch{showGuide();}
   finally{install.disabled=false;}
 });

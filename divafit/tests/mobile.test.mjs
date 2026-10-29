@@ -52,5 +52,35 @@ test('manifesto e ícones PNG têm as dimensões necessárias para instalação'
       const [width,height]=icon.sizes.split('x').map(Number);
       assert.equal(bytes.readUInt32BE(16),width);assert.equal(bytes.readUInt32BE(20),height);
     }
+    for(const [legacy,current]of [['icon-192.png','divafit-silhueta-20261029-192.png'],['leanleo-192.png','divafit-silhueta-20261029-192.png'],['divafit-512.png','divafit-silhueta-20261029-512.png']])
+      assert.deepEqual(await readFile(path.join(dir,legacy)),await readFile(path.join(dir,current)));
   }finally{await rm(dir,{recursive:true,force:true});}
+});
+test('instalação permanece disponível no navegador após instalar e oculta no modo aplicativo',async()=>{
+  const source=await readFile(new URL('../mobile.js',import.meta.url),'utf8');
+  function mount(standalone=false){
+    const handlers={},elements={};
+    for(const id of ['app-install','install-app','install-help','install-guide','connection-state','close-install-guide'])elements[id]={hidden:false,disabled:false,open:false,events:{},addEventListener(name,fn){this.events[name]=fn;},close(){this.open=false;},showModal(){this.open=true;}};
+    vm.runInNewContext(source,{
+      document:{querySelector:selector=>elements[selector.slice(1)]},
+      window:{matchMedia:()=>({matches:standalone,addEventListener(){}}),addEventListener:(name,fn)=>handlers[name]=fn,isSecureContext:false},
+      navigator:{onLine:true}
+    });
+    return {handlers,elements};
+  }
+  const browser=mount();
+  browser.handlers.appinstalled();
+  assert.equal(browser.elements['app-install'].hidden,false);
+  browser.handlers.beforeinstallprompt({preventDefault(){},prompt:async()=>{},userChoice:Promise.resolve({outcome:'accepted'})});
+  await browser.elements['install-app'].events.click();
+  assert.equal(browser.elements['app-install'].hidden,false);
+  await browser.elements['install-app'].events.click();
+  assert.equal(browser.elements['install-guide'].open,true);
+  assert.equal(mount(true).elements['app-install'].hidden,true);
+});
+test('o acesso à instalação fica depois do conteúdo, no rodapé',async()=>{
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.ok(html.indexOf('id="app-install"')>html.indexOf('id="app"'));
+  assert.match(html,/Instalar DivaFit no celular/);
+  assert.match(html,/Revisar atualização do app/);
 });
