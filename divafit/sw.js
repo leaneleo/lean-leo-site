@@ -1,5 +1,5 @@
-const CACHE='divafit-offline-v2';
-const FALLBACK=['/offline.html','/offline.css'];
+const CACHE='divafit-offline-v3';
+const FALLBACK=['/offline.html','/offline.css','/assets/brand/bannerdivafit.png'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FALLBACK)));
 });

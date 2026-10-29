@@ -1,7 +1,7 @@
 # Consultoria Online DivaFit
 
-Identidade visual permanente: Lean&LeoFit. Antes de alterar o visual, ler
-`BRAND.md`; usar `brand.css`, Comfortaa e os logotipos aprovados em `assets/brand`.
+Identidade do sistema: DIVAFIT, com logo completa e silhueta feminina no ícone. Antes de alterar o visual, ler
+`BRAND.md`; usar `brand.css`, Comfortaa e os arquivos DivaFit aprovados em `assets/brand`.
 
 ## Aplicativo no celular
 
@@ -11,12 +11,12 @@ inicial. iPhone: abrir no Safari, Compartilhar, Adicionar à Tela de Início.
 Ao abrir pelo ícone, o sistema usa uma janela própria. Acesso restrito à equipe
 existente; esta versão não cria acesso para alunos nem altera permissões.
 
-O manifest define identidade, escopo, cores e ícones PNG exportados do avatar oficial Lean&LeoFit e copiados pelo build.
+O manifest define identidade, escopo, cores e ícones PNG exportados do silhueta feminina da logo DIVAFIT e copiados pelo build.
 `mobile.js` oferece a instalação nativa quando o navegador permite e instruções
 quando não permite. A confirmação final da instalação é sempre do usuário.
 As atualizações continuam pela publicação do site.
 
-O service worker guarda somente `offline.html` e `offline.css`. Navegações
+O service worker guarda somente `offline.html`, `offline.css` e a logo pública DIVAFIT. Navegações
 consultam sempre a rede; requisições da API e respostas autenticadas nunca
 entram no cache do worker. Sem internet, há aviso ou página de reconexão, sem
 gravação offline. Nenhuma senha ou token é adicionado ao cache. O login atual

@@ -2,7 +2,9 @@
 :root{--brand-primary:#d54930;--brand-action:#c54930;--brand-gold:#f0b057;--brand-white:#fff;--brand-ink:#382e2a;--brand-muted:#78665e;--brand-surface:#fff8f1;--brand-line:#efdfd4;--purple:var(--brand-action);--mint:#fff0dc;--line:var(--brand-line);--muted:var(--brand-muted);font-family:Comfortaa,ui-sans-serif,system-ui,sans-serif;color:var(--brand-ink);background:#fdfaf7}
 body{background:#fdfaf7;color:var(--brand-ink)}
 .brand{color:var(--brand-ink);font-weight:700;font-size:24px;gap:10px}
-.brand-logo{width:58px;height:58px;flex:0 0 58px;object-fit:contain}
+.brand{display:block;padding:0 4px}
+.brand-wordmark{position:relative;display:block;width:100%;max-width:210px;height:68px;overflow:hidden;border-radius:10px;background:linear-gradient(90deg,var(--brand-primary),var(--brand-gold))}
+.brand-wordmark img{position:absolute;display:block;width:145%;max-width:none;height:auto;left:-22.5%;top:50%;transform:translateY(-50%)}
 .brand small{font-size:8px;letter-spacing:1.5px;color:var(--brand-muted);line-height:1.5}
 .workspace-label,.eyebrow{color:#a74428}
 nav button{color:var(--brand-muted)}
@@ -50,4 +52,4 @@ blockquote{color:#7d6253;border-left-color:var(--brand-gold)}
 .app-install img{border-radius:50%;background:white}
 #install-guide ol{color:#665146}
 .install-note{background:#fff2e2;color:#765339}
-@media(max-width:650px){.brand-logo{width:54px;height:54px;flex-basis:54px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}
+@media(max-width:650px){.brand-wordmark{width:210px;height:68px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}

@@ -16,10 +16,10 @@ function worker(fetchResult){
   });
   return {handlers,stored,matches};
 }
-test('o cache contém só a página pública de reconexão e seu estilo',async()=>{
+test('o cache contém somente a página de reconexão, seu estilo e a logo pública',async()=>{
   const w=worker(async()=>{});let promise;
   w.handlers.install({waitUntil:p=>promise=p});await promise;
-  assert.deepEqual(w.stored,['/offline.html','/offline.css']);
+  assert.deepEqual(w.stored,['/offline.html','/offline.css','/assets/brand/bannerdivafit.png']);
 });
 test('API, config, scripts e requisições de escrita não são interceptados',()=>{
   const w=worker(()=>{throw Error('não deve buscar');});

@@ -29,7 +29,7 @@ function updateConnection(){connection.hidden=navigator.onLine;}
 window.addEventListener('online',updateConnection);
 window.addEventListener('offline',updateConnection);
 updateConnection();
-// Somente a página informativa de desconexão é guardada. Sem cache de alunos,
+// Somente a página pública de desconexão, seu estilo e a logo são guardados. Sem cache de alunos,
 // respostas da API, credenciais ou páginas autenticadas.
 if('serviceWorker' in navigator && window.isSecureContext){
   navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).catch(()=>{});
