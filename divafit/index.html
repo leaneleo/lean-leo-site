@@ -1,1 +1,40 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#51314f"><title>Consultoria Online DivaFit</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="student-style.css"></head><body><div id="app"></div><script src="config.js"></script><script type="module" src="app.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#51314f">
+  <meta name="description" content="Gestão da Consultoria Online DivaFit: alunos, rotinas e prazos em um só lugar.">
+  <title>Consultoria Online DivaFit</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="student-style.css">
+  <link rel="stylesheet" href="mobile.css">
+</head>
+<body>
+  <section id="app-install" class="app-install" aria-label="DivaFit no celular" hidden>
+    <img src="icons/icon-192.png" width="40" height="40" alt="">
+    <div><strong>DivaFit no celular</strong><span>Abra pelo ícone na sua tela inicial.</span></div>
+    <button id="install-app" type="button" class="primary">Instalar DivaFit</button>
+    <button id="install-help" type="button" class="text-button">Como instalar</button>
+  </section>
+  <div id="connection-state" class="connection-state" role="status" hidden>Sem conexão. Os dados na tela podem estar desatualizados. Para salvar alterações, conecte-se à internet.</div>
+  <div id="app"></div>
+  <dialog id="install-guide" aria-labelledby="install-title">
+    <div class="dialog-heading"><h2 id="install-title">DivaFit na tela inicial</h2><button id="close-install-guide" class="secondary" type="button" aria-label="Fechar instruções">Fechar</button></div>
+    <p>Use o mesmo endereço do sistema e entre com seu acesso habitual. Os dados continuam compartilhados com a equipe.</p>
+    <h3>Android · Chrome</h3>
+    <ol><li>Abra o DivaFit no Chrome do celular.</li><li>Toque no menu <strong>⋮</strong> e escolha <strong>Adicionar à tela inicial</strong> ou <strong>Instalar aplicativo</strong>.</li><li>Confirme a instalação. Depois, abra pelo ícone DivaFit.</li></ol>
+    <h3>iPhone · Safari</h3>
+    <ol><li>Abra o DivaFit no Safari.</li><li>Toque em <strong>Compartilhar</strong> e depois em <strong>Adicionar à Tela de Início</strong>.</li><li>Confirme em <strong>Adicionar</strong>.</li></ol>
+    <p>Se estiver dentro de outro aplicativo, abra o link no Chrome ou Safari. A instalação é feita pelo navegador; esta versão não exige download pela loja.</p>
+    <p class="install-note">É necessário estar conectado à internet para consultar e salvar dados de alunos.</p>
+  </dialog>
+  <noscript>Ative o JavaScript no navegador para usar o DivaFit.</noscript>
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+  <script type="module" src="mobile.js"></script>
+</body>
+</html>

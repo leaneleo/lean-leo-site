@@ -1,10 +1,13 @@
 import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
+import {buildIcons} from './icons.mjs';
 const url=process.env.DIVAFIT_SUPABASE_URL||'', key=process.env.DIVAFIT_SUPABASE_PUBLIC_KEY||'';
 if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL Supabase inválida');
 if(key.startsWith('sb_secret_'))throw Error('Use somente a chave pública');
 if(key.split('.').length===3){try{const payload=JSON.parse(Buffer.from(key.split('.')[1],'base64url'));if(payload.role==='service_role')throw Error('Uma chave administrativa não pode ser publicada')}catch(e){throw e}}
 await mkdir('public',{recursive:true});
 for(const file of ['index.html','style.css','student-style.css','app.js','production-domain.js','production-ui.js','student-domain.js','student-ui.js','domain.js','api.js'])await copyFile(file,'public/'+file);
+for(const file of ['manifest.webmanifest','mobile.js','mobile.css','sw.js','offline.html','offline.css'])await copyFile(file,'public/'+file);
+await buildIcons('public/icons');
 await writeFile('public/config.js','window.DIVAFIT_CONFIG = '+JSON.stringify({supabaseUrl:url,supabaseKey:key})+';');
 // Apenas mídia pública; documentos e dados de alunos não fazem parte do site.
 async function copyMedia(source, destination) {

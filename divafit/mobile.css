@@ -1,0 +1,28 @@
+[hidden]{display:none!important}
+body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+.app-install{display:flex;align-items:center;gap:12px;padding:12px max(18px,env(safe-area-inset-left));background:#f0e9f1;border-bottom:1px solid #dfd2e1}
+.app-install img{border-radius:11px;flex-shrink:0}
+.app-install>div{margin-right:auto;min-width:0}
+.app-install strong{display:block;color:#51314f;font-size:13px}
+.app-install span{display:block;color:#76647b;font-size:11px;margin-top:4px;line-height:1.5}
+.connection-state{padding:14px 20px;background:#fff0d8;color:#754b0b;font-size:13px;line-height:1.6;border-bottom:1px solid #ead3af}
+#install-guide{max-width:560px}
+#install-guide h3{font-size:15px;color:var(--purple);margin-top:24px}
+#install-guide ol{padding-left:22px;font-size:14px;line-height:1.8;color:#514658}
+#install-guide li{margin-bottom:10px}
+.install-note{background:#f3eef4;padding:12px;border-radius:9px}
+@media(max-width:650px){
+  input,select,textarea{font-size:16px}
+  button,.primary,.secondary{min-height:44px}
+  .app-install{flex-wrap:wrap;gap:8px 12px;padding:12px 16px}
+  .app-install>div{flex:1}
+  .app-install #install-app{width:100%;order:2}
+  .app-install #install-help{order:1;font-size:11px;padding:6px}
+  header{flex-wrap:wrap}
+  .date-label{white-space:normal}
+  dialog{width:calc(100% - 20px);max-height:calc(100dvh - 24px);padding:20px}
+  .dialog-heading{gap:12px;align-items:flex-start}
+  .dialog-heading h2{font-size:20px}
+  .student-header .header-actions{width:100%}
+}
+@media(display-mode:standalone){.app-install{display:none!important}}
