@@ -22,3 +22,8 @@ export async function receipt(assignment,kind){return request('/rest/v1/message_
 export async function prepareCopy(args){return request('/rest/v1/rpc/prepare_training_copy',{method:'POST',body:JSON.stringify(args)})}
 
 export async function saveStudentRoutine(args){return request('/rest/v1/rpc/save_student_routine',{method:'POST',body:JSON.stringify(args)})}
+
+export const googleFormStatus=()=>request('/rest/v1/rpc/google_form_status',{method:'POST',body:'{}'});
+export const configureGoogleForm=hash=>request('/rest/v1/rpc/configure_google_form',{method:'POST',body:JSON.stringify({p_hash:hash})});
+
+export const reviewGoogleForms=(args={})=>request('/rest/v1/rpc/review_google_forms',{method:'POST',body:JSON.stringify(args)});

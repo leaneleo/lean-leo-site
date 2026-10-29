@@ -56,6 +56,17 @@ Produção, Fila e Fichas e Entregas saíram da navegação. Biblioteca conserva
 
 ## Segurança e validação
 
+### Entrada pelo Google Forms
+
+Formulário autorizado: `1sh8auc4F7zdrqVv-pl3ERwey6nKfE7dzWPx1U_7fgg4`, conta `leaneleofit@gmail.com`.
+Em Configurações, o administrador usa **Conectar Google Forms** para gerar uma chave exclusiva de recebimento e copiar o script privado. No Google Apps Script, salvar em um projeto dedicado, executar `instalarDivaFit` e revisar/autorizar as permissões do Google. Não publicar como web app. A instalação gera um gatilho de envio e um gatilho de repetição de pendências a cada 15 minutos. O usuário pode executar `importarAnterioresDivaFit` para lotes de até 15 respostas antigas. Não coloca chave administrativa do Supabase no Google ou no navegador; somente uma chave exclusiva, revogável, desse formulário.
+
+O endpoint `forms-intake` autentica essa chave por SHA-256, valida o formulário e limita o tamanho. O banco serializa gravações, evita repetição do mesmo evento e procura o aluno por e-mail, telefone ou nome normalizado. Quando existe um único cadastro compatível, só preenche lacunas e acrescenta a avaliação; preserva as anotações e os dados atuais. Quando há mais de um, guarda a resposta privada para o administrador vincular em **Revisar possíveis duplicidades**. Não cria rotina, cobrança nem autorização de WhatsApp.
+
+As respostas completas e a data ficam preservadas; o panorama organiza os relatos em Dados Gerais, Avaliação Física e Anamnese. Nascimento só é preenchido quando existe data explícita; idade avulsa e medidas ambíguas não são adivinhadas. Não infere classificação clínica nem risco cardiovascular. Há resumo legível e acesso separado ao texto original do contrato. O marcador “Última resposta recebida” confirma recebimento pelo DivaFit; gerar o código sozinho não confirma a instalação no Google. Depois de autorizar, validar com uma resposta real ou um lote histórico e conferir o cadastro. Não enviar respostas fictícias ao formulário de produção.
+
+O navegador de validação não estava disponível nesta alteração. Testes locais cobrem os filtros, os níveis, o mapeamento e a renderização. Testes transacionais remotos conferem recebimento, repetição, preservação e permissões, com rollback. O fluxo real Google → DivaFit depende da autorização do gatilho na conta Google.
+
 Aplicar as migrações em ordem. Todas as tabelas operacionais têm RLS, permissões de equipe, controle de versão e auditoria; pagamentos são restritos ao administrador. A gravação do resumo de rotina e o espelhamento do modelo exclusivo são transacionais. A cópia mantém origem e marca Igual quando a equipe não escolhe contá-la como Nova.
 
 Executar npm test, node --check app.js e node scripts/build.mjs. Testes transacionais de produção devem sempre ser revertidos. A revisão de perfis consultou 53 cadastros e encontrou 28 nascimentos explícitos; os demais precisam ser preenchidos pela equipe ou pela integração autorizada.
