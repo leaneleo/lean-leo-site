@@ -1,4 +1,4 @@
-const CACHE='divafit-offline-v1';
+const CACHE='divafit-offline-v2';
 const FALLBACK=['/offline.html','/offline.css'];
 self.addEventListener('install',event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FALLBACK)));

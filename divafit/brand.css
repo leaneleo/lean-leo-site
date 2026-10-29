@@ -1,0 +1,53 @@
+@font-face{font-family:Comfortaa;src:url('assets/brand/comfortaa.ttf') format('truetype');font-weight:300 700;font-style:normal;font-display:swap}
+:root{--brand-primary:#d54930;--brand-action:#c54930;--brand-gold:#f0b057;--brand-white:#fff;--brand-ink:#382e2a;--brand-muted:#78665e;--brand-surface:#fff8f1;--brand-line:#efdfd4;--purple:var(--brand-action);--mint:#fff0dc;--line:var(--brand-line);--muted:var(--brand-muted);font-family:Comfortaa,ui-sans-serif,system-ui,sans-serif;color:var(--brand-ink);background:#fdfaf7}
+body{background:#fdfaf7;color:var(--brand-ink)}
+.brand{color:var(--brand-ink);font-weight:700;font-size:24px;gap:10px}
+.brand-logo{width:58px;height:58px;flex:0 0 58px;object-fit:contain}
+.brand small{font-size:8px;letter-spacing:1.5px;color:var(--brand-muted);line-height:1.5}
+.workspace-label,.eyebrow{color:#a74428}
+nav button{color:var(--brand-muted)}
+nav button:hover{background:#fff6ed}
+nav button.nav-active{background:#fff0df;color:#923821;font-weight:700;box-shadow:inset 3px 0 var(--brand-primary)}
+.sidebar-footer{color:var(--brand-ink)}
+.avatar{background:#fff0df;color:#973a23}
+.primary{background:var(--brand-action);color:white}
+.primary:hover{background:#a93823}
+.secondary{color:#913b25;border-color:#e7caba;background:white}
+.secondary:hover{background:#fff7ed}
+.text-button,.link-button{color:#a33c24}
+.muted{color:var(--brand-muted)}
+.date-label{color:#77665d;border-color:var(--line)}
+.preview-banner,.production-hero{background:#fff0de;border-color:#edd4b9;color:#7d4d26}
+.production-hero h2{color:#963a25}
+.preview-banner p{color:#7d4d26}
+.notice-panel{background:#fff7ed}
+.s0{background:#fff0df}.s0 strong{color:#a44325}
+.s1{background:#fff}.s1 strong{color:#58443a}
+.s2{background:#fff4d9}.s2 strong{color:#805115}
+.s3{background:#fce8e0}.s3 strong{color:#9e3c27}
+.stat span,.stat small{color:#806b60}
+.tag{background:#fff0df;color:#8f4822}
+.tag.danger{background:#fae8e2;color:#9a3925}
+td small,th{color:#887369}
+.field{color:#776056}
+input,select,textarea{color:var(--brand-ink);border-color:#e6d7cd}
+input:focus,select:focus,textarea:focus{outline-color:#c56b46}
+button:focus-visible,a:focus-visible{outline:2px solid #a33c24;outline-offset:3px}
+.empty-icon{color:#cc9f83}.empty h3{color:#776056}
+.volume{background:#fff9f3}
+blockquote{color:#7d6253;border-left-color:var(--brand-gold)}
+.finance-totals{color:#806759}
+.production-card>small{color:var(--brand-muted)}
+.stage-strip .selected,.level-grid .selected{background:#fff0de;border-color:#c66f42;color:#913921}
+.level-grid button{background:#fff9f3;border-color:var(--line);color:#913b25}
+.check-step small{color:#8b7569}
+.current-step{background:#fff4e7}
+.sticky-actions{background:#fff5e9}
+.routine-notes-row{background:#fffaf5}
+.header-observations summary{color:#a33c24}
+.app-install{background:#fff1e0;border-color:#efd7bc}
+.app-install strong{color:#913b25}.app-install span{color:#80614d}
+.app-install img{border-radius:50%;background:white}
+#install-guide ol{color:#665146}
+.install-note{background:#fff2e2;color:#765339}
+@media(max-width:650px){.brand-logo{width:54px;height:54px;flex-basis:54px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}

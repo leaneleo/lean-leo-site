@@ -1,5 +1,8 @@
 # Consultoria Online DivaFit
 
+Identidade visual permanente: Lean&LeoFit. Antes de alterar o visual, ler
+`BRAND.md`; usar `brand.css`, Comfortaa e os logotipos aprovados em `assets/brand`.
+
 ## Aplicativo no celular
 
 Versão instalável pelo navegador, no mesmo endereço do sistema e sem lojas.
@@ -8,7 +11,7 @@ inicial. iPhone: abrir no Safari, Compartilhar, Adicionar à Tela de Início.
 Ao abrir pelo ícone, o sistema usa uma janela própria. Acesso restrito à equipe
 existente; esta versão não cria acesso para alunos nem altera permissões.
 
-O manifest define identidade, escopo, cores e ícones PNG gerados pelo build.
+O manifest define identidade, escopo, cores e ícones PNG exportados do avatar oficial Lean&LeoFit e copiados pelo build.
 `mobile.js` oferece a instalação nativa quando o navegador permite e instruções
 quando não permite. A confirmação final da instalação é sempre do usuário.
 As atualizações continuam pela publicação do site.
