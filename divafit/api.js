@@ -27,3 +27,5 @@ export const googleFormStatus=()=>request('/rest/v1/rpc/google_form_status',{met
 export const configureGoogleForm=hash=>request('/rest/v1/rpc/configure_google_form',{method:'POST',body:JSON.stringify({p_hash:hash})});
 
 export const reviewGoogleForms=(args={})=>request('/rest/v1/rpc/review_google_forms',{method:'POST',body:JSON.stringify(args)});
+
+export const saveCopyControl=args=>request('/rest/v1/rpc/save_copy_control',{method:'POST',body:JSON.stringify(args)});

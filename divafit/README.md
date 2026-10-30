@@ -56,6 +56,14 @@ Produção, Fila e Fichas e Entregas saíram da navegação. Biblioteca conserva
 
 ## Segurança e validação
 
+### Nível atual, sugestões e controle de cópia
+
+O cabeçalho usa a rotina mais recente já iniciada. Prioriza nível/volume esperado; quando só existe o original, o selo indica que o esperado está pendente. Não confunde volumetria com nível dos métodos. O nível é editável na rotina. A bancada abaixo do cabeçalho começa comparando o próximo intervalo de volume e permite mudar formato, dias por semana, VSSAM alvo e filtro de uso anterior. Não substitui a decisão da prescritora nem libera rotina automaticamente. Criar a cópia usa o RPC existente, preserva origem e abre o rascunho para adaptação.
+
+Controle de cópia fica logo após a biblioteca. Tem um cartão por aluno, ordenação alfabética, pesquisa por nome, ficha de destino, múltiplas origens, volumes original/esperado, nível, observações e confirmação de revisão. Quando o volume antigo não distingue original de esperado, aparece como informado sem tipo; não é convertido por suposição. Origens vinculadas ajudam a identificar usos anteriores nas sugestões. Campos numéricos, nomes, ficha, nível e notas são editáveis. Alterar um registro de volume da origem no controle não modifica a rotina de outro aluno. O RPC preserva evidências de importação, faz gravação transacional e verifica concorrência, permissões e vínculos.
+
+A importação de 30/10/2026 cruzou o controle de cópias com 34 documentos individuais: 116 controles (77 com origem informada, 59 com anotações complementares). Seis fichas históricas encontradas apenas no controle foram recuperadas em elaboração, com período, volumes e formato pendentes. Evidências e citações ficam somente no banco privado; não fazem parte do site público nem do repositório. Nenhuma classificação, data ou volume atual foi substituído pela importação de origens. A sincronização contínua com a Mfit continua dependendo de uma integração própria autorizada; instalar seu plugin no chat não a ativa.
+
 ### Entrada pelo Google Forms
 
 Formulário autorizado: `1sh8auc4F7zdrqVv-pl3ERwey6nKfE7dzWPx1U_7fgg4`, conta `leaneleofit@gmail.com`.
