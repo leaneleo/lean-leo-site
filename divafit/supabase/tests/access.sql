@@ -1,0 +1,20 @@
+-- Ensaio manual obrigatório, em um projeto de teste com a migração aplicada.
+-- Substituir somente os UUIDs abaixo por contas reais de teste criadas no Auth.
+-- Não executar com dados de produção. Cada ensaio deve ser seguido de rollback.
+-- Administrador SQL ignora RLS; SET LOCAL ROLE authenticated é indispensável.
+--
+-- begin;
+-- set local role authenticated;
+-- select set_config('request.jwt.claim.sub', '<UUID-DA-PRESCRITORA>', true);
+-- select public.divafit_role(); -- trainer
+-- select * from public.payments; -- zero linhas
+-- select * from public.audit_log; -- zero linhas
+-- insert into public.payments(student_ids,plan) values(array['<UUID-ALUNO>']::uuid[],'teste');
+-- Esperado: bloqueio RLS. A transação fica abortada: rollback antes do próximo ensaio.
+-- rollback;
+--
+-- Repetir com admin: SELECT/INSERT/UPDATE de pagamentos devem funcionar.
+-- Repetir com conta autenticada sem team_members: nenhuma tabela operacional deve retornar linhas.
+-- Como anon: SELECT/INSERT/UPDATE devem ser negados.
+-- Como trainer/admin: alterações em team_members e audit_log devem ser negadas.
+-- Testar dois PATCH de uma ficha com mesma versão: só o primeiro pode alterar uma linha.
