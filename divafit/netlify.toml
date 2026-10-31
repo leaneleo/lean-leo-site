@@ -2,6 +2,12 @@
   publish = "public"
   command = "node scripts/build.mjs"
 
+[[redirects]]
+  from = "https://consultoria-divafit.netlify.app/*"
+  to = "https://app.leeleo.com.br/:splat"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
