@@ -1,0 +1,49 @@
+[build]
+  publish = "public"
+  command = "node scripts/build.mjs"
+
+[[redirects]]
+  from = "https://consultoria-divafit.netlify.app/*"
+  to = "https://app.leeleo.com.br/:splat"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "DENY"
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self' https://*.supabase.co; img-src 'self' data:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'"
+
+[[headers]]
+  for = "/config.js"
+  [headers.values]
+    Cache-Control = "no-store"
+
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
