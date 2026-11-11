@@ -27,3 +27,7 @@ await copyMedia('assets','public/assets');
 await mkdir('public/assets/brand',{recursive:true});
 for(const file of ['comfortaa.ttf','OFL.txt'])await copyFile('assets/brand/'+file,'public/assets/brand/'+file);
 console.log(url&&key?'Interface preparada. Valide o banco antes de usar dados reais.':'Interface preparada em modo de apresentação, sem conexão ou dados.');
+
+await mkdir('public/checkout/divafit/retorno',{recursive:true});
+for(const file of ['index.html','checkout.css','checkout.js','retorno.js'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
+await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.html');
