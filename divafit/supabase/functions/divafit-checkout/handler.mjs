@@ -11,13 +11,15 @@ export function createHandler({env,fetcher=fetch}){
   const provider=async(path,body)=>{const r=await fetcher('https://api.checkout.infinitepay.io/'+path,{method:'POST',headers:{'content-type':'application/json','X-Api-Key':env.INFINITEPAY_API_KEY},body:JSON.stringify(body),signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error('A InfinitePay não concluiu a solicitação.');return r.json()};
   try{
    const raw=await req.text();if(raw.length>16000)return reply({error:'Solicitação muito grande.'},413);const input=JSON.parse(raw);const route=new URL(req.url).searchParams.get('route')||'quote';
-   const enabled=env.CHECKOUT_ENABLED==='true'&&env.CHECKOUT_TERMS_APPROVED==='true'&&Boolean(env.INFINITEPAY_API_KEY&&env.INFINITEPAY_HANDLE&&env.TURNSTILE_SECRET_KEY);
+   const paymentReady=env.CHECKOUT_RECEIVER_VERIFIED==='true'&&Boolean(env.INFINITEPAY_API_KEY&&env.INFINITEPAY_HANDLE);
+   const termsReady=env.CHECKOUT_TERMS_APPROVED==='true'&&Boolean(env.CHECKOUT_TERMS_VERSION&&env.CHECKOUT_TERMS_VERSION!=='rascunho'&&env.CHECKOUT_TERMS_VERSION.length<=80);
+   const enabled=env.CHECKOUT_ENABLED==='true'&&paymentReady&&termsReady&&Boolean(env.TURNSTILE_SECRET_KEY&&env.TURNSTILE_SITE_KEY);
    if(route==='quote'){
     let coupon=null;const code=String(input.coupon||'').trim().toUpperCase();if(code){if(!/^[A-Z0-9_-]{3,32}$/.test(code))throw Error('Cupom inválido.');const rows=await db('checkout_coupons?code=eq.'+encodeURIComponent(code)+'&select=*',null,'GET');coupon=rows[0];if(!coupon)throw Error('Cupom não encontrado.');}
     return reply({...quote(input.plan,coupon),enabled,turnstile_site_key:env.TURNSTILE_SITE_KEY||null,terms_version:env.CHECKOUT_TERMS_VERSION||'rascunho'});
    }
-   if(!enabled)return reply({error:'As vendas ainda não foram ativadas. Nenhuma cobrança foi criada.'},503);
    if(route==='create'){
+    if(!enabled)return reply({error:'As vendas ainda não foram ativadas. Nenhuma cobrança foi criada.'},503);
     const person=customer(input);if(!uuid.test(input.request_id||''))throw Error('Atualize a página e tente novamente.');
     const captcha=await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:new URLSearchParams({secret:env.TURNSTILE_SECRET_KEY,response:String(input.challenge||'')}),signal:AbortSignal.timeout(8000)}).then(r=>r.json());if(!captcha.success||!['app.leeleo.com.br','leeleo.com.br','www.leeleo.com.br'].includes(captcha.hostname))throw Error('Confirme a verificação de segurança.');
     const fingerprint=await sha(JSON.stringify({person,plan:input.plan,coupon:String(input.coupon||'').trim().toUpperCase()}));const token=String(input.request_id);const tokenHash=await sha(token);
@@ -30,6 +32,7 @@ export function createHandler({env,fetcher=fetch}){
     if(!uuid.test(input.order_nsu||''))throw Error('Pedido inválido.');const rows=await db('checkout_orders?id=eq.'+input.order_nsu+'&select=id,status,onboarding_status,token_hash,plan,months',null,'GET');const order=rows[0];if(!order||order.token_hash!==await sha(req.headers.get('x-checkout-token')||''))return reply({error:'Pedido não encontrado.'},404);return reply({status:order.status,onboarding_status:order.onboarding_status,plan:order.plan,months:order.months});
    }
    if(route==='webhook'||route==='confirm'){
+    if(!paymentReady)return reply({error:'A conta recebedora ainda não foi conferida para confirmação de pagamentos.'},503);
     if(!uuid.test(input.order_nsu||''))throw Error('Pedido inválido.');const rows=await db('checkout_orders?id=eq.'+input.order_nsu+'&select=*',null,'GET');const order=rows[0];if(!order)throw Error('Pedido não encontrado.');
     const slug=input.invoice_slug||input.slug,transaction=input.transaction_nsu;if(typeof slug!=='string'||slug.length>200||typeof transaction!=='string'||transaction.length>200)throw Error('Dados de pagamento incompletos.');
     const check=await provider('payment_check',{handle:env.INFINITEPAY_HANDLE,order_nsu:order.id,transaction_nsu:transaction,slug});
@@ -41,3 +44,4 @@ export function createHandler({env,fetcher=fetch}){
   }catch(err){return reply({error:err instanceof SyntaxError?'Solicitação inválida.':err.message||'Não foi possível concluir.'},400);}
  };
 }
+
