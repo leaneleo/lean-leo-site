@@ -8,6 +8,7 @@
 - Garantia de 30 dias com condições escritas (seguir o programa = formulário + fotos, 75% dos treinos, registro no MFIT, reavaliação; pedido até o 37º dia; devolução em até 7 dias úteis; não substitui o art. 49 do CDC). Texto na página **aprovado pelo Leandro em 19/11, 15h40**.
 - Vendedor: 66.715.938 LEANDRO DE AMORIM ROMACHELI (MEI), CNPJ 66.715.938/0001-04, Rua C20, 75, Jardim América, Goiânia-GO, 74265-100.
 - Urgência só verdadeira: 10 vagas por mês, contando apenas pagamentos confirmados no mês (fuso de São Paulo). Liga com o segredo CHECKOUT_MONTHLY_SLOTS=10. Sem prazo falso; validade só em campanha real.
+- Financeiro (decisão de 19/11, 17h14): mensalidades do personal presencial NÃO passam pela InfinitePay; cada aluno paga direto na conta do seu personal (Leandro ou Leonardo). O sistema só contabiliza. A InfinitePay fica para a consultoria online. Próximo passo: o Leandro vai enviar os relatórios de vendas da InfinitePay de 2026 (ano todo) para criarmos a importação no Financeiro (bruto, taxa, líquido, no cartão DivaFit).
 - Falta para abrir: Turnstile (TURNSTILE_SITE_KEY/SECRET), aprovação final dos termos, publicar função + página, compra real de teste com estorno.
 
 Oferta informada:
