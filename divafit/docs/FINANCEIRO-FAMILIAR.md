@@ -6,14 +6,14 @@ Aula usa a tarifa válida na data e preserva esse valor. Recebimento é um lanç
 
 Dados em `private`, RLS negando acesso direto, funções exigindo administrador real da equipe. Na leitura do banco atual, Leandro é administrador, Elisângela é treinadora e Leonardo não tem conta cadastrada. O card dele não exige criar usuário; acesso próprio é uma etapa separada.
 
-**Ativado em produção após autorização explícita de Leandro em 19/11/2026.** A migração foi aplicada no banco DivaFit; a importação privada foi conferida e a publicação no Netlify confirmou o commit de integração `36555c6`. O teste transacional no banco real confirmou cálculo e cancelamento pelo administrador e bloqueio da treinadora; os registros de teste foram desfeitos. Os dados sem tarifa continuam a conferir e a aba com data-base divergente permanece preservada como fonte, sem aulas lançadas por suposição. A conferência visual autenticada ainda precisa ser concluída.
+**Ativado em produção após autorização explícita de Leandro em 19/11/2026.** A migração foi aplicada no banco DivaFit; a importação privada foi conferida e a publicação no Netlify confirmou o commit de integração `36555c6`. O teste transacional no banco real confirmou cálculo e cancelamento pelo administrador e bloqueio da treinadora; os registros de teste foram desfeitos. Os dados sem tarifa continuam a conferir e a aba com data-base divergente permanece preservada como fonte, sem aulas lançadas por suposição. Conferência autenticada: os três cards e o valor mensal carregaram; o total anual exibido foi comparado ao banco. O controle de período ganhou botão Aplicar período, com ano ativo na visão anual e mês ativo na visão mensal. A atualização foi publicada e testada com login: seleção/aplicação de 2025 conferiu com o banco; novembro de 2026 foi restaurado e o texto de aula preencheu aluno e tarifa sem salvar um atendimento fictício. A conexão com o navegador deixou de responder após o descarte do preenchimento de teste; a verificação posterior do banco confirmou que nenhum lançamento novo foi criado.
 
 ## Validação
 
 - 67 testes Node aprovados; build e verificação de sintaxe aprovados.
 - PostgreSQL isolado: autorização, RLS, preços por data, centavos, repetição, conflitos e cancelamento com histórico.
 - DOM simulado: três cards, texto para aula, confirmação, soma e limpeza/bloqueio ao perder acesso.
-- Chromium local não iniciou por restrição de socket do ambiente. A primeira tentativa local não concluiu teste visual. A validação autenticada do site publicado está em andamento.
+- Chromium local não iniciou por restrição de socket do ambiente. A primeira tentativa local não concluiu teste visual. A validação autenticada posterior conferiu cartões, período anual/mensal e tarifa por texto no site publicado.
 
 Testes adicionais: `scripts/test-finance-sql.mjs` (PGlite 0.5.16 via PGLITE_MODULE_PATH) e `scripts/test-finance-dom.mjs` (JSDOM 26.1.0 via JSDOM_MODULE_PATH), instalados somente no ambiente temporário. Nenhuma nova dependência do aplicativo.
 

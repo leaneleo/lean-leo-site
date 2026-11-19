@@ -10,3 +10,4 @@
 - Após autorização explícita de Leandro: migração aplicada no banco DivaFit, importação privada conferida e publicação confirmada no Netlify. Teste transacional real confirmou cálculo/cancelamento e bloqueio da treinadora, com rollback dos testes. Dados desconhecidos continuam a conferir; planilha original preservada. Conferência visual autenticada em andamento.
 
 - Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
+- Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
