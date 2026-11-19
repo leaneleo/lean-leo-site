@@ -8,3 +8,5 @@
 - Extração de Excel e preparação de SQL privado sem execução. Dados reais não versionados.
 - 67 testes Node, banco isolado e DOM aprovados. Build aprovado; teste visual bloqueado pelo ambiente.
 - Após autorização explícita de Leandro: migração aplicada no banco DivaFit, importação privada conferida e publicação confirmada no Netlify. Teste transacional real confirmou cálculo/cancelamento e bloqueio da treinadora, com rollback dos testes. Dados desconhecidos continuam a conferir; planilha original preservada. Conferência visual autenticada em andamento.
+
+- Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
