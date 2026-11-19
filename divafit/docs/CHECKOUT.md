@@ -5,7 +5,7 @@
 - Segredos já salvos na Edge Function (19/11, 15h30): INFINITEPAY_API_KEY, INFINITEPAY_HANDLE=romeland, CHECKOUT_RECEIVER_VERIFIED=true, CHECKOUT_ENABLED=false, CHECKOUT_TERMS_APPROVED=false, CHECKOUT_TERMS_VERSION=rascunho.
 - Taxa do parcelamento: paga pela cliente em todas as parcelas (`options.assured_installments: 0`).
 - Preços riscados de referência voltam (R$ 197,00 e R$ 591,00), conforme o plano mestre.
-- Garantia de 30 dias com condições escritas (seguir o programa = formulário + fotos, 75% dos treinos, registro no MFIT, reavaliação; pedido até o 37º dia; devolução em até 7 dias úteis; não substitui o art. 49 do CDC). Texto na página, aguardando aprovação final do Leandro.
+- Garantia de 30 dias com condições escritas (seguir o programa = formulário + fotos, 75% dos treinos, registro no MFIT, reavaliação; pedido até o 37º dia; devolução em até 7 dias úteis; não substitui o art. 49 do CDC). Texto na página **aprovado pelo Leandro em 19/11, 15h40**.
 - Vendedor: 66.715.938 LEANDRO DE AMORIM ROMACHELI (MEI), CNPJ 66.715.938/0001-04, Rua C20, 75, Jardim América, Goiânia-GO, 74265-100.
 - Urgência só verdadeira: 10 vagas por mês, contando apenas pagamentos confirmados no mês (fuso de São Paulo). Liga com o segredo CHECKOUT_MONTHLY_SLOTS=10. Sem prazo falso; validade só em campanha real.
 - Falta para abrir: Turnstile (TURNSTILE_SITE_KEY/SECRET), aprovação final dos termos, publicar função + página, compra real de teste com estorno.
