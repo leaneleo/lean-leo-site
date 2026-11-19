@@ -54,3 +54,18 @@ test('Link da InfinitePay repassa a taxa de todas as parcelas para a cliente',()
  const p=providerPayload({id:'x',plan:'quarterly',months:4,card_cents:38415,pix_cents:36000,expires_at:'2026-12-01T00:00:00Z',customer:{name:'Ana',email:'a@b.co',phone:'5562999999999'}},readyEnv);
  assert.equal(p.options.assured_installments,0);assert.equal(p.items[0].price,38415);assert.ok(p.options.discounts.pix>6&&p.options.discounts.pix<6.3);
 });
+
+test('Aceita o link no formato atual da InfinitePay (checkout.infinitepay.io) e recusa outros domínios',async()=>{
+ const rodar=async linkUrl=>{let salvo=null;const fetcher=async(url,init={})=>{
+  if(url.includes('siteverify'))return Response.json({success:true,hostname:'app.leeleo.com.br'});
+  if(url.endsWith('/rpc/create_checkout_order'))return Response.json({id:'d5763e2a-21e0-44c3-8a08-1d3f00af8ee0',status:'creating',plan:'monthly',months:1,card_cents:7880,pix_cents:7880,expires_at:'2026-11-20T02:59:59Z',customer:{name:'Leandro Teste',email:'l@t.co',phone:'5562999999999'}});
+  if(url==='https://api.checkout.infinitepay.io/links')return Response.json({url:linkUrl});
+  if(url.includes('checkout_orders?id=eq.')){salvo=JSON.parse(init.body);return new Response(null,{status:204});}
+  throw Error('inesperado '+url);};
+  const r=await createHandler({env:readyEnv,fetcher})(request('create',{plan:'monthly',name:'Leandro Teste',email:'l@t.co',phone:'62999999999',accepted:true,request_id:'0b8f6a52-6d2e-4f5e-9a1b-2c3d4e5f6a7b',challenge:'ok'}));
+  return {status:r.status,body:await r.json(),salvo};};
+ const ok=await rodar('https://checkout.infinitepay.io/romeland?lenc=abc.v1.def');
+ assert.equal(ok.status,200);assert.equal(ok.body.checkout_url,'https://checkout.infinitepay.io/romeland?lenc=abc.v1.def');assert.equal(ok.salvo.status,'pending');
+ const ruim=await rodar('https://checkout.golpe.example/romeland');
+ assert.equal(ruim.status,400);assert.match(ruim.body.error,/Link de pagamento inválido/);
+});

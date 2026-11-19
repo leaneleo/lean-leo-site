@@ -28,7 +28,7 @@ export function createHandler({env,fetcher=fetch}){
     const fingerprint=await sha(JSON.stringify({person,plan:input.plan,coupon:String(input.coupon||'').trim().toUpperCase()}));const token=String(input.request_id);const tokenHash=await sha(token);
     const order=await db('rpc/create_checkout_order',{p_request:input.request_id,p_hash:fingerprint,p_token:tokenHash,p_plan:input.plan,p_customer:person,p_coupon:String(input.coupon||'').trim().toUpperCase(),p_terms:env.CHECKOUT_TERMS_VERSION});
     if(order.status==='paid')return reply({status:'paid'});if(order.checkout_url)return reply({checkout_url:order.checkout_url});
-    const payload=providerPayload(order,env);const payment=await provider('links',payload);const url=new URL(payment.url||payment.checkout_url||'');if(url.protocol!=='https:'||url.hostname!=='buy.infinitepay.io')throw Error('Link de pagamento inválido.');
+    const payload=providerPayload(order,env);const payment=await provider('links',payload);const url=new URL(payment.url||payment.checkout_url||'');if(url.protocol!=='https:'||!['checkout.infinitepay.io','buy.infinitepay.io'].includes(url.hostname))throw Error('Link de pagamento inválido.');
     await db('checkout_orders?id=eq.'+order.id,{checkout_url:url.href,status:'pending'},'PATCH');return reply({checkout_url:url.href});
    }
    if(route==='status'){
