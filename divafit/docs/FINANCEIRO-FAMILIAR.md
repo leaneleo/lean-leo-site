@@ -6,14 +6,14 @@ Aula usa a tarifa válida na data e preserva esse valor. Recebimento é um lanç
 
 Dados em `private`, RLS negando acesso direto, funções exigindo administrador real da equipe. Na leitura do banco atual, Leandro é administrador, Elisângela é treinadora e Leonardo não tem conta cadastrada. O card dele não exige criar usuário; acesso próprio é uma etapa separada.
 
-**Código não publicado, migração não aplicada e dados não importados para produção.** A revisão automática rejeitou a aplicação de `supabase/financeiro.sql` por exigir aprovação explícita para alteração persistente de produção. Não aplicar por outro caminho sem resolver a aprovação.
+**Ativado em produção após autorização explícita de Leandro em 19/11/2026.** A migração foi aplicada no banco DivaFit; a importação privada foi conferida e a publicação no Netlify confirmou o commit de integração `36555c6`. O teste transacional no banco real confirmou cálculo e cancelamento pelo administrador e bloqueio da treinadora; os registros de teste foram desfeitos. Os dados sem tarifa continuam a conferir e a aba com data-base divergente permanece preservada como fonte, sem aulas lançadas por suposição. A conferência visual autenticada ainda precisa ser concluída.
 
 ## Validação
 
 - 67 testes Node aprovados; build e verificação de sintaxe aprovados.
 - PostgreSQL isolado: autorização, RLS, preços por data, centavos, repetição, conflitos e cancelamento com histórico.
 - DOM simulado: três cards, texto para aula, confirmação, soma e limpeza/bloqueio ao perder acesso.
-- Chromium local não iniciou por restrição de socket do ambiente. Não houve teste visual nem teste autenticado das novas telas no site real.
+- Chromium local não iniciou por restrição de socket do ambiente. A primeira tentativa local não concluiu teste visual. A validação autenticada do site publicado está em andamento.
 
 Testes adicionais: `scripts/test-finance-sql.mjs` (PGlite 0.5.16 via PGLITE_MODULE_PATH) e `scripts/test-finance-dom.mjs` (JSDOM 26.1.0 via JSDOM_MODULE_PATH), instalados somente no ambiente temporário. Nenhuma nova dependência do aplicativo.
 
@@ -25,4 +25,4 @@ Leandro confirmou que a planilha localizada no Drive pertence a ele. O original 
 
 A extração encontrou dados sem tarifa, diferença de fechamento e uma aba com data-base divergente. Essas aulas não podem ser confirmadas por suposição. Abas anuais devem ser preservadas como fontes privadas; investimentos, saldos e dívidas não são renda. Consultoria já paga não deve ser duplicada pelos mesmos registros do Excel. **A substituição integral da planilha ainda não está concluída.**
 
-Após aprovação: aplicar somente a migração no banco DivaFit `ycchdswqaekdupmrnszz`, revisar/importar as fontes privadas, publicar no projeto Netlify `consultoria-divafit`, conferir totais e bloqueio da treinadora. O site institucional usa main; o DivaFit atual foi identificado no commit `ffc99443c0aace618b3746c635a1001612d277ee`, branch `codex/divafit-gestao-inicial`. Não publicar essas alterações na main institucional.
+Migração aplicada somente no banco DivaFit `ycchdswqaekdupmrnszz`, revisar/importar as fontes privadas, publicar no projeto Netlify `consultoria-divafit`, conferir totais e bloqueio da treinadora. O site institucional usa main; o DivaFit atual foi identificado no commit `ffc99443c0aace618b3746c635a1001612d277ee`, branch `codex/divafit-gestao-inicial`. Não publicar essas alterações na main institucional.

@@ -82,6 +82,6 @@ Aplicar as migrações em ordem. Todas as tabelas operacionais têm RLS, permiss
 Executar npm test, node --check app.js e node scripts/build.mjs. Testes transacionais de produção devem sempre ser revertidos. A revisão de perfis consultou 53 cadastros e encontrou 28 nascimentos explícitos; os demais precisam ser preenchidos pela equipe ou pela integração autorizada.
 
 
-## Financeiro familiar — em revisão
+## Financeiro familiar
 
-Ampliação da aba Financeiro descrita em `docs/FINANCEIRO-FAMILIAR.md`. Migração e importação não foram aplicadas em produção. Dados reais do Excel não pertencem ao código público.
+Ampliação da aba Financeiro descrita em `docs/FINANCEIRO-FAMILIAR.md`. Migração e importação aplicadas após autorização de Leandro; dados desconhecidos permanecem a conferir. Dados reais do Excel não pertencem ao código público.
