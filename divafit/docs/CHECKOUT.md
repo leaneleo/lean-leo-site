@@ -66,3 +66,11 @@ https://www.infinitepay.io/checkout-documentacao
 - Estornos/cancelamentos exigem revisão no provedor.
 - WhatsApp oficial e alterações na MFIT continuam sem automação nesta revisão. Nenhuma mensagem é enviada.
 
+
+## 19/11 (noite) — ajustes após o 1º teste
+- Resumo mostra: valor do plano → cupom (código, % e valor abatido) → total a pagar (cartão e Pix; uma linha só quando são iguais).
+- Selos -20% (Mensal) e -35% em destaque (Trimestral); Trimestral mostra o Pix como "39% de desconto".
+- Erros do banco aparecem com o motivo real (cupom esgotado, cupom indisponível para o plano etc.).
+- Se a InfinitePay falhar ao gerar o link, o pedido vira `canceled` na hora e não prende cupom nem vaga.
+- Depois de um erro, a página gera um novo pedido (novo request_id) e reinicia a verificação anti-robô.
+- Cupom TESTE-DIVAFIT: 50%, só Mensal, 1 uso, até 19/11 23h59. Desativar após o teste.
