@@ -14,12 +14,15 @@ export function createHandler({env,fetcher=fetch}){
    const paymentReady=env.CHECKOUT_RECEIVER_VERIFIED==='true'&&Boolean(env.INFINITEPAY_API_KEY&&env.INFINITEPAY_HANDLE);
    const termsReady=env.CHECKOUT_TERMS_APPROVED==='true'&&Boolean(env.CHECKOUT_TERMS_VERSION&&env.CHECKOUT_TERMS_VERSION!=='rascunho'&&env.CHECKOUT_TERMS_VERSION.length<=80);
    const enabled=env.CHECKOUT_ENABLED==='true'&&paymentReady&&termsReady&&Boolean(env.TURNSTILE_SECRET_KEY&&env.TURNSTILE_SITE_KEY);
+   // Vagas reais do mês (só pagamentos confirmados contam). CHECKOUT_MONTHLY_SLOTS vazio = sem limite.
+   const vagas=async()=>{const total=Number(env.CHECKOUT_MONTHLY_SLOTS||0);if(!Number.isInteger(total)||total<1)return null;const sp=new Date(Date.now()-3*3600e3);const inicio=new Date(Date.UTC(sp.getUTCFullYear(),sp.getUTCMonth(),1,3)).toISOString();const rows=await db('checkout_orders?status=eq.paid&paid_at=gte.'+encodeURIComponent(inicio)+'&select=id',null,'GET');return {total,restantes:Math.max(0,total-rows.length)}};
    if(route==='quote'){
     let coupon=null;const code=String(input.coupon||'').trim().toUpperCase();if(code){if(!/^[A-Z0-9_-]{3,32}$/.test(code))throw Error('Cupom inválido.');const rows=await db('checkout_coupons?code=eq.'+encodeURIComponent(code)+'&select=*',null,'GET');coupon=rows[0];if(!coupon)throw Error('Cupom não encontrado.');}
-    return reply({...quote(input.plan,coupon),enabled,turnstile_site_key:env.TURNSTILE_SITE_KEY||null,terms_version:env.CHECKOUT_TERMS_VERSION||'rascunho'});
+    return reply({...quote(input.plan,coupon),enabled,vagas:await vagas(),turnstile_site_key:env.TURNSTILE_SITE_KEY||null,terms_version:env.CHECKOUT_TERMS_VERSION||'rascunho'});
    }
    if(route==='create'){
     if(!enabled)return reply({error:'As vendas ainda não foram ativadas. Nenhuma cobrança foi criada.'},503);
+    const v=await vagas();if(v&&v.restantes<1)return reply({error:'As vagas deste mês acabaram. Nenhuma cobrança foi criada.'},409);
     const person=customer(input);if(!uuid.test(input.request_id||''))throw Error('Atualize a página e tente novamente.');
     const captcha=await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:new URLSearchParams({secret:env.TURNSTILE_SECRET_KEY,response:String(input.challenge||'')}),signal:AbortSignal.timeout(8000)}).then(r=>r.json());if(!captcha.success||!['app.leeleo.com.br','leeleo.com.br','www.leeleo.com.br'].includes(captcha.hostname))throw Error('Confirme a verificação de segurança.');
     const fingerprint=await sha(JSON.stringify({person,plan:input.plan,coupon:String(input.coupon||'').trim().toUpperCase()}));const token=String(input.request_id);const tokenHash=await sha(token);

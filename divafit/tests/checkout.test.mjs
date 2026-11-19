@@ -34,6 +34,23 @@ test('Preços inteiros e desconto de cupom calculados no servidor',()=>{assert.e
 test('Valores pagos não são confundidos com principal ou taxas líquidas',()=>{const o={card_cents:38415,pix_cents:36000};assert.equal(verifiedPayment({success:true,paid:true,amount:38415,paid_amount:40000,capture_method:'credit_card'},o),true);assert.equal(verifiedPayment({success:true,paid:true,amount:38415,paid_amount:36000,capture_method:'pix'},o),true);for(const value of [{success:true,paid:false,amount:38415,paid_amount:40000,capture_method:'credit_card'},{success:true,paid:true,amount:15760,paid_amount:38415,capture_method:'credit_card'},{success:true,paid:true,amount:38415,paid_amount:35999,capture_method:'pix'}])assert.equal(verifiedPayment(value,o),false)});
 test('Retorno e webhook não liberam acompanhamento com integração desativada',async()=>{let calls=0;const handler=createHandler({env:{},fetcher:async()=>{calls++;throw Error('Não deveria conectar')}});for(const route of ['create','confirm','webhook']){const r=await handler(new Request('https://test/?route='+route,{method:'POST',body:'{}'}));assert.equal(r.status,503)}assert.equal(calls,0)});
 test('Dados incompletos, consentimento implícito e origem externa são rejeitados',async()=>{assert.throws(()=>customer({name:'Teste',email:'x@y.com',phone:'62999999999'}));const c=customer({name:'Pessoa Teste',email:'X@y.com',phone:'62999999999',accepted:true});assert.equal(c.whatsapp_consent,false);assert.equal(c.email,'x@y.com');const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',headers:{Origin:'https://evil.example'},body:'{}'}));assert.equal(r.status,403)});
-test('Link usa valores persistidos, cobrança única e expiração; não promete parcelas',()=>{const payload=providerPayload({id:'order',plan:'quarterly',card_cents:38415,pix_cents:36000,months:4,expires_at:'2026-12-01T00:00:00Z',customer:{name:'Teste',email:'t@example.com',phone:'5562999999999'}},{INFINITEPAY_HANDLE:'teste',SUPABASE_URL:'https://example.supabase.co'});assert.equal(payload.items[0].price,38415);assert.equal(payload.options.single_payment,true);assert.equal('assured_installments' in payload.options,false);assert.equal(Math.round(38415*(1-payload.options.discounts.pix/100)),36000)});
+test('Link usa valores persistidos, cobrança única, expiração e taxa das parcelas paga pela cliente (decisão de 19/11)',()=>{const payload=providerPayload({id:'order',plan:'quarterly',card_cents:38415,pix_cents:36000,months:4,expires_at:'2026-12-01T00:00:00Z',customer:{name:'Teste',email:'t@example.com',phone:'5562999999999'}},{INFINITEPAY_HANDLE:'teste',SUPABASE_URL:'https://example.supabase.co'});assert.equal(payload.items[0].price,38415);assert.equal(payload.options.single_payment,true);assert.equal(payload.options.assured_installments,0);assert.equal(Math.round(38415*(1-payload.options.discounts.pix/100)),36000)});
 test('O navegador não determina preço, duração ou confirmação na cotação',async()=>{const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',body:JSON.stringify({plan:'quarterly',card:1,pix:1,months:99,paid:true})}));const q=await r.json();assert.equal(q.card,38415);assert.equal(q.months,4);assert.equal(q.enabled,false)});
 
+
+test('Vagas reais: contam só pagamentos confirmados do mês e fecham a venda quando acabam',async()=>{
+ let pagos=3,consulta='';
+ const fetcher=async url=>{if(url.includes('checkout_orders?status=eq.paid')){consulta=url;return Response.json(Array.from({length:pagos},(_,i)=>({id:String(i)})));}throw Error('Requisição inesperada');};
+ const handler=createHandler({env:{...readyEnv,CHECKOUT_MONTHLY_SLOTS:'10'},fetcher});
+ const q=await(await handler(request('quote',{plan:'quarterly'}))).json();
+ assert.deepEqual(q.vagas,{total:10,restantes:7});assert.match(decodeURIComponent(consulta),/paid_at=gte\.\d{4}-\d{2}-01T03:00:00\.000Z/);
+ pagos=10;
+ assert.equal((await(await handler(request('quote',{plan:'monthly'}))).json()).vagas.restantes,0);
+ const r=await handler(request('create',{plan:'monthly'}));assert.equal(r.status,409);assert.match((await r.json()).error,/vagas deste mês acabaram/);
+ assert.equal((await(await createHandler({env:readyEnv,fetcher})(request('quote',{plan:'monthly'}))).json()).vagas,null,'sem limite configurado');
+});
+
+test('Link da InfinitePay repassa a taxa de todas as parcelas para a cliente',()=>{
+ const p=providerPayload({id:'x',plan:'quarterly',months:4,card_cents:38415,pix_cents:36000,expires_at:'2026-12-01T00:00:00Z',customer:{name:'Ana',email:'a@b.co',phone:'5562999999999'}},readyEnv);
+ assert.equal(p.options.assured_installments,0);assert.equal(p.items[0].price,38415);assert.ok(p.options.discounts.pix>6&&p.options.discounts.pix<6.3);
+});
