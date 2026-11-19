@@ -2,3 +2,10 @@
 
 .plan input[type=radio]{width:16px;height:16px;flex:0 0 16px;align-self:flex-start;}
 .vagas{margin:-6px 0 14px;font-size:13px;font-weight:700;color:#c4501a;background:#fff3ea;border:1px solid #f3cdb3;border-radius:10px;padding:8px 12px}
+.off{display:inline-block;font-style:normal;font-size:12px;font-weight:700;color:#fff;background:#d84d1e;border-radius:20px;padding:2px 9px;margin-left:6px;vertical-align:middle}
+.off-big{font-size:15px;padding:4px 12px;background:#c4501a}
+.pix-destaque{display:block;font-weight:700;color:#246139;margin:2px 0 4px}
+.summary .coupon-row dd{color:#246139;font-weight:700}
+.summary .total dt,.summary .total dd{font-weight:700;font-size:16px;color:#282626}
+.summary .total{border-top:1px solid #ead9cc;padding-top:8px}
+.summary .pix-row{border-top:0;padding-top:0}

@@ -69,3 +69,21 @@ test('Aceita o link no formato atual da InfinitePay (checkout.infinitepay.io) e 
  const ruim=await rodar('https://checkout.golpe.example/romeland');
  assert.equal(ruim.status,400);assert.match(ruim.body.error,/Link de pagamento inválido/);
 });
+
+test('Falha no link cancela o pedido (não prende cupom) e o motivo real do banco aparece para a cliente',async()=>{
+ const corpo={plan:'monthly',name:'Leandro Teste',email:'l@t.co',phone:'62999999999',accepted:true,request_id:'0b8f6a52-6d2e-4f5e-9a1b-2c3d4e5f6a7b',challenge:'ok',coupon:'TESTE-DIVAFIT'};
+ let cancelado=null;
+ const base=async(url,init={})=>{if(url.includes('siteverify'))return Response.json({success:true,hostname:'app.leeleo.com.br'});
+  if(url.endsWith('/rpc/create_checkout_order'))return Response.json({id:'d5763e2a-21e0-44c3-8a08-1d3f00af8ee0',status:'creating',plan:'monthly',months:1,card_cents:7880,pix_cents:7880,expires_at:'2026-11-20T02:59:59Z',customer:{name:'Leandro Teste',email:'l@t.co',phone:'5562999999999'}});
+  if(url==='https://api.checkout.infinitepay.io/links')return Response.json({url:'https://outro.exemplo/x'});
+  if(url.includes('checkout_orders?id=eq.')&&url.includes('status=eq.creating')){cancelado=JSON.parse(init.body);return new Response(null,{status:204});}
+  throw Error('inesperado '+url);};
+ const r=await createHandler({env:readyEnv,fetcher:base})(request('create',corpo));
+ assert.equal(r.status,400);assert.match((await r.json()).error,/Nenhuma cobrança foi feita/);assert.deepEqual(cancelado,{status:'canceled'});
+ const esgotado=async(url,init)=>url.endsWith('/rpc/create_checkout_order')?Response.json({message:'Cupom esgotado'},{status:400}):base(url,init);
+ const r2=await createHandler({env:readyEnv,fetcher:esgotado})(request('create',corpo));
+ assert.equal((await r2.json()).error,'Cupom esgotado.');
+ const fechado=async(url,init)=>url.endsWith('/rpc/create_checkout_order')?Response.json({id:'d5763e2a-21e0-44c3-8a08-1d3f00af8ee0',status:'canceled'}):base(url,init);
+ const r3=await createHandler({env:readyEnv,fetcher:fechado})(request('create',corpo));
+ assert.equal(r3.status,409);
+});

@@ -4,7 +4,7 @@ export function quote(planKey,coupon=null,now=new Date()){
  let discount=0;
  if(coupon){if(!coupon.active||(coupon.starts_at&&Date.parse(coupon.starts_at)>+now)||(coupon.ends_at&&Date.parse(coupon.ends_at)<=+now)||(coupon.plan&&coupon.plan!==planKey))throw Error('Cupom indisponível para este plano.');if(coupon.max_uses!=null&&coupon.uses>=coupon.max_uses)throw Error('Cupom esgotado.');discount=Number(coupon.percent_bps||0);if(!Number.isInteger(discount)||discount<1||discount>9000)throw Error('Cupom inválido.');}
  const card=plan.card-Math.floor(plan.card*discount/10000),pix=plan.pix-Math.floor(plan.pix*discount/10000);
- return {plan:planKey,name:plan.name,months:plan.months+plan.bonus,bonus:plan.bonus,original:plan.original,card,pix,coupon:coupon?.code||null,discount_bps:discount};
+ return {plan:planKey,name:plan.name,months:plan.months+plan.bonus,bonus:plan.bonus,original:plan.original,list_card:plan.card,list_pix:plan.pix,card,pix,coupon:coupon?.code||null,discount_bps:discount};
 }
 export function customer(input){const name=String(input.name||'').trim(),email=String(input.email||'').trim().toLowerCase();let phone=String(input.phone||'').replace(/\D/g,'');if(phone.length===10||phone.length===11)phone='55'+phone;if(name.length<3||name.length>150||!/^\S+@\S+\.\S+$/.test(email)||email.length>254||!/^55\d{10,11}$/.test(phone)||input.accepted!==true)throw Error('Confira nome, e-mail, WhatsApp e aceite das condições.');return {name,email,phone,whatsapp_consent:input.whatsapp_consent===true};}
 export function verifiedPayment(check,order){
