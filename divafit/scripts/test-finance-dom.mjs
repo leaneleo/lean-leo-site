@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+const {JSDOM}=await import(process.env.JSDOM_MODULE_PATH||'jsdom');
+const dom=new JSDOM('<!doctype html><div id="family-finance"></div>',{url:'https://fixture.invalid'});
+globalThis.document=dom.window.document;globalThis.Node=dom.window.Node;globalThis.confirm=()=>true;
+const {createFinanceWorkspace}=await import('../finance-ui.js');
+let admin=true,calls=0,created=[],notices=[];
+const data={clients:[{id:'a',name:'Aluno Teste',code:'teste',bucket:'leandro'}],rates:[{client_id:'a',starts_on:'2000-01-01',cents:11000}],entries:[],sources:[]};
+const api={financeWorkspace:async()=>{calls++;return structuredClone(data);},financeEntryCreate:async args=>{created.push(args);data.entries.push({client_id:'a',bucket:'leandro',kind:'aula',day:args.p_day,quantity:1,cents:11000,status:'confirmado'});}};
+const ui=createFinanceWorkspace({api,isAdmin:()=>admin,payments:()=>[],notice:t=>notices.push(t)});await ui.mount();
+const box=document.querySelector('#family-finance');assert.equal(box.querySelectorAll('.finance-cards article').length,3);assert(box.textContent.includes('Personal Leonardo Landim'));
+const quick=[...box.querySelectorAll('label')].find(l=>l.textContent.startsWith('Registro rápido')).querySelector('input');quick.value='Hoje Aluno Teste treinou com Leandro';
+[...box.querySelectorAll('button')].find(b=>b.textContent==='Preencher aula pelo texto').click();
+const form=box.querySelector('form');assert.equal(form.querySelectorAll('select')[2].value,'a');form.dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,10));
+assert.equal(created.length,1);assert.equal(created[0].p_cents,null);assert(box.textContent.includes('1 aulas'));assert(box.textContent.includes('110,00'));assert(notices.some(n=>n.includes('Nenhuma mensagem')));
+admin=false;ui.clear();const before=calls;await ui.mount();assert.equal(calls,before);assert.equal(box.textContent,'');
+console.log('DOM: três cards, texto para preencher aula, confirmação, soma e limpeza/bloqueio ao perder acesso aprovados. Não substitui teste visual no navegador.');

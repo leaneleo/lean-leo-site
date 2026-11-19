@@ -29,3 +29,9 @@ export const configureGoogleForm=hash=>request('/rest/v1/rpc/configure_google_fo
 export const reviewGoogleForms=(args={})=>request('/rest/v1/rpc/review_google_forms',{method:'POST',body:JSON.stringify(args)});
 
 export const saveCopyControl=args=>request('/rest/v1/rpc/save_copy_control',{method:'POST',body:JSON.stringify(args)});
+
+
+export const financeWorkspace=year=>request('/rest/v1/rpc/finance_workspace',{method:'POST',body:JSON.stringify({p_year:year})});
+export const financeEntryCreate=args=>request('/rest/v1/rpc/finance_entry_create',{method:'POST',body:JSON.stringify(args)});
+export const financeClientCreate=args=>request('/rest/v1/rpc/finance_client_create',{method:'POST',body:JSON.stringify(args)});
+export const financeEntryCancel=args=>request('/rest/v1/rpc/finance_entry_cancel',{method:'POST',body:JSON.stringify(args)});

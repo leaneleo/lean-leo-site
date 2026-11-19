@@ -1,0 +1,23 @@
+import {readFile} from 'node:fs/promises';import assert from 'node:assert/strict';
+const {PGlite}=await import(process.env.PGLITE_MODULE_PATH||'@electric-sql/pglite');const db=new PGlite();
+const admin='10000000-0000-4000-8000-000000000001',trainer='10000000-0000-4000-8000-000000000002';
+await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid$$;insert into auth.users values('${admin}'),('${trainer}');`);
+await db.exec(await readFile(new URL('../supabase/migrations/001_divafit.sql',import.meta.url),'utf8'));
+await db.exec(`insert into public.team_members values('${admin}','Administrador','admin'),('${trainer}','Treinadora','trainer')`);
+await db.exec(await readFile(new URL('../supabase/financeiro.sql',import.meta.url),'utf8'));
+const query=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
+const deny=fn=>assert.rejects(fn,e=>e.code==='42501');
+await deny(()=>query('select finance_workspace(2026)'));
+await db.exec(`set request.jwt.claim.sub='${trainer}'`);await deny(()=>query('select finance_workspace(2026)'));await deny(()=>query("select finance_client_create('leandro','Aluno A','a',11000,'2026-01-01')"));
+await db.exec(`set request.jwt.claim.sub='${admin}'`);
+const id=await query("select finance_client_create('leandro','Aluno A','a',11000,'2026-01-01')");
+const sql="select finance_entry_create($1,$2,'leandro','aula','2026-11-19',2,null,'Teste')",args=['20000000-0000-4000-8000-000000000001',id];
+const e=await query(sql,args);assert.equal(e.cents,22000);assert.equal(e.unit_cents,11000);const repeat=await query(sql,args);assert.equal(repeat.id,e.id);assert.equal(await query('select count(*)::int from private.finance_entries'),1);
+await assert.rejects(()=>query("select finance_entry_create($1,$2,'leonardo','aula','2026-11-19',2,null,'Teste')",['20000000-0000-4000-8000-000000000002',id]));
+await assert.rejects(()=>query("select finance_entry_create($1,$2,'leandro','aula','2025-11-19',2,null,'Teste')",['20000000-0000-4000-8000-000000000003',id]));
+await assert.rejects(()=>query("select finance_entry_create($1,$2,'leandro','aula','2026-11-19',3,null,'Teste')",args));
+await query('select finance_entry_cancel($1,$2)',[e.id,e.version]);await assert.rejects(()=>query('select finance_entry_cancel($1,$2)',[e.id,e.version]));assert.equal(await query('select count(*)::int from private.finance_entries'),1);
+await db.exec(`set request.jwt.claim.sub='${trainer}';set role authenticated`);await deny(()=>query('select finance_workspace(2026)'));await deny(()=>query('select * from private.finance_entries'));await deny(()=>query('select * from private.finance_sources'));await deny(()=>query('select finance_entry_cancel($1,1)',[e.id]));
+await db.exec('reset role;set role anon');await deny(()=>query('select finance_workspace(2026)'));
+if(process.env.FINANCE_IMPORT_SQL){await db.exec('reset role');const seed=await readFile(process.env.FINANCE_IMPORT_SQL,'utf8');await db.exec(seed);await db.exec(seed);assert.equal(await query("select count(*)::int from private.finance_entries where source_key='organizacao-le:fixture:B4'"),1);assert.equal(await query("select cents::int from private.finance_entries where source_key='organizacao-le:fixture:B4'"),11000);}
+console.log('PostgreSQL isolado: preços por data, centavos, idempotência, concorrência, cancelamento com histórico e bloqueio de treinadora/anônimo aprovados.');await db.close();

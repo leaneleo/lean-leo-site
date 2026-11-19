@@ -80,3 +80,8 @@ O navegador de validação não estava disponível nesta alteração. Testes loc
 Aplicar as migrações em ordem. Todas as tabelas operacionais têm RLS, permissões de equipe, controle de versão e auditoria; pagamentos são restritos ao administrador. A gravação do resumo de rotina e o espelhamento do modelo exclusivo são transacionais. A cópia mantém origem e marca Igual quando a equipe não escolhe contá-la como Nova.
 
 Executar npm test, node --check app.js e node scripts/build.mjs. Testes transacionais de produção devem sempre ser revertidos. A revisão de perfis consultou 53 cadastros e encontrou 28 nascimentos explícitos; os demais precisam ser preenchidos pela equipe ou pela integração autorizada.
+
+
+## Financeiro familiar — em revisão
+
+Ampliação da aba Financeiro descrita em `docs/FINANCEIRO-FAMILIAR.md`. Migração e importação não foram aplicadas em produção. Dados reais do Excel não pertencem ao código público.
