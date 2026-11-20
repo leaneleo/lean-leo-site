@@ -5,7 +5,7 @@
 - Segredos já salvos na Edge Function (19/11, 15h30): INFINITEPAY_API_KEY, INFINITEPAY_HANDLE=romeland, CHECKOUT_RECEIVER_VERIFIED=true, CHECKOUT_ENABLED=false, CHECKOUT_TERMS_APPROVED=false, CHECKOUT_TERMS_VERSION=rascunho.
 - Taxa do parcelamento: paga pela cliente em todas as parcelas (`options.assured_installments: 0`).
 - Preços riscados de referência voltam (R$ 197,00 e R$ 591,00), conforme o plano mestre.
-- Garantia de 30 dias com condições escritas (seguir o programa = formulário + fotos, 75% dos treinos, registro no MFIT, reavaliação; pedido até o 37º dia; devolução em até 7 dias úteis; não substitui o art. 49 do CDC). Texto na página **aprovado pelo Leandro em 19/11, 15h40**.
+- (substituído em 19/11 21h50, ver abaixo) Garantia de 30 dias com condições escritas (seguir o programa = formulário + fotos, 75% dos treinos, registro no MFIT, reavaliação; pedido até o 37º dia; devolução em até 7 dias úteis; não substitui o art. 49 do CDC). Texto na página **aprovado pelo Leandro em 19/11, 15h40**.
 - Vendedor: 66.715.938 LEANDRO DE AMORIM ROMACHELI (MEI), CNPJ 66.715.938/0001-04, Rua C20, 75, Jardim América, Goiânia-GO, 74265-100.
 - Urgência só verdadeira: 10 vagas por mês, contando apenas pagamentos confirmados no mês (fuso de São Paulo). Liga com o segredo CHECKOUT_MONTHLY_SLOTS=10. Sem prazo falso; validade só em campanha real.
 - Financeiro (decisão de 19/11, 17h14): mensalidades do personal presencial NÃO passam pela InfinitePay; cada aluno paga direto na conta do seu personal (Leandro ou Leonardo). O sistema só contabiliza. A InfinitePay fica para a consultoria online. Próximo passo: o Leandro vai enviar os relatórios de vendas da InfinitePay de 2026 (ano todo) para criarmos a importação no Financeiro (bruto, taxa, líquido, no cartão DivaFit).
@@ -80,3 +80,5 @@ https://www.infinitepay.io/checkout-documentacao
 - O pedido de teste foi arquivado (`archived=true`) e não ocupa vaga; o cadastro de teste da "aluna" foi arquivado. Cupom TESTE-DIVAFIT desativado.
 - Vagas: lotes de 5 (segredo opcional CHECKOUT_LOTE_SLOTS; padrão 5; 0 desliga). Cada pagamento confirmado não arquivado ocupa 1; ao fechar o lote, abre outro de 5. Texto na página: "Lote atual: restam X vagas de 5". CHECKOUT_MONTHLY_SLOTS deixou de ser usado.
 - Página de retorno refeita: confere o pagamento sozinha (a cada 4 s por ~1 min), mostra as etapas Pagamento → Avaliação → Treino e só libera o botão do formulário depois da confirmação.
+- Garantia (decisão do Leandro, 19/11 21h49): 30 dias no total a partir da compra. Dias 1–7: arrependimento por qualquer motivo (CDC art. 49). Dias 8–30: devolução se a aluna seguiu o programa (mesmas condições) e não percebeu evolução. Pedido até o 30º dia. Acabou o prazo de 37 dias.
+- Pendente: trocar o segredo CHECKOUT_TERMS_VERSION para `oferta-2026-11-19-v2` (o Leandro digita no painel do Supabase) para os pedidos novos registrarem a garantia nova.
