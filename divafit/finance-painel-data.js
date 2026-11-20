@@ -1,13 +1,21 @@
 const normalize=s=>String(s??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/\s+/g,' ');
 const valid=n=>Number.isSafeInteger(n)&&n>=0;
-export const FINANCE_NAMES={divafit:'Le&LeoFit',leandro:'Personal Leandro Romacheli',leonardo:'Personal Leonardo Landim'};
+export const FINANCE_NAMES={divafit:'Le&LeoFit',leandro:'Personal Leandro Romacheli',leonardo:'Personal Leonardo Landim',familia:'Família'};
+export const ONLINE_REPORT_LABEL='Faturamento Le&LeoFit';
+export const EXPENSE_CATEGORIES=['Moradia','Mercado','Contas da casa','Transporte','Saúde','Educação','Lazer','Cartão de crédito','Equipe (Elisângela)','Ferramentas e sistemas','Impostos e taxas','Outros'];
+const isReport=e=>e.kind==='recebimento'&&e.source?.rotulo===ONLINE_REPORT_LABEL;
+export function reportCoverageEnd(entries){let end='';for(const e of entries??[])if(isReport(e)&&!e.archived&&e.status!=='cancelado'&&(e.source?.cobertura_fim??'')>end)end=e.source.cobertura_fim;return end;}
 export const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 export function faturamento(data,payments,period){
  const sums={divafit:0,leandro:0,leonardo:0},counts={leandro:0,leonardo:0},pending={leandro:0,leonardo:0};
  for(const e of data.entries??[]){if(e.kind!=='aula'||e.archived||e.status==='cancelado'||!e.day?.startsWith(period)||!(e.bucket in counts))continue;
   if(e.status!=='confirmado'||!valid(e.cents)){pending[e.bucket]++;continue;}sums[e.bucket]+=e.cents;counts[e.bucket]+=e.quantity;
  }
- const seen=new Set();for(const p of payments??[]){if(seen.has(p.id)||p.archived||p.status!=='Pago'||!p.paid_on?.startsWith(period))continue;seen.add(p.id);
+ // Relatórios mensais da InfinitePay (consultoria online): contam como Le&LeoFit.
+ for(const e of data.entries??[]){if(!isReport(e)||e.archived||e.status!=='confirmado'||!e.day?.startsWith(period)||!valid(e.cents))continue;sums.divafit+=e.cents;}
+ // Pagamentos dentro do período já coberto por relatório não são somados outra vez.
+ const covered=reportCoverageEnd(data.entries);
+ const seen=new Set();for(const p of payments??[]){if(seen.has(p.id)||p.archived||p.status!=='Pago'||!p.paid_on?.startsWith(period)||(covered&&p.paid_on<=covered))continue;seen.add(p.id);
  const cents=p.import_data?.principal_cents??(p.amount===null||p.amount===''?null:Math.round(Number(p.amount)*100));if(valid(cents))sums.divafit+=cents;}
  return {sums,counts,pending,total:Object.values(sums).reduce((a,b)=>a+b,0)};
 }
@@ -69,3 +77,13 @@ export function configuredGroupRate(data,contacts,bucket,participants,day){
  const rules=contacts.filter(c=>c.bucket===bucket&&c.source?.calculator?.active===true&&c.source.calculator.kind==='pessoa'&&c.source.calculator.starts_on<=day&&codes.every(code=>c.source.calculator.people.includes(code)));
  if(rules.length!==1)return null;const code=rules[0].source.calculator.tariffs?.[String(participants.length)];return data.clients.find(c=>c.bucket===bucket&&c.code===code&&!c.archived)?.id??null;
 }
+
+// Família: entradas (faturamento registrado) x saídas (gastos da casa).
+export function familySummary(data,payments,period){
+ const entradas=faturamento(data,payments,period).total;let saidas=0;const byCategory={};const items=[];
+ for(const e of data.entries??[]){if(e.kind!=='despesa'||e.bucket!=='familia'||e.archived||e.status!=='confirmado'||!e.day?.startsWith(period)||!valid(e.cents))continue;
+  saidas+=e.cents;const c=e.category||'Outros';byCategory[c]=(byCategory[c]??0)+e.cents;items.push(e);}
+ const ranking=Object.entries(byCategory).map(([category,cents])=>({category,cents,share:saidas?cents/saidas:0})).sort((a,b)=>b.cents-a.cents);
+ return {entradas,saidas,saldo:entradas-saidas,ranking,items:items.sort((a,b)=>b.day.localeCompare(a.day))};
+}
+export function familySeries(data,payments,year){return MONTHS.map((name,i)=>{const period=year+'-'+String(i+1).padStart(2,'0');return {name,period,...familySummary(data,payments,period)};});}
