@@ -35,3 +35,18 @@ export const financeWorkspace=year=>request('/rest/v1/rpc/finance_workspace',{me
 export const financeEntryCreate=args=>request('/rest/v1/rpc/finance_entry_create',{method:'POST',body:JSON.stringify(args)});
 export const financeClientCreate=args=>request('/rest/v1/rpc/finance_client_create',{method:'POST',body:JSON.stringify(args)});
 export const financeEntryCancel=args=>request('/rest/v1/rpc/finance_entry_cancel',{method:'POST',body:JSON.stringify(args)});
+
+export const financeCatalog=()=>request('/rest/v1/rpc/finance_catalog',{method:'POST',body:JSON.stringify({})});
+
+export const financeProductSave=(args)=>request('/rest/v1/rpc/finance_product_save',{method:'POST',body:JSON.stringify(args)});
+
+export const financeContactSave=(args)=>request('/rest/v1/rpc/finance_contact_save',{method:'POST',body:JSON.stringify(args)});
+
+export const financeRateSave=(args)=>request('/rest/v1/rpc/finance_rate_save',{method:'POST',body:JSON.stringify(args)});
+
+export const financeClassesRegister=(args)=>request('/rest/v1/rpc/finance_classes_register',{method:'POST',body:JSON.stringify(args)});
+
+export const financeClosings=(month)=>request('/rest/v1/rpc/finance_closings',{method:'POST',body:JSON.stringify({p_month:month})});
+
+export const financeClosingApprove=(args)=>request('/rest/v1/rpc/finance_closing_approve',{method:'POST',body:JSON.stringify(args)});
+

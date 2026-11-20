@@ -68,7 +68,7 @@ A importação de 30/10/2026 cruzou o controle de cópias com 34 documentos indi
 
 ### Entrada pelo Google Forms
 
-Formulário autorizado: `1sh8auc4F7zdrqVv-pl3ERwey6nKfE7dzWPx1U_7fgg4`, conta `leaneleofit@gmail.com`.
+O formulário autorizado e a conta responsável ficam na configuração privada da integração.
 Em Configurações, o administrador usa **Conectar Google Forms** para gerar uma chave exclusiva de recebimento e copiar o script privado. No Google Apps Script, salvar em um projeto dedicado, executar `instalarDivaFit` e revisar/autorizar as permissões do Google. Não publicar como web app. A instalação gera um gatilho de envio e um gatilho de repetição de pendências a cada 15 minutos. O usuário pode executar `importarAnterioresDivaFit` para lotes de até 15 respostas antigas. Não coloca chave administrativa do Supabase no Google ou no navegador; somente uma chave exclusiva, revogável, desse formulário.
 
 O endpoint `forms-intake` autentica essa chave por SHA-256, valida o formulário e limita o tamanho. O banco serializa gravações, evita repetição do mesmo evento e procura o aluno por e-mail, telefone ou nome normalizado. Quando existe um único cadastro compatível, só preenche lacunas e acrescenta a avaliação; preserva as anotações e os dados atuais. Quando há mais de um, guarda a resposta privada para o administrador vincular em **Revisar possíveis duplicidades**. Não cria rotina, cobrança nem autorização de WhatsApp.
@@ -85,3 +85,5 @@ Executar npm test, node --check app.js e node scripts/build.mjs. Testes transaci
 ## Financeiro familiar
 
 Ampliação da aba Financeiro descrita em `docs/FINANCEIRO-FAMILIAR.md`. Migração e importação aplicadas após autorização de Leandro; dados desconhecidos permanecem a conferir. Dados reais do Excel não pertencem ao código público.
+
+Painel anual, produtos, agenda e fechamentos: `docs/FINANCEIRO-PAINEL.md`. WhatsApp não envia mensagens; abertura das vendas depende das condições de integração conferidas no servidor.
