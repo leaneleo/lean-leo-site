@@ -35,3 +35,25 @@ export function onlineActivity(payments,month){
  const first=new Map();for(const p of payments){if(p.status!=='Pago'||!p.paid_on||p.archived)continue;for(const id of p.student_ids??[])if(!first.has(id)||p.paid_on<first.get(id))first.set(id,p.paid_on);}
  const fresh=new Set();let renewals=0;for(const p of payments){if(p.status!=='Pago'||!p.paid_on?.startsWith(month)||p.archived)continue;let renewed=false;for(const id of p.student_ids??[]){if(first.get(id)===p.paid_on)fresh.add(id);else renewed=true;}if(renewed)renewals++;}return {fresh:fresh.size,renewals};
 }
+
+// Cadastros de cobrança e modalidades não representam um status de pessoa ativa.
+export function calculatorPeople(data,contacts,bucket,all=false){
+ const clients=(data.clients??[]).filter(c=>c.bucket===bucket&&!c.archived);
+ const codes=new Set(contacts.filter(c=>c.bucket===bucket).flatMap(c=>[c.name,...c.client_codes]));
+ return clients.filter(c=>{
+  if(!data.rates.some(r=>r.client_id===c.id))return false;
+  if(/\d$/.test(c.code)||/^(laboral|lab|avaliação|avaliacao)/i.test(c.code))return false;
+  if(clients.some(base=>base.id!==c.id&&normalize(base.code)===normalize(c.code.slice(0,-1))&&/[AR]$/.test(c.code)))return false;
+  return all||!codes.size||codes.has(c.code);
+ }).map(c=>({...c,label:normalize(c.code)==='helen'?'Ellen':c.name})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
+}
+export function calculatorTap(groups,id,join=false){
+ if(groups.some(g=>g.includes(id)))throw Error('Esse aluno já está no visor.');
+ const next=groups.map(g=>[...g]);
+ if(join){if(!next.length)throw Error('Escolha o primeiro aluno antes do +.');if(next.at(-1).length>=3)throw Error('Este atendimento já tem três pessoas.');next.at(-1).push(id);}else next.push([id]);
+ return next;
+}
+export function knownGroupRate(entries,participants,day){
+ const key=[...participants].sort().join('|');
+ return entries.filter(v=>v.kind==='aula'&&v.status==='confirmado'&&v.day<=day&&v.source?.participants?.length>1&&[...v.source.participants].sort().join('|')===key).sort((a,b)=>b.day.localeCompare(a.day))[0]?.client_id??null;
+}

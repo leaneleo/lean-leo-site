@@ -1,5 +1,12 @@
 # Histórico DivaFit
 
+## Calculadora de atendimentos — 19/11/2026
+
+- Botões com nomes, visor animado, + para dupla/trio, limpar, desfazer e = Registrar no dia escolhido. Grupos exigem tarifa cadastrada; combinações já registradas reutilizam a modalidade, respeitando a vigência.
+- Retirada a contagem estimada de 20 ativos: ela confundia modalidades e atividade recente com pessoas. A planilha não define status ativo; o cartão indica A confirmar.
+- Histórico importado e valores preservados. Sem mensagens enviadas.
+
+
 ## Painel anual, produtos e fechamentos — 19/11/2026
 
 - Pizza anual, destaque do ano, três cards e meses abaixo; páginas exclusivas e botão Voltar. Marca online Le&LeoFit e nome Leandro Romacheli corrigidos.

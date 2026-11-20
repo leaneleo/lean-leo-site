@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {faturamento,annualSeries,saudacao,closingText,parseClassNames,weekDays,rateFor,onlineActivity} from '../finance-painel-data.js';
+import {faturamento,annualSeries,saudacao,closingText,parseClassNames,weekDays,rateFor,onlineActivity,calculatorPeople,calculatorTap,knownGroupRate} from '../finance-painel-data.js';
 test('painel: faturamento não duplica recebimento de aula nem juros do comprador',()=>{
  const data={entries:[{bucket:'leandro',kind:'aula',day:'2026-11-01',cents:11000,quantity:1,status:'confirmado'},{bucket:'leandro',kind:'recebimento',day:'2026-11-01',cents:11000,quantity:1,status:'confirmado'},{bucket:'leandro',kind:'aula',day:'2026-11-02',cents:null,quantity:1,status:'a_revisar'}]};
  const payments=[{id:'p',status:'Pago',paid_on:'2026-11-01',amount:120,import_data:{principal_cents:10000}}];
@@ -18,4 +18,12 @@ test('agenda: texto aceita várias pessoas, mas não decide tarifa de grupo nem 
 test('agenda: semana cruza mês/ano sem perder data e métricas online usam confirmação',()=>{
  assert.deepEqual(weekDays('2027-01-01'),['2026-12-28','2026-12-29','2026-12-30','2026-12-31','2027-01-01']);
  const result=onlineActivity([{id:'1',student_ids:['a'],paid_on:'2026-10-01',status:'Pago'},{id:'2',student_ids:['a'],paid_on:'2026-11-01',status:'Pago'},{id:'3',student_ids:['b'],paid_on:'2026-11-01',status:'Pago'},{id:'4',student_ids:['c'],paid_on:'2026-11-01',status:'Pendente'}],'2026-11');assert.deepEqual(result,{fresh:1,renewals:1});
+});
+
+test('calculadora: nomes, mais, trio, remoção e duplicação preservam atendimentos',()=>{
+ let g=calculatorTap([], 'a');g=calculatorTap(g,'b');assert.deepEqual(g,[['a'],['b']]);g=calculatorTap([['a']],'b',true);g=calculatorTap(g,'c',true);assert.deepEqual(g,[['a','b','c']]);assert.throws(()=>calculatorTap(g,'d',true));assert.throws(()=>calculatorTap(g,'a'));assert.throws(()=>calculatorTap([],'a',true));
+ assert.equal(knownGroupRate([{kind:'aula',status:'confirmado',day:'2026-11-01',client_id:'tarifa',source:{participants:['b','a']}}],['a','b'],'2026-11-19'),'tarifa');assert.equal(knownGroupRate([],['a','b'],'2026-11-19'),null);
+});
+test('calculadora: modalidades não viram pessoas e a lista não declara status ativo',()=>{
+ const clients=[{id:'a',bucket:'leandro',name:'Pessoa',code:'Pessoa'},{id:'b',bucket:'leandro',name:'Pessoa1',code:'Pessoa1'},{id:'c',bucket:'leandro',name:'Laboral',code:'Laboral'}];const data={clients,rates:clients.map(c=>({client_id:c.id}))};assert.deepEqual(calculatorPeople(data,[{bucket:'leandro',name:'Pessoa',client_codes:['Pessoa','Pessoa1']}],'leandro').map(c=>c.id),['a']);
 });

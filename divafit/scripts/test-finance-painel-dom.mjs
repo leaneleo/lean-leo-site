@@ -9,10 +9,10 @@ const api={financeWorkspace:async()=>{calls++;return structuredClone(data);},fin
 const ui=createFinanceWorkspace({api,isAdmin:()=>admin,payments:()=>[],notice:()=>{}});await ui.mount();
 const box=document.querySelector('#family-finance');assert.equal(box.querySelectorAll('.fp-source').length,3);assert.equal(box.querySelectorAll('.fp-month').length,12);assert.equal(box.querySelectorAll('svg').length,1);assert(!box.textContent.includes('a receber'));
 box.querySelectorAll('.fp-source')[1].click();assert.equal(box.querySelectorAll('.fp-day').length,5);assert(box.textContent.includes('Personal Leandro Romacheli'));
-const text=box.querySelector('[aria-label="Quem treinou?"]');text.value='Hoje Aluno A e Aluno B treinaram';text.dispatchEvent(new dom.window.Event('input'));
-const mode=box.querySelector('[aria-label="Atendimento"]');mode.value='separados';mode.dispatchEvent(new dom.window.Event('change'));
-[...box.querySelectorAll('button')].find(b=>b.textContent==='Conferir').click();assert(box.querySelector('.fp-preview').textContent.includes('200,00'));
-mode.value='juntos';mode.dispatchEvent(new dom.window.Event('change'));const variant=box.querySelector('[aria-label="Tarifa do atendimento em grupo"]');variant.value='g';variant.dispatchEvent(new dom.window.Event('change'));assert(box.querySelector('.fp-preview').textContent.includes('170,00'));
+const find=t=>[...box.querySelectorAll('button')].find(b=>b.textContent===t);
+find('Aluno A').click();find('Aluno B').click();assert(box.querySelector('.fp-calc-toolbar').textContent.includes('200,00'));assert.equal(box.querySelectorAll('.fp-calc-row').length,2);
+find('C').click();find('Aluno A').click();find('+').click();find('Aluno B').click();assert.equal(box.querySelectorAll('.fp-calc-row').length,1);assert(box.querySelector('.fp-calc-names').textContent.includes('Aluno A + Aluno B'));assert(find('= Registrar').disabled);
+const variant=box.querySelector('[aria-label="Tarifa da dupla"]');variant.value='g';variant.dispatchEvent(new dom.window.Event('change'));assert(box.querySelector('.fp-calc-toolbar').textContent.includes('170,00'));assert(!find('= Registrar').disabled);
 box.querySelector('form').dispatchEvent(new dom.window.Event('submit',{bubbles:true,cancelable:true}));await new Promise(r=>setTimeout(r,10));assert.equal(created.length,1);assert.equal(created[0].p_items.length,1);assert.deepEqual(created[0].p_items[0].participants,['a','b']);
 ui.home();await ui.mount();box.querySelectorAll('.fp-source')[0].click();assert(box.textContent.includes('Consultoria Online'));[...box.querySelectorAll('button')].find(b=>b.textContent.includes('Consultoria Online')).click();assert(box.textContent.includes('Plano mensal'));assert(!box.textContent.includes('Alunos e valores'));
 admin=false;ui.clear();const before=calls;await ui.mount();assert.equal(calls,before);assert.equal(box.textContent,'');
