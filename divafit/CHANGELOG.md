@@ -1,5 +1,11 @@
 # Histórico DivaFit
 
+## CRM, Família e relatórios InfinitePay — 20/11/2026
+
+- Aba CRM (administradores): situação de cada aluna (cobrar, devendo treino, renovar/prorrogar, em preparo, em dia, reativar), prorrogação de R$ 20 em um clique (fica Pendente), custo estimado de prescrição (R$ 50 por treino novo) e funil de leads com alertas de follow-up e atalho de WhatsApp sem envio automático.
+- Financeiro ganhou o card Família: entradas x saídas, saldo, ranking de gastos por categoria e lançamento rápido de gastos.
+- Relatórios InfinitePay 2024–2026 aparecem no card Le&LeoFit, sem somar duas vezes pagamentos do mesmo período. Detalhes em docs/CRM-FAMILIA.md.
+
 ## Pessoas e famílias confirmadas — 19/11/2026
 
 - Configuração privada ditada por Leandro: pessoas separadas dos responsáveis por cobrança e regras automáticas por família. Laboral fica no teclado e fora da contagem de alunos; nomes que deixaram de treinar saem da lista principal.

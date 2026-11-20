@@ -49,4 +49,7 @@ export const financeClassesRegister=(args)=>request('/rest/v1/rpc/finance_classe
 export const financeClosings=(month)=>request('/rest/v1/rpc/finance_closings',{method:'POST',body:JSON.stringify({p_month:month})});
 
 export const financeClosingApprove=(args)=>request('/rest/v1/rpc/finance_closing_approve',{method:'POST',body:JSON.stringify(args)});
-
+export const financeExpenseCreate=args=>request('/rest/v1/rpc/finance_expense_create',{method:'POST',body:JSON.stringify(args)});
+export const crmLeads=()=>request('/rest/v1/rpc/crm_leads',{method:'POST',body:'{}'});
+export const crmLeadSave=args=>request('/rest/v1/rpc/crm_lead_save',{method:'POST',body:JSON.stringify(args)});
+export const crmLeadArchive=args=>request('/rest/v1/rpc/crm_lead_archive',{method:'POST',body:JSON.stringify(args)});
