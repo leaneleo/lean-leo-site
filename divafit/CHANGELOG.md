@@ -8,6 +8,8 @@
 - Integração InfinitePay do Claude preservada integralmente; presencial só contabilizado. Importação do histórico externo online ainda depende dos relatórios.
 - 78 testes Node da versão integrada, banco isolado e DOM aprovados. Detalhes em docs/FINANCEIRO-PAINEL.md.
 
+- Publicado no Netlify (c0f2940); conferidos autenticado gráfico, 12 meses, páginas, catálogo e prévia sem salvar dados fictícios. Console sem erros.
+
 ## Financeiro familiar — 19/11/2026, ativado após autorização
 
 - Três cards de renda, mês/ano, aulas e recebimentos separados, despesas e consolidado por aluno/plano.

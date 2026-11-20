@@ -38,4 +38,4 @@ Arquivos: supabase/financeiro_painel.sql, supabase/financeiro_fechamentos_cron.s
 
 Validação: 78 testes Node da versão integrada, DOM simulado do painel e PostgreSQL isolado. Cobertura inclui grupos cobrados uma vez, repetição, reajuste histórico, fecho/aprovação, saudação e bloqueio de treinadora/anônimo. A revisão automática inicialmente confundiu as restrições do Studio com este projeto; após verificar AGENTS.md do DivaFit e o banco correto, a aplicação pelo mesmo mecanismo foi autorizada. Migrações e configuração mensal foram aplicadas apenas no DivaFit.
 
-A conferência autenticada da nova versão e o estado final das exigências da InfinitePay devem ser registrados após o deploy.
+Publicação confirmada no Netlify em 19/11 às 22h15, commit c0f2940. Conferência autenticada: gráfico, 12 meses, três páginas, catálogo e prévia de aulas com tarifas da planilha carregaram; nenhum lançamento fictício salvo. Console sem erros. O estado operacional da InfinitePay permanece conforme o trabalho separado do Claude.
