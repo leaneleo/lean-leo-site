@@ -1,5 +1,13 @@
 # Histórico DivaFit
 
+## Painel anual, produtos e fechamentos — 19/11/2026
+
+- Pizza anual, destaque do ano, três cards e meses abaixo; páginas exclusivas e botão Voltar. Marca online Le&LeoFit e nome Leandro Romacheli corrigidos.
+- Agenda semanal, registro em lote/grupo por tarifa cadastrada, reajustes por vigência e tratamentos da planilha com saudação pelo horário.
+- Catálogo privado editável e preparação mensal de rascunhos, sem WhatsApp.
+- Integração InfinitePay do Claude preservada integralmente; presencial só contabilizado. Importação do histórico externo online ainda depende dos relatórios.
+- 78 testes Node da versão integrada, banco isolado e DOM aprovados. Detalhes em docs/FINANCEIRO-PAINEL.md.
+
 ## Financeiro familiar — 19/11/2026, ativado após autorização
 
 - Três cards de renda, mês/ano, aulas e recebimentos separados, despesas e consolidado por aluno/plano.
