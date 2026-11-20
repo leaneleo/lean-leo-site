@@ -1,5 +1,5 @@
 import {test} from 'node:test';import assert from 'node:assert/strict';import {quote,customer,verifiedPayment,providerPayload} from '../supabase/functions/divafit-checkout/pricing.mjs';import {createHandler} from '../supabase/functions/divafit-checkout/handler.mjs';
-const readyEnv={CHECKOUT_ENABLED:'true',CHECKOUT_TERMS_APPROVED:'true',CHECKOUT_TERMS_VERSION:'oferta-v1',CHECKOUT_RECEIVER_VERIFIED:'true',INFINITEPAY_API_KEY:'mock-key',INFINITEPAY_HANDLE:'mock-account',TURNSTILE_SECRET_KEY:'mock-secret',TURNSTILE_SITE_KEY:'mock-site',SUPABASE_URL:'https://database.example',SUPABASE_SERVICE_ROLE_KEY:'mock-server-key'};
+const readyEnv={CHECKOUT_LOTE_SLOTS:'0',CHECKOUT_ENABLED:'true',CHECKOUT_TERMS_APPROVED:'true',CHECKOUT_TERMS_VERSION:'oferta-v1',CHECKOUT_RECEIVER_VERIFIED:'true',INFINITEPAY_API_KEY:'mock-key',INFINITEPAY_HANDLE:'mock-account',TURNSTILE_SECRET_KEY:'mock-secret',TURNSTILE_SITE_KEY:'mock-site',SUPABASE_URL:'https://database.example',SUPABASE_SERVICE_ROLE_KEY:'mock-server-key'};
 const request=(route,body={})=>new Request('https://test/?route='+route,{method:'POST',body:JSON.stringify(body)});
 
 test('Vendas exigem recebedor conferido, termos versionados e proteção completa',async()=>{
@@ -38,16 +38,17 @@ test('Link usa valores persistidos, cobrança única, expiração e taxa das par
 test('O navegador não determina preço, duração ou confirmação na cotação',async()=>{const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',body:JSON.stringify({plan:'quarterly',card:1,pix:1,months:99,paid:true})}));const q=await r.json();assert.equal(q.card,38415);assert.equal(q.months,4);assert.equal(q.enabled,false)});
 
 
-test('Vagas reais: contam só pagamentos confirmados do mês e fecham a venda quando acabam',async()=>{
- let pagos=3,consulta='';
- const fetcher=async url=>{if(url.includes('checkout_orders?status=eq.paid')){consulta=url;return Response.json(Array.from({length:pagos},(_,i)=>({id:String(i)})));}throw Error('Requisição inesperada');};
- const handler=createHandler({env:{...readyEnv,CHECKOUT_MONTHLY_SLOTS:'10'},fetcher});
- const q=await(await handler(request('quote',{plan:'quarterly'}))).json();
- assert.deepEqual(q.vagas,{total:10,restantes:7});assert.match(decodeURIComponent(consulta),/paid_at=gte\.\d{4}-\d{2}-01T03:00:00\.000Z/);
- pagos=10;
- assert.equal((await(await handler(request('quote',{plan:'monthly'}))).json()).vagas.restantes,0);
- const r=await handler(request('create',{plan:'monthly'}));assert.equal(r.status,409);assert.match((await r.json()).error,/vagas deste mês acabaram/);
- assert.equal((await(await createHandler({env:readyEnv,fetcher})(request('quote',{plan:'monthly'}))).json()).vagas,null,'sem limite configurado');
+test('Vagas em lotes de 5: cada pagamento ocupa uma e, ao fechar o lote, abre outro; teste arquivado não conta',async()=>{
+ let pagos=0,consulta='';
+ const fetcher=async url=>{if(url.includes('checkout_orders?status=eq.paid')){consulta=url;return Response.json(Array.from({length:pagos},(_,i)=>({id:String(i)})));}throw Error('Requisição inesperada '+url);};
+ const handler=createHandler({env:{...readyEnv,CHECKOUT_LOTE_SLOTS:undefined},fetcher});
+ const vagas=async()=>(await(await handler(request('quote',{plan:'monthly'}))).json()).vagas;
+ assert.deepEqual(await vagas(),{total:5,restantes:5,lote:1});assert.match(consulta,/archived=eq\.false/);
+ pagos=1;assert.equal((await vagas()).restantes,4);
+ pagos=4;assert.equal((await vagas()).restantes,1);
+ pagos=5;assert.deepEqual(await vagas(),{total:5,restantes:5,lote:2});
+ pagos=7;assert.equal((await vagas()).restantes,3);
+ assert.equal((await(await createHandler({env:{...readyEnv,CHECKOUT_LOTE_SLOTS:'0'},fetcher})(request('quote',{plan:'monthly'}))).json()).vagas,null,'desligado');
 });
 
 test('Link da InfinitePay repassa a taxa de todas as parcelas para a cliente',()=>{

@@ -74,3 +74,9 @@ https://www.infinitepay.io/checkout-documentacao
 - Se a InfinitePay falhar ao gerar o link, o pedido vira `canceled` na hora e não prende cupom nem vaga.
 - Depois de um erro, a página gera um novo pedido (novo request_id) e reinicia a verificação anti-robô.
 - Cupom TESTE-DIVAFIT: 50%, só Mensal, 1 uso, até 19/11 23h59. Desativar após o teste.
+
+## 19/11 (21h50) — compra de teste mantida e vagas em lotes de 5
+- A compra de teste de R$ 78,80 (Leandro) NÃO foi estornada: o dinheiro fica no caixa e continua no Financeiro, com nota.
+- O pedido de teste foi arquivado (`archived=true`) e não ocupa vaga; o cadastro de teste da "aluna" foi arquivado. Cupom TESTE-DIVAFIT desativado.
+- Vagas: lotes de 5 (segredo opcional CHECKOUT_LOTE_SLOTS; padrão 5; 0 desliga). Cada pagamento confirmado não arquivado ocupa 1; ao fechar o lote, abre outro de 5. Texto na página: "Lote atual: restam X vagas de 5". CHECKOUT_MONTHLY_SLOTS deixou de ser usado.
+- Página de retorno refeita: confere o pagamento sozinha (a cada 4 s por ~1 min), mostra as etapas Pagamento → Avaliação → Treino e só libera o botão do formulário depois da confirmação.
