@@ -39,13 +39,14 @@ export function onlineActivity(payments,month){
 // Cadastros de cobrança e modalidades não representam um status de pessoa ativa.
 export function calculatorPeople(data,contacts,bucket,all=false){
  const clients=(data.clients??[]).filter(c=>c.bucket===bucket&&!c.archived);
- const codes=new Set(contacts.filter(c=>c.bucket===bucket).flatMap(c=>[c.name,...c.client_codes]));
+ const confirmed=contacts.filter(c=>c.bucket===bucket&&c.source?.calculator?.active===true&&c.source.calculator.kind==='pessoa');
+ const codes=new Set(confirmed.length?confirmed.flatMap(c=>c.source.calculator.people):contacts.filter(c=>c.bucket===bucket).flatMap(c=>[c.name,...c.client_codes]));
  return clients.filter(c=>{
   if(!data.rates.some(r=>r.client_id===c.id))return false;
   if(/\d$/.test(c.code)||/^(laboral|lab|avaliação|avaliacao)/i.test(c.code))return false;
   if(clients.some(base=>base.id!==c.id&&normalize(base.code)===normalize(c.code.slice(0,-1))&&/[AR]$/.test(c.code)))return false;
   return all||!codes.size||codes.has(c.code);
- }).map(c=>({...c,label:normalize(c.code)==='helen'?'Ellen':c.name})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
+ }).map(c=>({...c,label:c.name})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
 }
 export function calculatorTap(groups,id,join=false){
  if(groups.some(g=>g.includes(id)))throw Error('Esse aluno já está no visor.');
@@ -56,4 +57,15 @@ export function calculatorTap(groups,id,join=false){
 export function knownGroupRate(entries,participants,day){
  const key=[...participants].sort().join('|');
  return entries.filter(v=>v.kind==='aula'&&v.status==='confirmado'&&v.day<=day&&v.source?.participants?.length>1&&[...v.source.participants].sort().join('|')===key).sort((a,b)=>b.day.localeCompare(a.day))[0]?.client_id??null;
+}
+
+export function confirmedActivePeople(contacts,bucket){
+ const rules=contacts.filter(c=>c.bucket===bucket&&c.source?.calculator?.active===true&&c.source.calculator.kind==='pessoa');
+ return rules.length?new Set(rules.flatMap(c=>c.source.calculator.people)).size:null;
+}
+export function configuredGroupRate(data,contacts,bucket,participants,day){
+ if(participants.length<2||participants.length>3)return null;
+ const codes=participants.map(id=>data.clients.find(c=>c.id===id&&c.bucket===bucket)?.code);if(codes.some(c=>!c))return null;
+ const rules=contacts.filter(c=>c.bucket===bucket&&c.source?.calculator?.active===true&&c.source.calculator.kind==='pessoa'&&c.source.calculator.starts_on<=day&&codes.every(code=>c.source.calculator.people.includes(code)));
+ if(rules.length!==1)return null;const code=rules[0].source.calculator.tariffs?.[String(participants.length)];return data.clients.find(c=>c.bucket===bucket&&c.code===code&&!c.archived)?.id??null;
 }

@@ -1,5 +1,10 @@
 # Histórico DivaFit
 
+## Pessoas e famílias confirmadas — 19/11/2026
+
+- Configuração privada ditada por Leandro: pessoas separadas dos responsáveis por cobrança e regras automáticas por família. Laboral fica no teclado e fora da contagem de alunos; nomes que deixaram de treinar saem da lista principal.
+- Valores novos com vigência a partir de 19/11, somente para próximos registros. Todos os lançamentos anteriores preservados e comparados por hash. Nenhum recálculo de outros meses.
+
 ## Calculadora de atendimentos — 19/11/2026
 
 - Botões com nomes, visor animado, + para dupla/trio, limpar, desfazer e = Registrar no dia escolhido. Grupos exigem tarifa cadastrada; combinações já registradas reutilizam a modalidade, respeitando a vigência.

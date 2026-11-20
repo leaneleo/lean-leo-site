@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {faturamento,annualSeries,saudacao,closingText,parseClassNames,weekDays,rateFor,onlineActivity,calculatorPeople,calculatorTap,knownGroupRate} from '../finance-painel-data.js';
+import {faturamento,annualSeries,saudacao,closingText,parseClassNames,weekDays,rateFor,onlineActivity,calculatorPeople,calculatorTap,knownGroupRate,configuredGroupRate,confirmedActivePeople} from '../finance-painel-data.js';
 test('painel: faturamento não duplica recebimento de aula nem juros do comprador',()=>{
  const data={entries:[{bucket:'leandro',kind:'aula',day:'2026-11-01',cents:11000,quantity:1,status:'confirmado'},{bucket:'leandro',kind:'recebimento',day:'2026-11-01',cents:11000,quantity:1,status:'confirmado'},{bucket:'leandro',kind:'aula',day:'2026-11-02',cents:null,quantity:1,status:'a_revisar'}]};
  const payments=[{id:'p',status:'Pago',paid_on:'2026-11-01',amount:120,import_data:{principal_cents:10000}}];
@@ -26,4 +26,12 @@ test('calculadora: nomes, mais, trio, remoção e duplicação preservam atendim
 });
 test('calculadora: modalidades não viram pessoas e a lista não declara status ativo',()=>{
  const clients=[{id:'a',bucket:'leandro',name:'Pessoa',code:'Pessoa'},{id:'b',bucket:'leandro',name:'Pessoa1',code:'Pessoa1'},{id:'c',bucket:'leandro',name:'Laboral',code:'Laboral'}];const data={clients,rates:clients.map(c=>({client_id:c.id}))};assert.deepEqual(calculatorPeople(data,[{bucket:'leandro',name:'Pessoa',client_codes:['Pessoa','Pessoa1']}],'leandro').map(c=>c.id),['a']);
+});
+
+test('famílias: contagem usa pessoas confirmadas e preço novo não retroage',()=>{
+ const clients=[{id:'a',bucket:'leandro',code:'Pessoa A'},{id:'b',bucket:'leandro',code:'Pessoa B'},{id:'c',bucket:'leandro',code:'Pessoa C'},{id:'d',bucket:'leandro',code:'dupla'},{id:'t',bucket:'leandro',code:'trio'},{id:'s',bucket:'leandro',code:'servico'}];
+ const contacts=[{bucket:'leandro',source:{calculator:{active:true,kind:'pessoa',people:['Pessoa A','Pessoa B','Pessoa C'],starts_on:'2026-11-19',tariffs:{2:'dupla',3:'trio'}}}},{bucket:'leandro',source:{calculator:{active:true,kind:'servico',people:['servico']}}}];
+ assert.equal(confirmedActivePeople(contacts,'leandro'),3);assert.equal(confirmedActivePeople(contacts,'leonardo'),null);
+ assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','b'],'2026-11-18'),null);assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','b'],'2026-11-19'),'d');assert.equal(configuredGroupRate({clients},contacts,'leandro',['b','a','c'],'2026-11-20'),'t');assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','s'],'2026-11-19'),null);
+ const rates=[{client_id:'a',starts_on:'2026-01-01',cents:16000},{client_id:'a',starts_on:'2026-11-19',cents:14000}];assert.equal(rateFor(rates,'a','2026-10-31'),16000);assert.equal(rateFor(rates,'a','2026-11-18'),16000);assert.equal(rateFor(rates,'a','2026-11-19'),14000);
 });
