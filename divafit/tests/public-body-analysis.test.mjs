@@ -7,7 +7,7 @@ const jpg=new Blob([Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2Q==','base64')],{t
 function request(overrides={},site=origin,headers={}){
   const data=new FormData();
   for(const [k,v] of Object.entries({email:' TEST@example.test ',whatsapp:'+55 (62) 90000-0000',weight:72,
-    height:165,age:35,sex:'feminino',purpose:'body-photo-v1',challenge:'fixture-token',
+    height:165,age:35,sex:'feminino',objective:'Emagrecimento',purpose:'body-photo-v1',challenge:'fixture-token',
     frente:jpg,lado:jpg,costas:jpg,...overrides}))data.set(k,v);
   return new Request(origin+'/public',{method:'POST',headers:{origin:site,...headers},body:data});
 }

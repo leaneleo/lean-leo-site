@@ -1,3 +1,4 @@
+import {objetivos} from '../../../avaliacao/calculos.mjs';
 import {ANGLES,generateEstimate,readForm,readMeasures} from '../body-analysis/handler.mjs';
 
 export function contacts(form) {
@@ -29,7 +30,8 @@ export function createPublicHandler(deps) {
       let form;
       try {form=await readForm(req);}catch{return json({message:'Envie três fotos JPEG de até 2 MB cada.'},400);}
       const identity=contacts(form), measures=readMeasures(form), token=form.get('challenge');
-      if(!identity||!measures||!['feminino','masculino'].includes(measures.sex)||form.get('purpose')!=='body-photo-v1')
+      const objective=form.get('objective');
+      if(!objetivos.includes(objective)||!identity||!measures||!['feminino','masculino'].includes(measures.sex)||form.get('purpose')!=='body-photo-v1')
         return json({message:'Confira os dados e o aviso de uso das fotos.'},400);
       const files=ANGLES.map(angle=>form.get(angle));
       if(files.some((file,i)=>!(file instanceof Blob)||file.type!=='image/jpeg'||!file.size||
@@ -59,7 +61,7 @@ export function createPublicHandler(deps) {
       },photos,measures);
       const percentage=result.gordura_percentual;
       keep=result.fotos_ok&&percentage?.estimado>0&&percentage.estimado<100;
-      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],measures,percentage.estimado,id,origin).catch(()=>false):false;
+      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],{...measures,objective},percentage.estimado,id,origin).catch(()=>false):false;
       return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...diagnostics()}:
         {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
     }catch(error){

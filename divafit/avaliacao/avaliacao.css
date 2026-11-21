@@ -72,3 +72,5 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .challenge-black .panel,.challenge-black .risk{background:#201816;border-color:#614033;color:#fff7f2;box-shadow:none}
 .challenge-black .risk{border-inline-start:.35rem solid #a44326}
 .challenge-black ul{margin:0;padding-inline-start:1.2rem;display:grid;gap:.55rem}
+
+.assessment-page .choices.goal{grid-template-columns:1fr}

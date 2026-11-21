@@ -1,5 +1,5 @@
 import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
-import {avaliar,composicao,faixasAdulto,parseMeasure} from './calculos.mjs';
+import {avaliar,composicao,faixasAdulto,parseMeasure,objetivos,linhasMeta,mensagemMeta,notaMeta} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
 const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedback'), back=$('#back'), next=$('#next');
@@ -13,6 +13,7 @@ const fields=[
  {key:'altura',label:'Qual é sua altura?',placeholder:'Ex.: 1,65',unit:'m',min:1,max:2.5},
  {key:'peso',label:'Qual é seu peso?',placeholder:'Ex.: 68,5',unit:'kg',min:25,max:350},
  {key:'treinos',label:'Quantas vezes você treina por semana?',choices:Array.from({length:8},(_,i)=>[String(i),i===0?'Não treino':i===1?'1 vez':i+' vezes','activity'])},
+ {key:'objetivo',label:'Qual é o seu objetivo principal?',choices:objetivos.map(label=>[label,label,'activity'])},
  {key:'cintura',label:'Qual é a medida da sua cintura?',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
@@ -79,7 +80,7 @@ function render(){
     return;
   }
   if(spec.choices){
-    const group=el('div',undefined,spec.key==='sexo'?'choices sex':'choices');
+    const group=el('div',undefined,spec.key==='objetivo'?'choices goal':spec.key==='sexo'?'choices sex':'choices');
     group.setAttribute('role','group');group.setAttribute('aria-label',spec.label);
     for(const [value,label,symbol] of spec.choices){
       const item=el('label',undefined,'choice'), input=el('input');
@@ -216,10 +217,10 @@ function complete(r,dados=answers,gordura=null,analysis={}){
   measures.append(metric('Idade',dados.idade+' anos'),metric('Altura',format(dados.altura,2)+' m'),
     metric('Peso',format(dados.peso,1)+' kg'),metric('Cintura',dados.cintura===null?'Não informada':format(dados.cintura,1)+' cm'),
     metric('Risco à saúde · IMC × cintura',r.risco),metric('Cintura/altura',r.razao===null?'Não informada':format(r.razao,2)),
-    metric('Taxa metabólica de repouso',format(body.tmr,0)+' kcal/dia'));
+    metric('Objetivo principal',dados.objetivo),metric('Taxa metabólica de repouso',format(body.tmr,0)+' kcal/dia'));
   const locked=el('section',undefined,'panel locked');
   const items=el('div',undefined,'metrics');
-  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Excedente de gordura','Tempo estimado a 500 kcal/dia']){
+  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Excedente de gordura','Prazo estimado']){
     items.append(metric(label,'Bloqueado'));
   }
   locked.append(el('h3','Composição corporal'),items);
@@ -227,12 +228,16 @@ function complete(r,dados=answers,gordura=null,analysis={}){
     locked.replaceChildren(el('h3','Composição corporal'),el('p',analysis.range?'Faixa estimada: '+format(analysis.range.min,1)+'% a '+format(analysis.range.max,1)+'%.':'Exemplo fictício para revisão do layout.','hint'));
     const bodyMetrics=el('div',undefined,'metrics');
     bodyMetrics.append(metric('Gordura corporal',format(body.gordura,1)+'% · '+body.classeGordura),
-      metric('Massa magra',format(body.magra,1)+'%'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
-      metric('Gordura alvo',format(body.alvo,1)+'%'),metric('Excedente de gordura',format(body.excedente,1)+' kg'),
-      metric('Projeção a 500 kcal/dia',Math.ceil(body.dias)+' dias'));
-    const track=el('div',undefined,'target-track');
-    track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
-    locked.append(bodyMetrics,track,el('p','Projeção matemática com massa magra constante. O tempo real pode variar.','hint'));
+      metric('Massa magra',format(body.magra,1)+'% · '+format(body.magraKg,2)+' kg'),
+      metric('Massa gorda',format(body.gorduraKg,2)+' kg'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
+      ...linhasMeta(body).map(([label,value])=>metric(label,value)));
+    locked.append(bodyMetrics);
+    if(body.alvo!==null){
+      const track=el('div',undefined,'target-track');
+      track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
+      locked.append(track);
+    }
+    locked.append(el('p',notaMeta,'hint'),el('p',mensagemMeta(body)));
   }else if(analysis.error){
     locked.append(el('p',analysis.error,'hint'),btn('Voltar à etapa de fotos',()=>{current=fields.length-1;render();window.scrollTo(0,0);}));
   }else if(photoAgreementAt){
@@ -272,7 +277,7 @@ form.addEventListener('submit',ev=>{
   current++;render();
 });
 if(new URLSearchParams(location.search).get('exemplo')==='1'){
-  const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:86};
+  const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:objetivos[0]};
   form.hidden=true;result.hidden=false;
   complete(avaliar(exemplo),exemplo,32);
 }else render();

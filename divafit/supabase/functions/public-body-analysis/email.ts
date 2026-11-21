@@ -3,7 +3,7 @@ import jpeg from 'npm:jpeg-js@0.4.4';
 import {avaliar} from '../../../avaliacao/calculos.mjs';
 import {emailAvaliacao} from '../../../avaliacao/email.mjs';
 
-type Measures={weight:number;height:number;age:number;sex:string;waist:number|null};
+type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string};
 
 function gauge(imc:number,band:number){
   const width=280,height=150,data=new Uint8Array(width*height*4);
@@ -25,7 +25,7 @@ function gauge(imc:number,band:number){
 
 export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number,id:string){
   const dados={idade:measures.age,altura:measures.height/100,peso:measures.weight,
-    sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist};
+    sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist,objetivo:measures.objective};
   const r=avaliar(dados);
   const response=await fetch('https://api.resend.com/emails',{
     method:'POST',signal:AbortSignal.timeout(9000),

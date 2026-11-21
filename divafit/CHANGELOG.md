@@ -1,3 +1,7 @@
+## Objetivo na avaliação
+
+- Adiciona três objetivos ao funil e reproduz as metas e mensagens da planilha na tela e no e-mail.
+
 ## Prévia de avaliação, Biblioteca e Financeiro
 
 - Avaliação compacta, total e siglas na Biblioteca, renda familiar anual e Desafio Black com visual escuro. E-mail de teste protegido por lista de destinatários.

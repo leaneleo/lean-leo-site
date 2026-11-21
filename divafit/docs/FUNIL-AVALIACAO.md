@@ -63,3 +63,9 @@ Na homologação, a função real recebeu três ilustrações fictícias e o Cla
 ### Prévia compacta e teste de e-mail
 
 O formulário tem largura máxima de 480 px. A prévia usa o remetente padrão `avaliacao@envios.leeleo.com.br` quando `PUBLIC_BODY_EMAIL_FROM` não é definido. O envio exige `PUBLIC_BODY_EMAIL_ENABLED=true` e `PUBLIC_BODY_EMAIL_TEST_RECIPIENTS` com os e-mails exatos autorizados, separados por vírgula. A função verifica o endereço e a origem da prévia no servidor e envia somente após uma estimativa aceita. Fora da prévia, o envio é bloqueado.
+
+### Objetivo e metas da planilha
+
+A pergunta de objetivo vem após a frequência de treino. Tela e e-mail utilizam o mesmo cálculo com AO como estimativa central. Histórico AS/AT/AU/AV/AW/AX/AY e BC–BI seguem a planilha, inclusive BC em vez da regra anterior de categoria consecutiva. A escolha das mensagens segue Dashboard B58 e os textos de P58:P62 são interpolados sem reescrita. Na Definição Muscular, BH = H + BG e BD, BE e BI exibem “-”. Na Hipertrofia, BC e BD exibem “-”, portanto a mensagem normal é P62. Uma projeção não equivale a uma garantia de prazo.
+
+Verificação com fórmulas copiadas de Histórico para três linhas fictícias, recalculadas no LibreOffice. Emagrecimento: F, 35 anos, 1,65 m, 72 kg, 32% → alvo 29,9%, peso 69,84 kg, ganho 3,42 kg, excedente 2,16 kg e 33,22 dias. Definição: F, 48 anos, 1,60 m, 68 kg, 32% → alvo 29,9%, peso 72,76 kg, ganho 4,76 kg, excedente e prazo indisponíveis. Hipertrofia: M, 32 anos, 1,78 m, 80 kg, 18% → peso 81 kg, ganho 1 kg, 12.000 kcal e 30 dias.

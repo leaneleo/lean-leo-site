@@ -37,7 +37,7 @@ async function jpeg(file){
 
 export async function sendPublicPhotos(config,data,photos,contacts,challenge){
   const fields={purpose:'body-photo-v1',challenge,email:contacts.email,whatsapp:contacts.whatsapp,
-    weight:data.peso,height:data.altura*100,age:data.idade,sex:data.sexo==='F'?'feminino':'masculino'};
+    objective:data.objetivo,weight:data.peso,height:data.altura*100,age:data.idade,sex:data.sexo==='F'?'feminino':'masculino'};
   if(data.cintura!==null)fields.waist=data.cintura;
   const body=new FormData();
   for(const [key,value] of Object.entries(fields))body.set(key,String(value));

@@ -1,4 +1,4 @@
-import {avaliar, composicao} from './calculos.mjs';
+import {avaliar, composicao, linhasMeta, mensagemMeta, notaMeta} from './calculos.mjs';
 
 const fmt=(value,digits=1)=>value.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
 
@@ -13,11 +13,10 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false}={}){
     ['Cintura/altura',r.razao===null?'Não informada':fmt(r.razao,2)],
     ['Taxa metabólica de repouso',fmt(c.tmr,0)+' kcal/dia'],
     ['Gordura corporal',gordura===null?bloqueado:fmt(c.gordura)+'% · '+c.classeGordura],
-    ['Massa magra',gordura===null?bloqueado:fmt(c.magra)+'%'],
+    ['Massa magra',gordura===null?bloqueado:fmt(c.magra)+'% · '+fmt(c.magraKg,2)+' kg'],
+    ['Massa gorda',gordura===null?bloqueado:fmt(c.gorduraKg,2)+' kg'],
     ['IMLG',gordura===null?bloqueado:fmt(c.imlg)+' · '+c.classeImlg],
-    ['Gordura alvo',gordura===null?bloqueado:fmt(c.alvo)+'%'],
-    ['Excedente de gordura',gordura===null?bloqueado:fmt(c.excedente)+' kg'],
-    ['Projeção teórica a 500 kcal/dia',gordura===null?bloqueado:Math.ceil(c.dias)+' dias']
+    ...(gordura===null?[]:[['Objetivo principal',c.objetivo],...linhasMeta(c)])
   ];
   const cards=rows.map(([label,value])=>`<tr><td style="padding:14px 18px;background:#fff;border:1px solid #eaded7;border-radius:18px">
   <div style="color:#655951;font-size:13px">${label}</div><strong style="display:block;margin-top:6px;font-size:20px">${value}</strong></td></tr>`).join('');
@@ -31,6 +30,7 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false}={}){
   <p style="font-size:32px;margin:10px 0"><strong>${fmt(r.imc)}</strong></p>
   <span style="display:inline-block;padding:8px 14px;border-radius:20px;background:#f9e4dc;color:#942b19">${r.categoria}</span>
   </td></tr><tr><td style="padding:0 12px"><table role="presentation" style="width:100%;border-spacing:0 8px">${cards}</table>
+  ${gordura===null?'':`<p>${notaMeta}</p><p>${mensagemMeta(c)}</p>`}
   <p style="padding:10px;font-size:13px">Estimativa feita por IA e fórmulas, pode conter erros e não substitui avaliação presencial.</p></td></tr>
   </table></body></html>`;
 }
