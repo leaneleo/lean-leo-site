@@ -1,0 +1,8 @@
+node_modules/
+.env*
+!config.example.js
+config.js
+imports/
+*.zip
+.netlify/
+public/

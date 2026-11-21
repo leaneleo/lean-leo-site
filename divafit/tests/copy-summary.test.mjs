@@ -1,0 +1,8 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {sourceSummary,compactMethods,DIVISIONS} from '../copy-domain.js';
+import {routineName} from '../student-domain.js';
+const db={students:[{id:'s',name:'Anna Clara Orsida'}],assignments:[{id:'a',student_id:'s',number:'1',original_vssam:69,workout_id:'w',predominant_methods:'Tradicional, Bi-set, Isometria, Drop set'}],workouts:[{id:'w',format:'AB',division:'sup/inf'}]};
+test('Origem completa, formato e divisão vêm da ficha vinculada; OBS não copia notas antigas',()=>{const x=sourceSummary({assignment_id:'a',notes:'Texto histórico',student_name:'Anna Clara Orsida',number:'1',original_vssam:69},db);assert.equal(x.origin,'FICHA 1 - Anna Clara Orsida IN5');assert.equal(x.format,'AB');assert.equal(x.division,'sup/inf');assert.equal(x.methods,'trad, bi-set, iso');assert.equal(x.observation,'');assert.equal(x.notes,'Texto histórico');assert.equal(DIVISIONS.pc,'Posterior do corpo')});
+test('Campos vazios revisados são preservados e métodos não inventam predominância',()=>{const x=sourceSummary({assignment_id:'a',format:'',division:'',methods:'',observation:'Revisar'},db);assert.equal(x.format,'');assert.equal(x.division,'');assert.equal(x.methods,'');assert.equal(x.observation,'Revisar');assert.equal(compactMethods('Tradicional;trad;Bi-set;iso;Drop set'),'trad, bi-set, iso')});
+test('Nome padronizado usa dados estruturados sem apagar nome antigo do registro',()=>{const a={...db.assignments[0],routine_name:'Texto antigo'};assert.equal(routineName(a,db.students[0]),'FICHA 1 - Anna Clara Orsida IN5');assert.equal(a.routine_name,'Texto antigo')});
