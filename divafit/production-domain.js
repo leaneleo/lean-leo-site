@@ -28,6 +28,15 @@ const libraryPhases = new Map([
    }))
 ]);
 
+export function originalPhaseForVolume(value) {
+ const v = Number(value);
+ if (!Number.isFinite(v) || v < 40 || v > 280) return 'NC';
+ if (v < 80) return v < 60 ? 'IN1' : 'IN2';
+ if (v < 140) return 'IT' + (Math.floor((v - 80) / 10) + 1);
+ if (v < 200) return 'AV' + (Math.floor((v - 140) / 10) + 1);
+ return 'AA' + Math.min(8, Math.floor((v - 200) / 10) + 1);
+}
+
 function libraryPhaseOf(assignment) {
  const phase = String(assignment.original_phase ?? '').trim().toUpperCase();
  return libraryPhases.has(phase.replace(/[B-Z]$/, '')) ? phase : 'NC';
