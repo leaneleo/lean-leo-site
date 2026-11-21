@@ -57,6 +57,7 @@ function render(){
   heading.focus({preventScroll:true});
   if(spec.key==='fotos'){
     step.append(el('p','Inclua frente, lado e costas, com o corpo inteiro e boa iluminação.','hint'));
+    if(publicEnabled)step.append(el('p','Ao enviar as fotos, você solicita seu processamento pela Anthropic para estimar a composição corporal.','hint'));
     const photos=el('div',undefined,'photos');
     for(const angle of ['Frente','Lado','Costas']){
       const pick=el('label',undefined,'pick-file'), file=el('input'), label=el('span',angle,'file-text');
@@ -74,7 +75,7 @@ function render(){
     }
     if(photoFiles.size)next.textContent='Enviar fotos e ver avaliação';
     step.append(photos,btn('Continuar sem fotos',()=>{photoFiles.clear();photoAgreementAt=null;show(avaliar(answers));},'subtle'),
-      el('p','LGPD · Lei nº 13.709/2018. A finalidade do envio é estimar a composição corporal com IA. '+(publicEnabled?'Ao concluir a avaliação com fotos, elas serão processadas pela Anthropic. O DivaFit registra a finalidade, a data e identificadores protegidos para limitar o uso.':'Nesta prévia, as fotos ficam apenas no seu dispositivo.'),'notice'));
+      el('p','🔒 Seus dados estão protegidos pela Lei Geral de Proteção de Dados (LGPD): Lei n. 13.709, de 14 de agosto de 2018. Nada será publicado sem sua autorização.','notice'));
     return;
   }
   if(spec.choices){

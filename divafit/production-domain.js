@@ -39,7 +39,7 @@ export function originalPhaseForVolume(value) {
 
 function libraryPhaseOf(assignment) {
  const phase = String(assignment.original_phase ?? '').trim().toUpperCase();
- const base = phase.replace(/[B-Z]$/, '');
+ const base = phase.replace(/[A-Z]$/, '');
  return libraryPhases.has(base) || /^AA(?:9|[1-9][0-9]+)$/.test(base) ? phase : 'NC';
 }
 
@@ -66,7 +66,7 @@ export function libraryGroups(db) {
    counts.set(phase, (counts.get(phase) || 0) + 1);
  }
  const groups = [];
- const extra = [...new Set([...counts.keys()].map(phase => phase.replace(/[B-Z]$/, '')))]
+ const extra = [...new Set([...counts.keys()].map(phase => phase.replace(/[A-Z]$/, '')))]
    .filter(phase => phase.startsWith('AA') && !libraryPhases.has(phase))
    .sort((a, b) => Number(a.slice(2)) - Number(b.slice(2)))
    .map(phase => {

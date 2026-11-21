@@ -13,8 +13,9 @@ const dummyTurnstile='1x0000000000000000000000000000000AA'; // Official public f
 const turnstile=env('PUBLIC_BODY_TURNSTILE_SECRET')||dummyTurnstile;
 const testMode=turnstile===dummyTurnstile;
 const salt=env('PUBLIC_BODY_CONTACT_SECRET')||(testMode?(keys.default||env('SUPABASE_SERVICE_ROLE_KEY')):'');
-const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM');
+const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM')||'avaliacao@envios.leeleo.com.br';
 const preview='https://deploy-preview-7--consultoria-divafit.netlify.app';
+const emailAllowlist=new Set(env('PUBLIC_BODY_EMAIL_TEST_RECIPIENTS').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
 const origins=testMode?[preview]:env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(Boolean);
 const encoder=new TextEncoder();
 async function rpc(name:string,args:Record<string,unknown>){
@@ -25,8 +26,9 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
-  email:!testMode&&resend&&from&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
-    ? (...args:Parameters<typeof sendAssessmentEmail> extends [string,string,...infer Rest]?Rest:never)=>sendAssessmentEmail(resend,from,...args)
+  email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
+    ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number,id:string,origin:string)=>
+      origin===preview&&emailAllowlist.has(to)?sendAssessmentEmail(resend,from,to,measures,fat,id):Promise.resolve(false)
     : undefined,
   async testPass(pass:string,origin:string){
     if(origin!==preview||!(/^[a-f0-9]{64}$/.test(pass)))return false;

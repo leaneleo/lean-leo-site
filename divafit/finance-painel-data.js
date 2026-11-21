@@ -87,3 +87,17 @@ export function familySummary(data,payments,period){
  return {entradas,saidas,saldo:entradas-saidas,ranking,items:items.sort((a,b)=>b.day.localeCompare(a.day))};
 }
 export function familySeries(data,payments,year){return MONTHS.map((name,i)=>{const period=year+'-'+String(i+1).padStart(2,'0');return {name,period,...familySummary(data,payments,period)};});}
+
+export function annualIncome(data,year,today) {
+ const current=Number(today.slice(0,4));
+ const closed=year<current?12:year===current?Number(today.slice(5,7))-1:0;
+ const rows=(data.entries??[]).filter(e=>!e.archived&&e.status==='confirmado'&&valid(e.cents)&&
+   e.day?.startsWith(String(year)+'-')&&e.day<=today);
+ const reports=rows.filter(isReport);
+ const personal=rows.filter(e=>e.bucket==='leandro'&&e.kind==='aula');
+ return {
+  divafit:reports.length?reports.reduce((sum,e)=>sum+e.cents,0):null,
+  leandro:personal.length?personal.reduce((sum,e)=>sum+e.cents,0):null,
+  leonardo:closed*1000000
+ };
+}

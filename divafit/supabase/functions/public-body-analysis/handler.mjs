@@ -59,7 +59,7 @@ export function createPublicHandler(deps) {
       },photos,measures);
       const percentage=result.gordura_percentual;
       keep=result.fotos_ok&&percentage?.estimado>0&&percentage.estimado<100;
-      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],measures,percentage.estimado,id).catch(()=>false):false;
+      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],measures,percentage.estimado,id,origin).catch(()=>false):false;
       return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...diagnostics()}:
         {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
     }catch(error){

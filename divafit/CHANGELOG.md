@@ -1,3 +1,7 @@
+## Prévia de avaliação, Biblioteca e Financeiro
+
+- Avaliação compacta, total e siglas na Biblioteca, renda familiar anual e Desafio Black com visual escuro. E-mail de teste protegido por lista de destinatários.
+
 ## Card Desafio Black — 21/11/2026
 
 - Financeiro mostra tema, datas, dieta em grupo e vendas fechadas, com link para a página do Desafio. Os dois pontos leem as mesmas informações.

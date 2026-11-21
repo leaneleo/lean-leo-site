@@ -60,4 +60,6 @@ O envio pelo Resend fica desligado enquanto `PUBLIC_BODY_EMAIL_ENABLED` for dife
 
 Na homologação, a função real recebeu três ilustrações fictícias e o Claude sinalizou que as fotos eram inadequadas para estimar gordura (HTTP 422). A Anthropic reportou 2.400 tokens de entrada e 3.230 de saída, com custo calculado de US$ 0,0371. O registro marcado como teste foi removido. O teste transacional no PostgreSQL confirmou a deduplicação por e-mail e celular, a recusa da 31ª reserva e a ausência de permissão para `anon`. O rollback deixou zero tentativas e zero passes de teste.
 
-A chave pública real do Turnstile deve ser fornecida pela Netlify em Deploy Preview. Após trocar a variável, é necessário um novo build da prévia.
+### Prévia compacta e teste de e-mail
+
+O formulário tem largura máxima de 480 px. A prévia usa o remetente padrão `avaliacao@envios.leeleo.com.br` quando `PUBLIC_BODY_EMAIL_FROM` não é definido. O envio exige `PUBLIC_BODY_EMAIL_ENABLED=true` e `PUBLIC_BODY_EMAIL_TEST_RECIPIENTS` com os e-mails exatos autorizados, separados por vírgula. A função verifica o endereço e a origem da prévia no servidor e envia somente após uma estimativa aceita. Fora da prévia, o envio é bloqueado.
