@@ -2,7 +2,7 @@
 
 ## Prévia para revisão
 
-Abra /avaliacao/. A barra fica no topo e indica as 10 etapas, incluindo e-mail e WhatsApp. Cada tela pede uma informação, seguida da opção de fotos, do resultado parcial e das telas de e-mail e WhatsApp. Use dados fictícios. As respostas ficam somente na memória da página. A prévia não envia fotos, não cadastra leads e não gera estimativa de gordura. A oferta apresenta a Consultoria Online e tem alternativa para /desafio-21-dias/, com vendas fechadas. O WhatsApp é campo de contato, sem disparo.
+Abra /avaliacao/. A barra fica no topo e indica as 10 etapas, incluindo e-mail e WhatsApp. Cada tela pede uma informação, com altura em metros (aceita vírgula ou ponto), seguida da opção de fotos, do resultado parcial e das telas de e-mail e WhatsApp. Use dados fictícios. As respostas ficam somente na memória da página. A prévia não envia fotos, não cadastra leads e não gera estimativa de gordura. A oferta apresenta a Consultoria Online e tem alternativa para /desafio-21-dias/, com vendas fechadas. O WhatsApp é campo de contato, sem disparo.
 
 ## Origem das fórmulas
 
@@ -31,3 +31,5 @@ Já existem no Drive um material chamado Desafio de 21 Dias Copia & Cola e crono
 ## Testes
 
 Rode npm test e node scripts/build.mjs. A suíte cobre faixas adultas e de 60+, limites de cintura por sexo, medida ausente e entradas inválidas. O ensaio autenticado com fotos na ferramenta interna depende do login da equipe. Nenhum registro real foi usado como dado de teste neste código.
+
+Na prévia visual, a opção de fotos não tem caixa separada. Com três imagens selecionadas, o botão **Enviar fotos e ver avaliação** fica abaixo do aviso e registra a ação só na memória da página. **Continuar sem fotos** elimina a seleção. Para o lançamento, a mesma ação precisa gerar um comprovante de consentimento no servidor antes da transmissão, com data, versão do texto e finalidade. A faixa de gordura segue indisponível enquanto a análise pública não estiver integrada.

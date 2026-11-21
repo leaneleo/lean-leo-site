@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {avaliar} from '../avaliacao/calculos.mjs';
-const base={idade:30,altura:200,peso:100,sexo:'F',cintura:88};
+import {avaliar,parseMeasure} from '../avaliacao/calculos.mjs';
+const base={idade:30,altura:2,peso:100,sexo:'F',cintura:88};
 test('Faixas adultas e camada de 60+ acompanham a planilha',()=>{
   assert.deepEqual([70,74,100,120,140,160].map(peso=>avaliar({...base,peso}).faixa),[0,1,2,3,4,5]);
   assert.equal(avaliar({...base,idade:60,peso:88}).categoria,'Magreza');
@@ -19,4 +19,12 @@ test('Rejeita idade infantil e medidas ausentes ou fora do intervalo',()=>{
   assert.throws(()=>avaliar({...base,idade:17}));
   assert.throws(()=>avaliar({...base,altura:0}));
   assert.throws(()=>avaliar({...base,cintura:NaN}));
+});
+
+test('Altura em metros aceita vírgula ou ponto, com cintura em centímetros',()=>{
+  assert.equal(parseMeasure('1,65'),1.65);
+  assert.equal(parseMeasure('1.65'),1.65);
+  assert.equal(parseMeasure('1,65 m'),null);
+  assert.throws(()=>avaliar({...base,altura:165}));
+  assert.ok(Math.abs(avaliar({...base,altura:1.65,cintura:82.5}).razao-0.5)<1e-12);
 });

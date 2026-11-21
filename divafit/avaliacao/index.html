@@ -5,7 +5,10 @@
 <meta name="robots" content="noindex,nofollow"><title>Avaliação física | Le&LeoFit</title>
 <link rel="stylesheet" href="./avaliacao.css"><script type="module" src="./avaliacao.mjs"></script>
 </head>
-<body><main><header><a href="/avaliacao/">Le&amp;LeoFit</a><h1>Avaliação física</h1></header>
-<div class="assessment-progress"><label id="progress-label" for="progress">Etapa 1 de 10</label><progress id="progress" max="10" value="0"></progress></div>
-<form id="form"><div id="step"></div><p id="feedback" role="status"></p><div class="actions"><button id="back" type="button">Voltar</button><button type="submit">Continuar</button></div></form>
-<section id="result" hidden aria-live="polite"></section></main></body></html>
+<body class="assessment-page">
+<header class="top"><div class="top-inner"><a class="wordmark" href="/avaliacao/" aria-label="Le e Leo Fit · início">Le<span>&amp;</span>LeoFit</a>
+<div class="assessment-progress"><label id="progress-label" for="progress">Etapa 1 de 10</label><progress id="progress" max="10" value="0"></progress></div></div></header>
+<main class="assessment-main">
+<form id="form" class="flow" novalidate><div id="step" class="stage"></div><p id="feedback" role="alert"></p>
+<div class="actions"><button id="back" class="secondary" type="button">← Voltar</button><button id="next" class="primary" type="submit">Continuar</button></div></form>
+<section id="result" hidden></section></main></body></html>
