@@ -2,7 +2,7 @@
 
 ## Prévia para revisão
 
-Abra /avaliacao/. Cada tela pede uma informação, seguida da opção de fotos, do resultado parcial e das telas de e-mail e WhatsApp. Use dados fictícios. As respostas ficam somente na memória da página. A prévia não envia fotos, não cadastra leads e não gera estimativa de gordura. A oferta apresenta a Consultoria Online e tem alternativa para /desafio-21-dias/, com vendas fechadas. O WhatsApp é campo de contato, sem disparo.
+Abra /avaliacao/. A barra fica no topo e indica as 10 etapas, incluindo e-mail e WhatsApp. Cada tela pede uma informação, seguida da opção de fotos, do resultado parcial e das telas de e-mail e WhatsApp. Use dados fictícios. As respostas ficam somente na memória da página. A prévia não envia fotos, não cadastra leads e não gera estimativa de gordura. A oferta apresenta a Consultoria Online e tem alternativa para /desafio-21-dias/, com vendas fechadas. O WhatsApp é campo de contato, sem disparo.
 
 ## Origem das fórmulas
 

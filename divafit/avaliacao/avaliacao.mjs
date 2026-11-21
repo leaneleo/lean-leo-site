@@ -13,12 +13,21 @@ const fields=[
  ['fotos','Quer incluir fotos?','photos']
 ];
 const answers={};
+const totalSteps=fields.length+2;
+const progress=$('#progress'), progressLabel=$('#progress-label');
+progress.max=totalSteps;
+function showProgress(n,done=false){
+  progress.value=done?n:n-1;
+  progressLabel.textContent=done?'Preenchimento concluído':`Etapa ${n} de ${totalSteps}`;
+}
+
 let current=0;
 const el=(tag,text)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;return node;};
 function btn(text,action){const b=el('button',text);b.type='button';b.addEventListener('click',action);return b;}
 function field(label,control){const l=el('label');l.append(el('span',label),control);return l;}
 function render(){
-  step.replaceChildren(el('p',`Etapa ${current+1} de ${fields.length}`));
+  showProgress(current+1);
+  step.replaceChildren();
   feedback.textContent='';
   back.hidden=current===0;
   const [name,label,type,min,max,increment]=fields[current];
@@ -81,6 +90,7 @@ function show(r){
   result.append(btn('Continuar para a avaliação completa',()=>contact('email')));
 }
 function contact(key){
+  showProgress(fields.length+(key==='email'?1:2));
   const box=el('form'), control=el('input');
   control.type=key==='email'?'email':'tel';control.required=true;control.name=key;
   const next=el('button','Continuar');next.type='submit';
@@ -90,6 +100,7 @@ function contact(key){
   box.addEventListener('submit',ev=>{
     ev.preventDefault();
     if(key==='email'){contact('whatsapp');return;}
+    showProgress(totalSteps,true);
     result.replaceChildren(el('h2','Consultoria Online'),el('p','Treino com acompanhamento personalizado.'),
       el('p','O resultado por fotos e a integração com o CRM ainda não estão ativos nesta prévia.'),
       btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/')));
