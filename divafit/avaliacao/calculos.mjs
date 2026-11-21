@@ -55,49 +55,48 @@ export function composicao(dados,gordura=null){
     imlg<desenvolvido?'Desenvolvido':imlg<=excelente?'Excelente':'Suspeito';
   const {objetivo}=dados;
   if(!objetivos.includes(objetivo))throw Error('Selecione o objetivo principal.');
-  const emagrecimento=objetivo===objetivos[0], hipertrofia=objetivo===objetivos[2];
-  const alvo=hipertrofia?null:faixa<=1?gordura:metas[sexo][grupo][Math.min(4,7-faixa)];
+  const alvo=faixa<=1?gordura:metas[sexo][grupo][Math.min(4,7-faixa)];
+  const bc=alvo/100;
+  const gorduraPermitida=magraKg*bc/(1-bc);
+  const perda=metaMinima(gorduraKg-gorduraPermitida);
+  const gorduraMeta={kg:perda,dias:perda*7700/500};
+
   const proporcao=sexo==='F'?.75:.80;
-  const pesoComMagraConstante=emagrecimento?magraKg/(1-alvo/100):null;
-  const massaMagraAlvo=emagrecimento?pesoComMagraConstante*proporcao:
+  const baseBf=objetivo===objetivos[0]?magraKg/(1-bc)*proporcao:
     magraKg<peso*proporcao?peso*proporcao:magraKg+1;
-  const ganho=massaMagraAlvo-magraKg;
-  const ganhoMagra=ganho>.1?ganho:null;
-  const pesoAlvo=emagrecimento?pesoComMagraConstante:peso+(ganhoMagra??0);
-  const excedente=!hipertrofia&&peso-pesoAlvo>.1?peso-pesoAlvo:null;
-  const kcal=hipertrofia?(ganhoMagra===null?null:ganhoMagra*12000):(excedente===null?null:-excedente*7700);
-  const dias=hipertrofia?(ganhoMagra===null?null:ganhoMagra*30):(excedente===null?null:excedente*7700/500);
-  const mensagemId=objetivo===objetivos[1]?1:emagrecimento?(ganhoMagra!==null?2:3):(excedente!==null?4:5);
+  const area=altura**2;
+  // BF/BG é o ponto de partida. O intervalo Excelente guia a meta, sem ultrapassá-lo.
+  const bf=imlg>=desenvolvido?magraKg:Math.min(excelente*area,Math.max(desenvolvido*area,baseBf));
+  const ganho=metaMinima(bf-magraKg);
+  const musculoMeta={kg:ganho,gramas:Math.round(ganho*1000+1e-9),dias:ganho*30};
+  const manter=faixa===1&&classeImlg==='Excelente';
   return {tmr,objetivo,gordura,classeGordura:classes[faixa],magra,magraKg,gorduraKg,imlg,classeImlg,
-    alvo,pesoAlvo,massaMagraAlvo,ganhoMagra,excedente,kcal,dias,mensagemId};
+    alvo,gorduraMeta,musculoMeta,manter};
 }
 
-// Dashboard P58:P62. Redação original.
-const mensagens=[
-  "Para conquistarmos a sua Definição Muscular, o foco é recomposição corporal. Uma meta alcançável seria eliminar {fat0} kg de gordura pura e construir {gain} kg de massa magra. Em aproximadamente {days} dias de consistência com um planejamento focado esse resultado é totalmente viável, mas o ajuste fino calórico e metabólico para essa recomposição deve ser traçado com o sua nutricionista e médico.",
-  "Para alcançar o seu objetivo de emagrecimento de forma acessível, será necessário um déficit calórico total estimado de {kcalGrouped} kcal para eliminar {fat} kg de gordura, enquanto ganhamos {gain} kg de massa magra para blindar seu metabolismo. Mantendo uma constância ativa, em cerca de {days} dias com uma meta diária saudável de 500 kcal/dia de déficit você atinge essa marca. A estratégia alimentar e de saúde para esse processo deve ser feita em parceria com o seu nutricionista e médico.",
-  "O seu foco principal será a redução do percentual de gordura. Para alcançar com segurança seu emagrecimento, será necessário eliminar {fat} kg de gordura pura, mantendo seus músculos intactos. Em {days} dias, mantendo um déficit calórico de 500 kcal/dia, alcançamos essa meta. O plano alimentar estratégico para tal deve ser feito com o nutricionista.",
-  "Para construirmos um físico volumoso e com um pouco mais de definição no seu processo de Hipertrofia, o caminho mais inteligente será ajustar moderadamente {fat} kg de gordura excedente antes de focar puramente no ganho de peso isolado. Isso garantirá que você construa massa magra com o ambiente metabólico super regulado, buscando a meta de {target} de gordura corporal. Mas, em aproximadamente {days} dias de consistência com o planejamento focado de superávit calórico de 400 kcal/dia, o ganho de {gain} de músculo pode ser totalmente viável. O direcionamento com o nutricionista e médico será essencial para criar essa transição perfeita.",
-  "O seu corpo está no cenário perfeito para focar 100% no ganho de volume e densidade muscular, já que seu percentual de gordura está {class} em {target}. Buscaremos construir {gain} kg de massa magra sólida. Fisiologicamente, iniciantes com ótima genética, nutrição e sono ganham até 2 kg de músculo/mês. Sendo realistas e visando um ganho limpo (metade desse potencial), estimamos que em {days} dias, mantendo um superávit estratégico de 400 kcal/dia ( {kcal} kcal/mês), você atingirá a meta. O ajuste de macronutrientes com o nutricionista será essencial."
-];
-
-export function mensagemMeta(meta){
-  const text=(n,digits,group=false)=>n===null?'-':n.toLocaleString('pt-BR',{
-    minimumFractionDigits:digits,maximumFractionDigits:digits,useGrouping:group
-  });
-  const values={fat0:text(meta.excedente,0),fat:text(meta.excedente,1),gain:text(meta.ganhoMagra,1),
-    days:text(meta.dias,0),kcalGrouped:text(meta.kcal===null?null:Math.abs(meta.kcal),0,true),
-    target:text(meta.alvo??meta.gordura,1)+'%',class:meta.classeGordura,kcal:text(meta.kcal,0)};
-  return mensagens[meta.mensagemId-1].replace(/\{(\w+)\}/g,(_,key)=>values[key]);
+function metaMinima(kg){
+  return kg>=.5-1e-10?kg:0;
 }
 
-export const notaMeta='Projeção teórica da planilha. Prazos e resultados variam. Ajustes de alimentação devem ser individualizados por um profissional.';
-export function linhasMeta(meta){
-  const measure=(n,unit,digits=2)=>n===null?'-':n.toLocaleString('pt-BR',{maximumFractionDigits:digits})+unit;
+const numero=(n,digits=2)=>n.toLocaleString('pt-BR',{maximumFractionDigits:digits});
+export function mensagemMeta({gorduraMeta,musculoMeta,manter}){
+  const gordura=gorduraMeta.kg>0, musculo=musculoMeta.kg>0;
+  const perda=gordura?numero(gorduraMeta.kg)+' kg de gordura em cerca de '+numero(gorduraMeta.dias,1)+' dias':'';
+  const ganho=musculo?numero(musculoMeta.gramas,0)+' g de músculo em cerca de '+numero(musculoMeta.dias,1)+' dias':'';
+  if(manter)return 'Parabéns! Seu percentual de gordura e seu volume muscular estão na faixa Excelente. Agora o foco é manter esse resultado com constância no treino, na alimentação e na recuperação.';
+  if(gordura&&musculo)return 'Para avançar na recomposição corporal, a projeção é eliminar '+perda+' e ganhar '+ganho+'. São metas calculadas separadamente. Planeje as etapas e o ajuste alimentar com seu nutricionista.';
+  if(gordura)return 'Seu foco principal é reduzir gordura preservando a massa magra. A projeção é eliminar '+perda+' com déficit de 500 kcal/dia. Planeje a estratégia alimentar com seu nutricionista.';
+  if(musculo)return 'O foco agora é ganhar massa magra. Com superávit de 400 kcal/dia, a projeção é ganhar '+ganho+'. Ajuste a estratégia alimentar com seu nutricionista.';
+  return 'Pelos cálculos, não há meta de perda de gordura nem de ganho muscular acima do limite adotado. Siga acompanhando suas medidas e seu desempenho nos treinos.';
+}
+
+export const notaMeta='Projeções teóricas calculadas separadamente. Prazos e resultados variam. Ajustes de alimentação devem ser individualizados por um profissional.';
+export function linhasMeta({alvo,gorduraMeta,musculoMeta}){
   return [
-    ['Gordura alvo',measure(meta.alvo,'%',1)],['Peso alvo',measure(meta.pesoAlvo,' kg')],
-    ['Massa magra alvo',measure(meta.massaMagraAlvo,' kg')],['Ganho de massa magra',measure(meta.ganhoMagra,' kg')],
-    ['Excedente de gordura',measure(meta.excedente,' kg')],['Saldo energético estimado',measure(meta.kcal,' kcal',0)],
-    ['Prazo estimado',measure(meta.dias,' dias')]
+    ['Gordura alvo',numero(alvo,1)+'%'],
+    ['Gordura a eliminar',gorduraMeta.kg?numero(gorduraMeta.kg)+' kg':'Sem meta de perda'],
+    ...(gorduraMeta.kg?[['Prazo de perda · déficit de 500 kcal/dia',numero(gorduraMeta.dias,1)+' dias']]:[]),
+    ['Músculo a ganhar',musculoMeta.kg?numero(musculoMeta.kg)+' kg ('+numero(musculoMeta.gramas,0)+' g)':'Sem meta de ganho'],
+    ...(musculoMeta.kg?[['Prazo de ganho · superávit de 400 kcal/dia',numero(musculoMeta.dias,1)+' dias']]:[])
   ];
 }

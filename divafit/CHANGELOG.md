@@ -1,3 +1,7 @@
+## Metas independentes na avaliação
+
+- Calcula perda de gordura e ganho muscular separadamente. Tela e e-mail exibem apenas prazos aplicáveis e escolhem a mensagem pelos resultados.
+
 ## Objetivo na avaliação
 
 - Adiciona três objetivos ao funil e reproduz as metas e mensagens da planilha na tela e no e-mail.

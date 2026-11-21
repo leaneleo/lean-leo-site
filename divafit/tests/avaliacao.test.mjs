@@ -1,6 +1,7 @@
+import {emailAvaliacao} from '../avaliacao/email.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {avaliar,composicao,parseMeasure,mensagemMeta} from '../avaliacao/calculos.mjs';
+import {avaliar,composicao,parseMeasure,mensagemMeta,linhasMeta} from '../avaliacao/calculos.mjs';
 const base={idade:30,altura:2,peso:100,sexo:'F',objetivo:'Emagrecimento',cintura:88};
 test('Faixas adultas e camada de 60+ acompanham a planilha',()=>{
   assert.deepEqual([70,74,100,120,140,160].map(peso=>avaliar({...base,peso}).faixa),[0,1,2,3,4,5]);
@@ -38,29 +39,39 @@ test('Composição usa faixas da planilha e o meta BC da planilha',()=>{
   assert.ok(Math.abs(alta.magra-68)<1e-10);
   assert.ok(Math.abs(alta.imlg-17)<1e-10);
   assert.equal(alta.classeImlg,'Desenvolvido');
-  assert.equal(alta.dias,alta.excedente*7700/500);
+  assert.equal(alta.gorduraMeta.dias,alta.gorduraMeta.kg*7700/500);
   assert.equal(composicao(base,16.9).alvo,16.9);
   assert.throws(()=>composicao(base,100));
 });
 
-test('Três objetivos reproduzem as células do Histórico recalculadas com dados fictícios',()=>{
-  const columns=['classeGordura','magra','magraKg','gorduraKg','tmr','imlg','classeImlg','alvo',
-    'excedente','kcal','massaMagraAlvo','ganhoMagra','pesoAlvo','dias','mensagemId'];
-  const rows=[
-    [[35,'F',1.65,72,32,'Emagrecimento'],['Alto',68,48.96,23.04,1415.25,17.9834710743802,'Desenvolvido',
-      29.9,2.15691868758917,-16608.2738944366,52.3823109843081,3.42231098430813,69.8430813124108,33.2165477888732,2]],
-    [[48,'F',1.60,68,32,'Definição Muscular'],['Moderadamente Alto',68,46.24,21.76,1279,18.0625,'Desenvolvido',
-      29.9,null,null,51,4.76,72.76,null,1]],
-    [[32,'M',1.78,80,18,'Hipertrofia'],['Bom',82,65.6,14.4,1757.5,20.7044565080167,'Normal',
-      null,null,12000,66.6,1,81,30,5]]
+test('Quatro cenários escolhem a mensagem pelos resultados e renderizam tela e email sem traços',()=>{
+  const cases=[
+    [72,32,'Definição Muscular',2.15691868758917,5.04,5040,/recomposição corporal/],
+    [80,32,'Hipertrofia',2.39657631954352,0,0,/reduzir gordura preservando/],
+    [60,16,'Emagrecimento',0,1.3275,1328,/superávit de 400 kcal/],
+    [65,16,'Hipertrofia',0,0,0,/Parabéns/]
   ];
-  for(const [[idade,sexo,altura,peso,gordura,objetivo],expected] of rows){
-    const result=composicao({idade,sexo,altura,peso,cintura:null,objetivo},gordura);
-    for(const [i,key] of columns.entries()){
-      const value=expected[i];
-      if(typeof value==='number')assert.ok(Math.abs(result[key]-value)<1e-8,objetivo+' · '+key);
-      else assert.equal(result[key],value,objetivo+' · '+key);
-    }
-    assert.doesNotMatch(mensagemMeta(result),/\{|undefined|NaN/);
+  for(const [peso,gordura,objetivo,perda,ganho,gramas,esperado] of cases){
+    const dados={idade:35,sexo:'F',altura:1.65,peso,cintura:null,objetivo};
+    const r=composicao(dados,gordura), msg=mensagemMeta(r);
+    assert.ok(Math.abs(r.gorduraMeta.kg-perda)<1e-9);
+    assert.ok(Math.abs(r.musculoMeta.kg-ganho)<1e-9);
+    assert.equal(r.musculoMeta.gramas,gramas);
+    assert.equal(r.gorduraMeta.dias,r.gorduraMeta.kg*7700/500);
+    assert.equal(r.musculoMeta.dias,r.musculoMeta.kg*30);
+    assert.match(msg,esperado);
+    assert.ok(emailAvaliacao(dados,{gordura}).includes(msg));
+    assert.doesNotMatch(JSON.stringify(linhasMeta(r))+msg,/"-"|eliminar -|NaN/);
   }
+});
+
+test('Metas inferiores a 500 g ficam fora e 500 g entram',()=>{
+  const dados={idade:35,sexo:'F',altura:1.65,peso:65,cintura:null,objetivo:'Emagrecimento'};
+  assert.equal(composicao(dados,30.1).gorduraMeta.kg,0);
+  const gorduraNoCorte=29.9+.5*(1-.299)/dados.peso*100;
+  assert.ok(Math.abs(composicao(dados,gorduraNoCorte).gorduraMeta.kg-.5)<1e-9);
+  const peso=(19*dados.altura**2-.4)/.84;
+  const r=composicao({...dados,peso},16);
+  assert.equal(r.musculoMeta.kg,0);
+  assert.match(mensagemMeta(r),/não há meta/);
 });

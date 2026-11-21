@@ -220,7 +220,7 @@ function complete(r,dados=answers,gordura=null,analysis={}){
     metric('Objetivo principal',dados.objetivo),metric('Taxa metabólica de repouso',format(body.tmr,0)+' kcal/dia'));
   const locked=el('section',undefined,'panel locked');
   const items=el('div',undefined,'metrics');
-  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Excedente de gordura','Prazo estimado']){
+  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Gordura a eliminar','Músculo a ganhar']){
     items.append(metric(label,'Bloqueado'));
   }
   locked.append(el('h3','Composição corporal'),items);
@@ -232,7 +232,7 @@ function complete(r,dados=answers,gordura=null,analysis={}){
       metric('Massa gorda',format(body.gorduraKg,2)+' kg'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
       ...linhasMeta(body).map(([label,value])=>metric(label,value)));
     locked.append(bodyMetrics);
-    if(body.alvo!==null){
+    if(body.gorduraMeta.kg>0){
       const track=el('div',undefined,'target-track');
       track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
       locked.append(track);
