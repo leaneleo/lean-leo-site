@@ -44,3 +44,7 @@
 
 - Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
 - Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
+
+## 2026-11-21
+
+- Referência de métodos em três colunas e proposta de VSSAM semanal documentada.
