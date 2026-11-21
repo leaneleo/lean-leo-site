@@ -1,3 +1,7 @@
+## 2026-11-21
+
+- Funil de avaliação com contatos reunidos, espaçamento mobile, aviso com o número da LGPD e demonstração da composição corporal com fórmulas da planilha.
+
 ## 2026-11-20
 
 - Biblioteca com total e filtros pelas siglas oficiais, Visão Geral com sete dias para alunos novos e revisão dos textos de rotinas. Cálculos acessíveis pelo atendimento.

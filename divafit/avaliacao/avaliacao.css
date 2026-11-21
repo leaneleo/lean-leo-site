@@ -33,3 +33,16 @@ button:active{transform:scale(.98)}button:focus-visible,a:focus-visible,.pick-fi
 .lead-shell{position:relative;display:grid;align-items:start;min-height:18rem}.lead-shadow,.lead-form{grid-area:1/1}.lead-shadow{filter:blur(7px);opacity:.54;pointer-events:none}.lead-form{position:relative;display:grid;gap:.8rem;margin:1.35rem .6rem;box-shadow:0 12px 32px #57281826}
 @media(min-width:700px){.flow{min-height:calc(100svh - 12rem)}.choices{grid-template-columns:repeat(4,minmax(0,1fr))}.choices.sex{grid-template-columns:repeat(2,minmax(0,1fr))}.actions .primary{flex:0 1 16rem;margin-left:auto}.lead-form{margin:2rem 4rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.stage{gap:1rem}
+.stage>.question{margin:0 0 .75rem}
+.question{line-height:1.2;letter-spacing:-.05em}
+.input-slot{min-height:4.2rem}
+.lead-shell{margin-top:1.75rem}
+.lead-form{gap:1rem;margin:1rem 0;padding:1.25rem}
+.contact-field{display:grid;gap:.45rem;font-size:.9rem;font-weight:700}
+.contact-field .input-slot{min-height:3.7rem}
+.contact-field .entry{font-size:1.05rem}
+.locked{display:grid;gap:1rem;background:#fff7f2}
+.locked .metric strong{color:var(--muted);font-size:1rem}
+.target-track{display:flex;justify-content:space-between;gap:.5rem;padding-top:.75rem;border-top:.6rem solid var(--accent);border-radius:.45rem;font-size:.85rem;font-weight:700}

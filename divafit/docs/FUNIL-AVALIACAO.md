@@ -33,3 +33,11 @@ Já existem no Drive um material chamado Desafio de 21 Dias Copia & Cola e crono
 Rode npm test e node scripts/build.mjs. A suíte cobre faixas adultas e de 60+, limites de cintura por sexo, medida ausente e entradas inválidas. O ensaio autenticado com fotos na ferramenta interna depende do login da equipe. Nenhum registro real foi usado como dado de teste neste código.
 
 Na prévia visual, a opção de fotos não tem caixa separada. Com três imagens selecionadas, o botão **Enviar fotos e ver avaliação** fica abaixo do aviso e registra a ação só na memória da página. **Continuar sem fotos** elimina a seleção. Para o lançamento, a mesma ação precisa gerar um comprovante de consentimento no servidor antes da transmissão, com data, versão do texto e finalidade. A faixa de gordura segue indisponível enquanto a análise pública não estiver integrada.
+
+### Revisão mobile de 21/11/2026
+
+Os contatos ficam na mesma tela. O aviso na etapa de fotos identifica a Lei nº 13.709/2018. Na prévia, o contato e as fotos ficam em memória e a avaliação sem análise de imagem bloqueia as métricas dependentes. Use `/avaliacao/?exemplo=1` para revisar a visualização preenchida com dados fictícios.
+
+Na planilha Avaliacao Física Lean&Leofit, aba Histórico, AS2 contém as faixas de gordura, AT2/AU2 a massa magra, AW2 a TMR, AX2/AY2 o IMLG e sua classificação, BD2/BH2 o excedente e BI2 a projeção linear a 500 kcal/dia. As categorias adicionais da planilha foram preservadas. O alvo segue a instrução de usar o teto da faixa imediatamente melhor em AS2. Isso difere de BC2, que usa metas próprias e pode pular faixas. Excelente e muito baixa mantêm o valor atual. A projeção é teórica.
+
+A função body-analysis existente exige sessão de equipe e consentimento cadastrado. A integração pública precisa de uma operação separada, com proteção anti-robô, limite diário, deduplicação, registro de finalidade e processamento privado. Nenhum upload ou e-mail real é disparado pela prévia.

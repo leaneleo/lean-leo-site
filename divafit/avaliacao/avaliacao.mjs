@@ -1,4 +1,4 @@
-import {avaliar,faixasAdulto,parseMeasure} from './calculos.mjs';
+import {avaliar,composicao,faixasAdulto,parseMeasure} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
 const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedback'), back=$('#back'), next=$('#next');
@@ -72,7 +72,7 @@ function render(){
     }
     if(photoFiles.size)next.textContent='Enviar fotos e ver avaliação';
     step.append(photos,btn('Continuar sem fotos',()=>{photoFiles.clear();photoAgreementAt=null;show(avaliar(answers));},'subtle'),
-      el('p','LGPD · Ao enviar as fotos, você autoriza a Le&LeoFit a usá-las para estimar sua composição corporal com IA, com armazenamento privado e processamento pela Anthropic. Nesta prévia, use imagens fictícias. Nenhuma foto é transmitida.','notice'));
+      el('p','LGPD · Lei nº 13.709/2018. A finalidade do envio é estimar a composição corporal com IA. Nesta prévia, as fotos ficam apenas no seu dispositivo.','notice'));
     return;
   }
   if(spec.choices){
@@ -137,36 +137,84 @@ function show(r){
     metric('Cintura/altura',r.razao===null?'Indisponível':format(r.razao,2)),metric('Faixa de gordura',photoAgreementAt?'Aguardando análise':'Disponível com fotos'));
   content.append(heading,indicator,panel,metrics);
   if(answers.treinos>=5)content.append(el('p','Em pessoas com muita massa muscular o IMC pode indicar peso acima do real; por isso olhamos também a cintura e as fotos.','hint'));
-  content.append(el('p',aviso,'hint'),btn('Desbloquear avaliação completa',()=>contact('email',r),'primary'));
+  content.append(el('p',aviso,'hint'),btn('Desbloquear avaliação completa',()=>contact(r),'primary'));
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
-function contact(key,r){
-  const isEmail=key==='email';
-  setProgress(fields.length+(isEmail?0:1));
+const contactValues={};
+function contact(r){
+  setProgress(fields.length+1);
   const heading=title('Desbloqueie sua avaliação completa');
   const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
   shadow.setAttribute('aria-hidden','true');
   shadow.append(metric('Composição corporal','— %'),metric('Cintura/altura',r.razao===null?'—':format(r.razao,2)),
     metric('Faixa de gordura','— a —'),metric('Indicador IMC × cintura',r.risco));
   const box=el('form',undefined,'lead-form');
-  const label=isEmail?'Qual é seu e-mail?':'Qual é seu WhatsApp com DDD?';
-  const {wrap,control}=textField(key,label,isEmail?'nome@exemplo.com':'(62) 90000-0000',isEmail?'email':'tel');
-  control.autocomplete=isEmail?'email':'tel-national';
-  if(!isEmail){control.pattern='[0-9()+ .-]{10,22}';control.maxLength=22;}
-  const submit=el('button','Continuar','primary');submit.type='submit';
-  box.append(el('h3',label),wrap,submit,btn('← Voltar',()=>isEmail?show(r):contact('email',r),'secondary'),
-    el('p','Prévia com dados fictícios. Os contatos não são enviados.','hint'));
+  for(const [key,label,example,type,auto] of [
+    ['nomeCompleto','Nome completo','Seu nome e sobrenome','text','name'],
+    ['whatsapp','Celular com WhatsApp','(62) 90000-0000','tel','tel-national'],
+    ['email','E-mail','nome@exemplo.com','email','email']
+  ]){
+    const {control}=textField(key,label,example,type);
+    const field=el('label',undefined,'contact-field');
+    control.value=contactValues[key]??(key==='nomeCompleto'?answers.nome:'');
+    control.autocomplete=auto;control.maxLength=type==='tel'?23:120;
+    control.addEventListener('input',()=>{contactValues[key]=control.value;control.setCustomValidity('');});
+    field.append(el('span',label));
+    const frame=el('span',undefined,'input-slot');
+    frame.append(control);field.append(frame);box.append(field);
+  }
+  const submit=el('button','Ver minha avaliação','primary');submit.type='submit';
+  box.append(submit,btn('← Voltar',()=>show(r),'secondary'),
+    el('p','Prévia com dados fictícios. Os contatos ficam nesta tela de teste.','hint'));
   shell.append(shadow,box);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
   box.addEventListener('submit',ev=>{
     ev.preventDefault();
-    if(isEmail){contact('whatsapp',r);return;}
-    setProgress(total,'Preenchimento concluído');
-    result.replaceChildren(el('div',undefined,'result-layout reveal'));
-    result.firstChild.append(title('Consultoria Online'),el('p','Treino com acompanhamento personalizado.'),
-      el('p','A avaliação por fotos e a integração com o CRM seguem em preparação nesta prévia.','hint'),
-      btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
+    const name=box.elements.nomeCompleto, phone=box.elements.whatsapp;
+    if(name.value.trim().split(/\s+/).length<2){name.setCustomValidity('Informe seu nome e sobrenome.');name.reportValidity();return;}
+    if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
+      phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
+    }
+    complete(r);
   });
+}
+function complete(r,dados=answers,gordura=null){
+  setProgress(total,'Preenchimento concluído');
+  const body=composicao(dados,gordura);
+  const heading=title('Sua avaliação completa');
+  const content=el('div',undefined,'result-layout reveal');
+  const panel=el('article',undefined,'panel gauge-core');
+  panel.append(gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
+  const measures=el('div',undefined,'metrics');
+  measures.append(metric('Idade',dados.idade+' anos'),metric('Altura',format(dados.altura,2)+' m'),
+    metric('Peso',format(dados.peso,1)+' kg'),metric('Cintura',dados.cintura===null?'Não informada':format(dados.cintura,1)+' cm'),
+    metric('Risco à saúde · IMC × cintura',r.risco),metric('Cintura/altura',r.razao===null?'Não informada':format(r.razao,2)),
+    metric('Taxa metabólica de repouso',format(body.tmr,0)+' kcal/dia'));
+  const locked=el('section',undefined,'panel locked');
+  const items=el('div',undefined,'metrics');
+  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Excedente de gordura','Tempo estimado a 500 kcal/dia']){
+    items.append(metric(label,'Bloqueado'));
+  }
+  locked.append(el('h3','Composição corporal'),items);
+  if(gordura!==null){
+    locked.replaceChildren(el('h3','Composição corporal'),el('p','Exemplo fictício para revisão do layout.','hint'));
+    const bodyMetrics=el('div',undefined,'metrics');
+    bodyMetrics.append(metric('Gordura corporal',format(body.gordura,1)+'% · '+body.classeGordura),
+      metric('Massa magra',format(body.magra,1)+'%'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
+      metric('Gordura alvo',format(body.alvo,1)+'%'),metric('Excedente de gordura',format(body.excedente,1)+' kg'),
+      metric('Projeção a 500 kcal/dia',Math.ceil(body.dias)+' dias'));
+    const track=el('div',undefined,'target-track');
+    track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
+    locked.append(bodyMetrics,track,el('p','Projeção matemática com massa magra constante. O tempo real pode variar.','hint'));
+  }else if(photoAgreementAt){
+    locked.append(el('p','As fotos selecionadas ficam no dispositivo. A análise por fotos ainda está em preparação.','hint'));
+  }else{
+    locked.append(btn('Envie suas fotos para desbloquear',()=>{current=fields.length-1;render();window.scrollTo(0,0);}));
+  }
+  content.append(heading,panel,measures,locked,el('p',aviso,'hint'),
+    el('h3','Consultoria Online'),el('p','Treino com acompanhamento personalizado.'),
+    btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
+  result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
 back.addEventListener('click',()=>{if(current>0){current--;render();}});
 form.addEventListener('submit',ev=>{
@@ -194,4 +242,8 @@ form.addEventListener('submit',ev=>{
   }
   current++;render();
 });
-render();
+if(new URLSearchParams(location.search).get('exemplo')==='1'){
+  const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:86};
+  form.hidden=true;result.hidden=false;
+  complete(avaliar(exemplo),exemplo,32);
+}else render();
