@@ -1,3 +1,7 @@
+## Card Desafio Black — 21/11/2026
+
+- Financeiro mostra tema, datas, dieta em grupo e vendas fechadas, com link para a página do Desafio. Os dois pontos leem as mesmas informações.
+
 ## Homologação da análise pública
 
 - Prévia aponta para a função do Supabase com passe de teste de uso único. Envio Resend preparado e desativado por padrão.
