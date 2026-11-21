@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {libraryGroups,libraryLevel,libraryRoutines} from '../production-domain.js';
+import {libraryGroups,libraryLevel,libraryRoutines,originalPhaseForVolume} from '../production-domain.js';
 import {createProduction} from '../production-ui.js';
 
 const data = {
@@ -17,6 +17,7 @@ test('Siglas oficiais aparecem mesmo sem rotinas e variantes ficam junto da base
   assert.deepEqual(groups.at(-2), {phase:'AA8', range:'270–280', count:1});
   assert.deepEqual(groups.at(-1), {phase:'NC', range:'', count:3});
   assert.equal(libraryLevel('AA8'), 'Altamente avançada');
+  assert.deepEqual([39,40,59,60,79,80,139,140,199,200,280,281].map(originalPhaseForVolume), ['NC','IN1','IN1','IN2','IN2','IT1','IT6','AV1','AV6','AA1','AA8','NC']);
   for (const group of groups) {
     assert.equal(libraryRoutines(data, {phase:group.phase}).length, group.count);
   }
