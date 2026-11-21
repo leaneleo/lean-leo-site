@@ -1,8 +1,10 @@
+import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
 import {avaliar,composicao,faixasAdulto,parseMeasure} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
 const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedback'), back=$('#back'), next=$('#next');
 const progress=$('#progress'), progressLabel=$('#progress-label');
+const publicEnabled=publicPhotosEnabled(window.DIVAFIT_PUBLIC_BODY);
 const aviso='Estimativa feita por IA e fórmulas, pode conter erros e não substitui avaliação presencial.';
 const fields=[
  {key:'nome',label:'Qual é seu primeiro nome?',placeholder:'Seu nome'},
@@ -72,7 +74,7 @@ function render(){
     }
     if(photoFiles.size)next.textContent='Enviar fotos e ver avaliação';
     step.append(photos,btn('Continuar sem fotos',()=>{photoFiles.clear();photoAgreementAt=null;show(avaliar(answers));},'subtle'),
-      el('p','LGPD · Lei nº 13.709/2018. A finalidade do envio é estimar a composição corporal com IA. Nesta prévia, as fotos ficam apenas no seu dispositivo.','notice'));
+      el('p','LGPD · Lei nº 13.709/2018. A finalidade do envio é estimar a composição corporal com IA. '+(publicEnabled?'Ao concluir a avaliação com fotos, elas serão processadas pela Anthropic. O DivaFit registra a finalidade, a data e identificadores protegidos para limitar o uso.':'Nesta prévia, as fotos ficam apenas no seu dispositivo.'),'notice'));
     return;
   }
   if(spec.choices){
@@ -164,21 +166,43 @@ function contact(r){
     frame.append(control);field.append(frame);box.append(field);
   }
   const submit=el('button','Ver minha avaliação','primary');submit.type='submit';
-  box.append(submit,btn('← Voltar',()=>show(r),'secondary'),
-    el('p','Prévia com dados fictícios. Os contatos ficam nesta tela de teste.','hint'));
+  const status=el('p','','hint');status.setAttribute('role','status');
+  let challenge='';
+  if(publicEnabled&&photoAgreementAt){
+    const widget=el('div');
+    box.append(widget);
+    submit.textContent='Analisar minhas fotos e ver avaliação';
+    submit.disabled=true;
+    photoChallenge(widget,token=>{challenge=token;submit.disabled=!token;})
+      .catch(()=>{status.textContent='A verificação está indisponível. Você pode continuar sem fotos.';});
+    box.append(btn('Ver avaliação sem fotos',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
+  }
+  box.append(status,submit,btn('← Voltar',()=>show(r),'secondary'),
+    el('p',publicEnabled&&photoAgreementAt?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
   shell.append(shadow,box);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
-  box.addEventListener('submit',ev=>{
+  box.addEventListener('submit',async ev=>{
     ev.preventDefault();
     const name=box.elements.nomeCompleto, phone=box.elements.whatsapp;
     if(name.value.trim().split(/\s+/).length<2){name.setCustomValidity('Informe seu nome e sobrenome.');name.reportValidity();return;}
     if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
     }
-    complete(r);
+    if(!publicEnabled||!photoAgreementAt){complete(r);return;}
+    if(!challenge||submit.disabled)return;
+    for(const control of box.elements)control.disabled=true;
+    status.textContent='Analisando as fotos. Isso pode levar alguns instantes.';
+    try{
+      const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
+        email:box.elements.email.value,whatsapp:phone.value
+      },challenge);
+      complete(r,answers,response.gordura.estimado,{range:response.gordura});
+    }catch(error){
+      complete(r,answers,null,{error:error.message});
+    }
   });
 }
-function complete(r,dados=answers,gordura=null){
+function complete(r,dados=answers,gordura=null,analysis={}){
   setProgress(total,'Preenchimento concluído');
   const body=composicao(dados,gordura);
   const heading=title('Sua avaliação completa');
@@ -197,7 +221,7 @@ function complete(r,dados=answers,gordura=null){
   }
   locked.append(el('h3','Composição corporal'),items);
   if(gordura!==null){
-    locked.replaceChildren(el('h3','Composição corporal'),el('p','Exemplo fictício para revisão do layout.','hint'));
+    locked.replaceChildren(el('h3','Composição corporal'),el('p',analysis.range?'Faixa estimada: '+format(analysis.range.min,1)+'% a '+format(analysis.range.max,1)+'%.':'Exemplo fictício para revisão do layout.','hint'));
     const bodyMetrics=el('div',undefined,'metrics');
     bodyMetrics.append(metric('Gordura corporal',format(body.gordura,1)+'% · '+body.classeGordura),
       metric('Massa magra',format(body.magra,1)+'%'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
@@ -206,6 +230,8 @@ function complete(r,dados=answers,gordura=null){
     const track=el('div',undefined,'target-track');
     track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
     locked.append(bodyMetrics,track,el('p','Projeção matemática com massa magra constante. O tempo real pode variar.','hint'));
+  }else if(analysis.error){
+    locked.append(el('p',analysis.error,'hint'),btn('Voltar à etapa de fotos',()=>{current=fields.length-1;render();window.scrollTo(0,0);}));
   }else if(photoAgreementAt){
     locked.append(el('p','As fotos selecionadas ficam no dispositivo. A análise por fotos ainda está em preparação.','hint'));
   }else{

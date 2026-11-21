@@ -67,7 +67,7 @@ export async function generateEstimate(call, photos, measures) {
 }
 
 const maxRequest = 6500000;
-async function readForm(req) {
+export async function readForm(req) {
   const reader = req.body?.getReader();
   if (!reader) throw Error();
   const chunks = [];

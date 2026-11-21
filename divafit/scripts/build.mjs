@@ -34,9 +34,14 @@ await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.ht
 
 
 for (const [folder,files] of [
- ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs']],
+ ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs']],
  ['desafio-21-dias',['index.html']]
 ]) {
  await mkdir('public/'+folder,{recursive:true});
  for (const file of files) await copyFile(folder+'/'+file,'public/'+folder+'/'+file);
 }
+
+await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_BODY = '+JSON.stringify({
+  endpoint:process.env.PUBLIC_BODY_ENDPOINT||'',
+  sitekey:process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||''
+})+';');
