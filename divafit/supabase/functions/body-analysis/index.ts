@@ -1,6 +1,6 @@
 import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import jpeg from 'npm:jpeg-js@0.4.4';
-import {encodeBase64} from 'jsr:@std/encoding@1.0.10/base64';
+import {Buffer} from 'node:buffer';
 import {ANGLES,MODEL,SYSTEM,createHandler} from './handler.mjs';
 
 const url = Deno.env.get('SUPABASE_URL') ?? '';
@@ -79,7 +79,7 @@ Deno.serve(createHandler({
   async call(photos:Uint8Array[],measures:unknown,attempt:number) {
     const content = photos.flatMap((bytes,index)=>[
       {type:'text',text:ANGLES[index]},
-      {type:'image',source:{type:'base64',media_type:'image/jpeg',data:encodeBase64(bytes)}}
+      {type:'image',source:{type:'base64',media_type:'image/jpeg',data:Buffer.from(bytes).toString('base64')}}
     ]);
     content.push({type:'text',text:JSON.stringify(measures)+(attempt?'\nRetorne somente o JSON corrigido.':'')});
     const response = await fetch('https://api.anthropic.com/v1/messages',{
