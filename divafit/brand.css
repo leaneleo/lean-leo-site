@@ -53,3 +53,8 @@ blockquote{color:#7d6253;border-left-color:var(--brand-gold)}
 #install-guide ol{color:#665146}
 .install-note{background:#fff2e2;color:#765339}
 @media(max-width:650px){.brand-wordmark{width:210px;height:68px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}
+
+.library-header-meta { display: flex; align-items: center; gap: .75rem; }
+.library-total { display: grid; justify-items: center; padding: .65rem 1rem; border: 1px solid #c54930; border-radius: 12px; background: #fff; color: #a23621; }
+.library-total strong { font-size: 2rem; line-height: 1.1; }
+.library-total small { font-size: .75rem; }

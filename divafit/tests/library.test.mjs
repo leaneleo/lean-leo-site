@@ -1,8 +1,42 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {libraryGroups,libraryRoutines} from '../production-domain.js';
+import {libraryGroups,libraryLevel,libraryRoutines} from '../production-domain.js';
 import {createProduction} from '../production-ui.js';
-const data={students:[{id:'s',name:'Aluno exemplo'}],workouts:[{id:'w',name:'Modelo compartilhado',format:'AB'}],assignments:[20,30,80,90,140,230,240,null].map((v,i)=>({id:'a'+i,student_id:'s',workout_id:'w',routine_name:'Ficha '+i,expected_vssam:v})),production_cases:[],instructions:[]};
-test('Níveis seguem iniciante, intermediário, avançado e sem VSSAM, com números naturais',()=>{assert.deepEqual(libraryGroups(data).map(x=>x.phase),['IN1','IN2','IT1','IT2','AV1','AV10','AV11',null])});
-test('Cada cartão conta exatamente as rotinas exibidas, mesmo compartilhando modelo',()=>{for(const g of libraryGroups(data))assert.equal(libraryRoutines(data,{phase:g.phase||'unknown'}).length,g.count);assert.equal(libraryRoutines(data,{phase:'IN1'})[0].a.id,'a0');assert.equal(libraryRoutines(data,{phase:'unknown'})[0].a.id,'a7');const x=structuredClone(data);x.assignments[0].routine_kind='Igual';x.assignments[1].archived=true;assert.equal(libraryRoutines(x).length,6)});
-test('Clique muda as rotinas visíveis e sem VSSAM abre a ficha correspondente',async()=>{const original=globalThis.document;globalThis.document={querySelector:()=>null};try{const p=createProduction({db:()=>data,esc:v=>String(v??''),button:(text,action,extra='')=>`<button data-action="${action}" ${extra}>${text}</button>`,tag:x=>x,date:x=>x||'—',formField:()=>'',safeLink:()=>'',api:{},render:()=>{}});await p.action({dataset:{action:'wf-level',phase:'IN1'}});let html=p.render('workouts');assert.match(html,/Treinos — Iniciante 1/);assert.match(html,/data-id="a0"/);assert.doesNotMatch(html,/data-id="a7"/);await p.action({dataset:{action:'wf-level',phase:'unknown'}});html=p.render('workouts');assert.match(html,/Treinos sem VSSAM/);assert.match(html,/data-id="a7"/);assert.doesNotMatch(html,/data-id="a0"/)}finally{globalThis.document=original}});
+
+const data = {
+  students:[], workouts:[], instructions:[], production_cases:[],
+  assignments:['AV1B', 'AV1', 'AV1C', 'AA8', 'NC', null, 'AV12'].map((original_phase, i) => ({
+    id:'a'+i, number:i, original_phase, expected_vssam:80
+  }))
+};
+
+test('Siglas oficiais aparecem mesmo sem rotinas e variantes ficam junto da base', () => {
+  const groups = libraryGroups(data);
+  assert.equal(groups.length, 25);
+  assert.deepEqual(groups.slice(8, 12).map(x => x.phase), ['AV1','AV1B','AV1C','AV2']);
+  assert.deepEqual(groups.at(-2), {phase:'AA8', range:'270–280', count:1});
+  assert.deepEqual(groups.at(-1), {phase:'NC', range:'', count:3});
+  assert.equal(libraryLevel('AA8'), 'Altamente avançada');
+  for (const group of groups) {
+    assert.equal(libraryRoutines(data, {phase:group.phase}).length, group.count);
+  }
+  assert.equal(libraryRoutines({...data, assignments:[{...data.assignments[0], archived:true}]}).length, 0);
+});
+
+test('Clique filtra pela sigla salva e exibe o resultado correspondente', async () => {
+  const original = globalThis.document;
+  globalThis.document = {querySelector:() => null};
+  try {
+    const production = createProduction({
+      db:() => data, esc:v => String(v ?? ''), button:(label, action, attrs='') => `<button ${attrs}>${label}</button>`,
+      tag:String, date:String, formField:() => '', safeLink:() => '', api:{}, render:() => {}
+    });
+    await production.action({dataset:{action:'wf-level', phase:'AV1B'}});
+    const html = production.render('workouts');
+    assert.match(html, /Rotinas — AV1B/);
+    assert.match(html, /data-id="a0"/);
+    assert.doesNotMatch(html, /data-id="a1"/);
+  } finally {
+    globalThis.document = original;
+  }
+});

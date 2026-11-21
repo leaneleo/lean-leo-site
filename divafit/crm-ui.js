@@ -43,8 +43,8 @@ export function createCrm({api,db,isAdmin,notice,reload,openStudent}){
    const facts=e('ul',null,'crm-facts');
    facts.append(e('li',r.info.label+(r.extensions?' · '+r.extensions+' prorrogação(ões)':'')));
    facts.append(e('li',r.info.treinos==null?'Treinos do plano: a conferir':r.delivered==null?'Treinos: '+r.info.treinos+' no plano · início do plano a conferir':'Treinos entregues: '+r.delivered+' de '+r.info.treinos));
-   if(r.end)facts.append(e('li','Ficha atual termina em '+dateLabel(r.end)+(r.days>=0?' (em '+r.days+' dia'+(r.days===1?'':'s')+')':' (há '+(-r.days)+' dia'+(r.days===-1?'':'s')+')')));
-   if(r.building)facts.append(e('li','Nova ficha em elaboração'+(r.building.number?' (nº '+r.building.number+')':'')));
+   if(r.end)facts.append(e('li','Rotina atual termina em '+dateLabel(r.end)+(r.days>=0?' (em '+r.days+' dia'+(r.days===1?'':'s')+')':' (há '+(-r.days)+' dia'+(r.days===-1?'':'s')+')')));
+   if(r.building)facts.append(e('li','Nova rotina em elaboração'+(r.building.number?' (nº '+r.building.number+')':'')));
    card.append(facts);
    const actions=e('div',null,'crm-actions');actions.append(button('Abrir aluna',()=>openStudent(r.student.id)));
    if(r.current&&['renovar','inativa','em_dia','devendo'].includes(r.status))actions.append(button('Registrar prorrogação (R$ 20)',async ev=>{

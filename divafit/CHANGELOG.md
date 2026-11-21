@@ -1,3 +1,7 @@
+## 2026-11-20
+
+- Biblioteca com total e filtros pelas siglas oficiais, Visão Geral com sete dias para alunos novos e revisão dos textos de rotinas. Cálculos acessíveis pelo atendimento.
+
 # Histórico DivaFit
 
 ## CRM, Família e relatórios InfinitePay — 20/11/2026
