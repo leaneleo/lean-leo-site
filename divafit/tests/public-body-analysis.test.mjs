@@ -4,14 +4,14 @@ import {createPublicHandler} from '../supabase/functions/public-body-analysis/ha
 
 const origin='https://preview.example.test';
 const jpg=new Blob([Buffer.from('/9j/4AAQSkZJRgABAQAAAQABAAD/2Q==','base64')],{type:'image/jpeg'});
-function request(overrides={},site=origin){
+function request(overrides={},site=origin,headers={}){
   const data=new FormData();
   for(const [k,v] of Object.entries({email:' TEST@example.test ',whatsapp:'+55 (62) 90000-0000',weight:72,
     height:165,age:35,sex:'feminino',purpose:'body-photo-v1',challenge:'fixture-token',
     frente:jpg,lado:jpg,costas:jpg,...overrides}))data.set(k,v);
-  return new Request(origin+'/public',{method:'POST',headers:{origin:site},body:data});
+  return new Request(origin+'/public',{method:'POST',headers:{origin:site,...headers},body:data});
 }
-function harness(){
+function harness(overrides={}){
   const keys=[], seen=new Map();
   let calls=0,slots=0,allowed=true;
   const handler=createPublicHandler({
@@ -31,7 +31,8 @@ function harness(){
         observacoes:{distribuicao_gordura:'',definicao_muscular:'',postura:'',assimetrias:''},
         comparacao_anterior:'',sugestoes_para_o_personal:[],limitacoes:''
       })}]};
-    }
+    },
+    ...overrides
   });
   return {handler,keys,calls:()=>calls,block:()=>{allowed=false;}};
 }
@@ -60,4 +61,28 @@ test('O bloqueio diário impede a 31ª análise',async()=>{
   }))));
   assert.equal(replies.filter(r=>r.status===429).length,1);
   assert.equal(calls(),30);
+});
+
+test('Modo de teste requer passe de uso único, marca a reserva e bloqueia e-mail',async()=>{
+  let available=true, flags=[], emails=0;
+  const {handler,calls}=harness({
+    testMode:true,
+    testPass:async pass=>{
+      if(pass!=='fixture' || !available)return false;
+      available=false;
+      return true;
+    },
+    reserve:async (id,email,phone,isTest)=>{flags.push(isTest);return 'ok';},
+    email:async()=>{emails++;return true;}
+  });
+  assert.equal((await handler(request())).status,403);
+  const signed=()=>request({},origin,{'x-fixture-pass':'fixture'});
+  const accepted=await handler(signed());
+  assert.equal(accepted.status,200);
+  assert.deepEqual(await accepted.json(),{gordura:{min:29,estimado:32,max:35},confianca:'baixa',
+    teste:true,input_tokens:321,output_tokens:123});
+  assert.equal((await handler(signed())).status,403);
+  assert.deepEqual(flags,[true]);
+  assert.equal(calls(),1);
+  assert.equal(emails,0);
 });

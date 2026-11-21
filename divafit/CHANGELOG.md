@@ -1,3 +1,7 @@
+## Homologação da análise pública
+
+- Prévia aponta para a função do Supabase com passe de teste de uso único. Envio Resend preparado e desativado por padrão.
+
 ## Funil público de fotos — 21/11/2026
 
 - Fluxo opcional de fotos com função pública independente, Turnstile, limite diário e deduplicação por contato. Desafio disponível na prévia e com vendas fechadas.

@@ -42,6 +42,6 @@ for (const [folder,files] of [
 }
 
 await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_BODY = '+JSON.stringify({
-  endpoint:process.env.PUBLIC_BODY_ENDPOINT||'',
-  sitekey:process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||''
+  endpoint:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_ENDPOINT||'':'',
+  sitekey:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||'1x00000000000000000000AA':''
 })+';');

@@ -2,13 +2,20 @@ import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import {Buffer} from 'node:buffer';
 import {ANGLES,MODEL,SYSTEM} from '../body-analysis/handler.mjs';
 import {resize} from '../body-analysis/resize.ts';
+import {sendAssessmentEmail} from './email.ts';
 import {createPublicHandler} from './handler.mjs';
 
 const env=(name:string)=>Deno.env.get(name)??'';
 const keys=JSON.parse(env('SUPABASE_SECRET_KEYS')||'{}');
 const client=createClient(env('SUPABASE_URL'),keys.default||env('SUPABASE_SERVICE_ROLE_KEY'),{auth:{persistSession:false}});
-const anthropic=env('ANTHROPIC_API_KEY'), turnstile=env('PUBLIC_BODY_TURNSTILE_SECRET'), salt=env('PUBLIC_BODY_CONTACT_SECRET');
-const origins=env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(Boolean);
+const anthropic=env('ANTHROPIC_API_KEY');
+const dummyTurnstile='1x0000000000000000000000000000000AA'; // Official public fixture credential.
+const turnstile=env('PUBLIC_BODY_TURNSTILE_SECRET')||dummyTurnstile;
+const testMode=turnstile===dummyTurnstile;
+const salt=env('PUBLIC_BODY_CONTACT_SECRET')||(testMode?(keys.default||env('SUPABASE_SERVICE_ROLE_KEY')):'');
+const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM');
+const preview='https://deploy-preview-7--consultoria-divafit.netlify.app';
+const origins=testMode?[preview]:env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(Boolean);
 const encoder=new TextEncoder();
 async function rpc(name:string,args:Record<string,unknown>){
   const {data,error}=await client.rpc(name,args);
@@ -17,12 +24,21 @@ async function rpc(name:string,args:Record<string,unknown>){
 }
 
 Deno.serve(createPublicHandler({
-  origins,ready:()=>Boolean(anthropic&&turnstile&&salt.length>=32&&origins.length),resize,
+  origins,testMode,
+  email:!testMode&&resend&&from&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
+    ? (...args:Parameters<typeof sendAssessmentEmail> extends [string,string,...infer Rest]?Rest:never)=>sendAssessmentEmail(resend,from,...args)
+    : undefined,
+  async testPass(pass:string,origin:string){
+    if(origin!==preview||!(/^[a-f0-9]{64}$/.test(pass)))return false;
+    const digest=Buffer.from(await crypto.subtle.digest('SHA-256',encoder.encode(pass))).toString('hex');
+    return await rpc('public_body_use_test_pass',{p_digest:digest})===true;
+  },
+  ready:()=>Boolean(anthropic&&turnstile&&salt.length>=32&&origins.length),resize,
   async hash(value:string){
     const key=await crypto.subtle.importKey('raw',encoder.encode(salt),{name:'HMAC',hash:'SHA-256'},false,['sign']);
     return Buffer.from(await crypto.subtle.sign('HMAC',key,encoder.encode(value))).toString('hex');
   },
-  reserve:(id:string,email:string,phone:string)=>rpc('public_body_reserve',{p_id:id,p_email:email,p_phone:phone}),
+  reserve:(id:string,email:string,phone:string,isTest:boolean)=>rpc('public_body_reserve',{p_id:id,p_email:email,p_phone:phone,p_is_test:isTest}),
   release:(id:string)=>rpc('public_body_release',{p_id:id}),
   async challenge(token:string,hostname:string){
     const response=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{
@@ -30,7 +46,7 @@ Deno.serve(createPublicHandler({
     });
     if(!response.ok)return false;
     const data=await response.json();
-    return data.success===true&&data.hostname===hostname&&data.action==='body_analysis';
+    return data.success===true&&(testMode||(data.hostname===hostname&&data.action==='body_analysis'));
   },
   async call(photos:Uint8Array[],measures:unknown,attempt:number){
     const content=photos.flatMap((bytes,index):Array<Record<string,unknown>>=>[
@@ -43,7 +59,7 @@ Deno.serve(createPublicHandler({
       headers:{'content-type':'application/json','x-api-key':anthropic,'anthropic-version':'2023-06-01'},
       body:JSON.stringify({model:MODEL,max_tokens:1800,system:SYSTEM,messages:[{role:'user',content}]})
     });
-    if(!response.ok)throw Error('Serviço de estimativa indisponível');
+    if(!response.ok)throw Object.assign(Error('Serviço de estimativa indisponível'),{status:response.status});
     return response.json();
   }
 }));

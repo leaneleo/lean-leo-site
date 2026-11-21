@@ -172,6 +172,8 @@ function contact(r){
     const widget=el('div');
     box.append(widget);
     submit.textContent='Analisar minhas fotos e ver avaliação';
+    if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
+      status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
     submit.disabled=true;
     photoChallenge(widget,token=>{challenge=token;submit.disabled=!token;})
       .catch(()=>{status.textContent='A verificação está indisponível. Você pode continuar sem fotos.';});

@@ -16,12 +16,15 @@ export function createPublicHandler(deps) {
     const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
     if(!origin||!deps.origins.includes(origin))return json({message:'Origem indisponível.'},403);
     Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'POST, OPTIONS',
-      'Access-Control-Allow-Headers':'content-type'});
+      'Access-Control-Allow-Headers':'content-type, x-fixture-pass'});
     if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
     if(req.method!=='POST')return json({message:'Método não permitido.'},405);
     if(!deps.ready())return json({message:'Análise por fotos indisponível.'},503);
     let id;
     let keep=false;
+    let isTest=false;
+    const usage={input_tokens:0,output_tokens:0};
+    const diagnostics=()=>isTest?{teste:true,...usage}:{};
     try {
       let form;
       try {form=await readForm(req);}catch{return json({message:'Envie três fotos JPEG de até 2 MB cada.'},400);}
@@ -32,11 +35,16 @@ export function createPublicHandler(deps) {
       if(files.some((file,i)=>!(file instanceof Blob)||file.type!=='image/jpeg'||!file.size||
          file.size>2097152||form.getAll(ANGLES[i]).length!==1))
         return json({message:'Envie uma foto JPEG para cada ângulo.'},400);
+      const pass=req.headers.get('x-fixture-pass');
+      if(deps.testMode){
+        if(!pass||!await deps.testPass?.(pass,origin))return json({message:'Homologação restrita a testes autorizados.'},403);
+        isTest=true;
+      }
       if(typeof token!=='string'||!token||token.length>2048||!await deps.challenge(token,new URL(origin).hostname))
         return json({message:'Refaça a verificação de segurança.'},403);
       const hashes=await Promise.all(identity.map((value,i)=>deps.hash(i+':'+value)));
       const candidate=crypto.randomUUID();
-      const reserved=await deps.reserve(candidate,...hashes);
+      const reserved=await deps.reserve(candidate,...hashes,isTest);
       if(reserved!=='ok')return json({message:reserved==='limit'?'Limite diário atingido. Tente amanhã.':'Este contato já foi usado ou tem uma análise em andamento.'},429);
       id=candidate;
       let photos;
@@ -44,13 +52,19 @@ export function createPublicHandler(deps) {
         photos=[];
         for(const file of files)photos.push(await deps.resize(file));
       }catch{return json({message:'Uma foto não pôde ser lida. Escolha as três imagens novamente.'},400);}
-      const {result}=await generateEstimate(deps.call,photos,measures);
+      const {result}=await generateEstimate(async (...args)=>{
+        const reply=await deps.call(...args);
+        for(const key of ['input_tokens','output_tokens'])usage[key]+=Number(reply.usage?.[key])||0;
+        return reply;
+      },photos,measures);
       const percentage=result.gordura_percentual;
       keep=result.fotos_ok&&percentage?.estimado>0&&percentage.estimado<100;
-      return json(keep?{gordura:percentage,confianca:result.confianca}:
-        {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.'},keep?200:422);
-    }catch{
-      return json({message:'A análise está indisponível. Você ainda pode ver os demais indicadores.'},502);
+      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],measures,percentage.estimado,id).catch(()=>false):false;
+      return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...diagnostics()}:
+        {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
+    }catch(error){
+      return json({message:'A análise está indisponível. Você ainda pode ver os demais indicadores.',...diagnostics(),
+        ...(isTest&&Number.isInteger(error?.status)?{upstream_status:error.status}:{})},502);
     }finally{
       if(id&&!keep)await deps.release(id).catch(()=>{});
     }
