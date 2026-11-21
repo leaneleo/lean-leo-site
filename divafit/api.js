@@ -4,7 +4,7 @@ let session=null;try{session=JSON.parse(sessionStorage.getItem('divafit.session'
 let recoveryPending=sessionStorage.getItem('divafit.recovery')==='true';
 function setSession(s){session=s;if(s)sessionStorage.setItem('divafit.session',JSON.stringify({...s,expires_at:s.expires_at||Date.now()/1000+s.expires_in}));else sessionStorage.removeItem('divafit.session');if(s&&!s.expires_at)s.expires_at=Date.now()/1000+s.expires_in}
 let refreshing=null;async function token(){if(!session)throw Error('Entre na sua conta.');if(session.expires_at<Date.now()/1000+60){if(!refreshing)refreshing=auth('token?grant_type=refresh_token',{refresh_token:session.refresh_token}).then(setSession).finally(()=>{refreshing=null});await refreshing}return session.access_token}
-async function request(path,options={},authenticated=true){const headers={apikey:config.supabaseKey,'Content-Type':'application/json',...options.headers};if(authenticated)headers.Authorization='Bearer '+await token();let response;try{response=await fetch(config.supabaseUrl+path,{...options,headers})}catch{throw Error('Sem conexão. Suas alterações não foram salvas; tente novamente.')}const value=await response.json().catch(()=>null);if(!response.ok){if(response.status===401)throw Error('Sessão expirada. Entre novamente.');throw Error(value?.message||value?.error_description||'Não foi possível concluir a operação.')}return value}
+async function request(path,options={},authenticated=true){const headers={apikey:config.supabaseKey,'Content-Type':'application/json',...options.headers};if(options.body instanceof FormData)delete headers['Content-Type'];if(authenticated)headers.Authorization='Bearer '+await token();let response;try{response=await fetch(config.supabaseUrl+path,{...options,headers})}catch{throw Error('Sem conexão. Suas alterações não foram salvas; tente novamente.')}const value=await response.json().catch(()=>null);if(!response.ok){if(response.status===401)throw Error('Sessão expirada. Entre novamente.');throw Error(value?.message||value?.error_description||'Não foi possível concluir a operação.')}return value}
 async function auth(endpoint,body){return request('/auth/v1/'+endpoint,{method:'POST',body:JSON.stringify(body)},false)}
 export async function login(email,password){const data=await auth('token?grant_type=password',{email,password});setSession(data)}
 export async function activate(email,password){const data=await auth('signup?redirect_to='+encodeURIComponent(window.location.origin),{email,password});if(data.access_token)setSession(data);return Boolean(data.access_token)}
@@ -53,3 +53,21 @@ export const financeExpenseCreate=args=>request('/rest/v1/rpc/finance_expense_cr
 export const crmLeads=()=>request('/rest/v1/rpc/crm_leads',{method:'POST',body:'{}'});
 export const crmLeadSave=args=>request('/rest/v1/rpc/crm_lead_save',{method:'POST',body:JSON.stringify(args)});
 export const crmLeadArchive=args=>request('/rest/v1/rpc/crm_lead_archive',{method:'POST',body:JSON.stringify(args)});
+
+export function bodyAnalysisHistory(studentId) {
+  return request('/rest/v1/body_analyses?student_id=eq.'+encodeURIComponent(studentId)+'&order=created_at.desc');
+}
+export async function bodyAnalysisConsent(studentId) {
+  const rows = await request('/rest/v1/body_analysis_consents?select=recorded_at&student_id=eq.'+encodeURIComponent(studentId));
+  return rows[0]?.recorded_at ?? null;
+}
+export const setBodyAnalysisConsent = (studentId,granted) => request('/rest/v1/rpc/body_analysis_consent',{
+  method:'POST',body:JSON.stringify({p_student:studentId,p_granted:granted})
+});
+export const runBodyAnalysis = form => request('/functions/v1/body-analysis',{
+  method:'POST',body:form
+});
+export const bodyAnalysisPhotos = id => request('/functions/v1/body-analysis?photos='+encodeURIComponent(id),{method:'POST'});
+export const reviewBodyAnalysis = (id,status,values=null) => request('/rest/v1/rpc/body_analysis_review',{
+  method:'POST',body:JSON.stringify({p_id:id,p_status:status,p_values:values})
+});

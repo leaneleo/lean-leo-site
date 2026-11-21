@@ -40,3 +40,7 @@
 
 - Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
 - Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
+
+## Avaliação corporal por fotos — branch de trabalho
+
+- Fluxo de equipe com consentimento, fotos privadas, rascunho de IA, revisão, histórico e impressão de aprovados. Veja docs/ANALISE-CORPORAL.md.
