@@ -59,3 +59,5 @@ Em Cloudflare → Turnstile → Add widget, escolha Managed e cadastre o hostnam
 O envio pelo Resend fica desligado enquanto `PUBLIC_BODY_EMAIL_ENABLED` for diferente de `true`. Após verificar o remetente, adicionar `RESEND_API_KEY` e `PUBLIC_BODY_EMAIL_FROM` aos secrets da Edge Function, testar com um endereço autorizado e, só então, habilitar o envio. No modo de teste, o disparo permanece bloqueado. O HTML inclui o velocímetro em anexo inline e usa uma chave de idempotência por análise.
 
 Na homologação, a função real recebeu três ilustrações fictícias e o Claude sinalizou que as fotos eram inadequadas para estimar gordura (HTTP 422). A Anthropic reportou 2.400 tokens de entrada e 3.230 de saída, com custo calculado de US$ 0,0371. O registro marcado como teste foi removido. O teste transacional no PostgreSQL confirmou a deduplicação por e-mail e celular, a recusa da 31ª reserva e a ausência de permissão para `anon`. O rollback deixou zero tentativas e zero passes de teste.
+
+A chave pública real do Turnstile deve ser fornecida pela Netlify em Deploy Preview. Após trocar a variável, é necessário um novo build da prévia.
