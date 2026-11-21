@@ -30,16 +30,17 @@ const libraryPhases = new Map([
 
 export function originalPhaseForVolume(value) {
  const v = Number(value);
- if (!Number.isFinite(v) || v < 40 || v > 280) return 'NC';
+ if (!Number.isFinite(v) || v < 40) return 'NC';
  if (v < 80) return v < 60 ? 'IN1' : 'IN2';
  if (v < 140) return 'IT' + (Math.floor((v - 80) / 10) + 1);
  if (v < 200) return 'AV' + (Math.floor((v - 140) / 10) + 1);
- return 'AA' + Math.min(8, Math.floor((v - 200) / 10) + 1);
+ return 'AA' + (v === 280 ? 8 : Math.floor((v - 200) / 10) + 1);
 }
 
 function libraryPhaseOf(assignment) {
  const phase = String(assignment.original_phase ?? '').trim().toUpperCase();
- return libraryPhases.has(phase.replace(/[B-Z]$/, '')) ? phase : 'NC';
+ const base = phase.replace(/[B-Z]$/, '');
+ return libraryPhases.has(base) || /^AA(?:9|[1-9][0-9]+)$/.test(base) ? phase : 'NC';
 }
 
 export function libraryLevel(phase) {
@@ -65,7 +66,14 @@ export function libraryGroups(db) {
    counts.set(phase, (counts.get(phase) || 0) + 1);
  }
  const groups = [];
- for (const [phase, range] of libraryPhases) {
+ const extra = [...new Set([...counts.keys()].map(phase => phase.replace(/[B-Z]$/, '')))]
+   .filter(phase => phase.startsWith('AA') && !libraryPhases.has(phase))
+   .sort((a, b) => Number(a.slice(2)) - Number(b.slice(2)))
+   .map(phase => {
+     const lower = 200 + (Number(phase.slice(2)) - 1) * 10;
+     return [phase, (lower === 280 ? 281 : lower) + '–' + (lower + 9)];
+   });
+ for (const [phase, range] of [...libraryPhases, ...extra]) {
    groups.push({phase, range, count:counts.get(phase) || 0});
    for (const variant of [...counts.keys()].filter(key => key.slice(0, -1) === phase).sort()) {
      groups.push({phase:variant, range, count:counts.get(variant)});

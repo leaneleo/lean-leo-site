@@ -17,7 +17,7 @@ test('Siglas oficiais aparecem mesmo sem rotinas e variantes ficam junto da base
   assert.deepEqual(groups.at(-2), {phase:'AA8', range:'270–280', count:1});
   assert.deepEqual(groups.at(-1), {phase:'NC', range:'', count:3});
   assert.equal(libraryLevel('AA8'), 'Altamente avançada');
-  assert.deepEqual([39,40,59,60,79,80,139,140,199,200,280,281].map(originalPhaseForVolume), ['NC','IN1','IN1','IN2','IN2','IT1','IT6','AV1','AV6','AA1','AA8','NC']);
+  assert.deepEqual([39,40,59,60,79,80,139,140,199,200,280,281,289,290,500].map(originalPhaseForVolume), ['NC','IN1','IN1','IN2','IN2','IT1','IT6','AV1','AV6','AA1','AA8','AA9','AA9','AA10','AA31']);
   for (const group of groups) {
     assert.equal(libraryRoutines(data, {phase:group.phase}).length, group.count);
   }
@@ -40,4 +40,11 @@ test('Clique filtra pela sigla salva e exibe o resultado correspondente', async 
   } finally {
     globalThis.document = original;
   }
+});
+
+test('Biblioteca exibe AA9 e classes superiores em ordem numérica, incluindo variantes', () => {
+ const assignments = ['AA10B','AA9','AA11','AA10'].map(original_phase => ({original_phase}));
+ assert.deepEqual(libraryGroups({...data,assignments}).slice(-5).map(({phase,range})=>[phase,range]),
+  [['AA9','281–289'],['AA10','290–299'],['AA10B','290–299'],['AA11','300–309'],['NC','']]);
+ assert.equal(libraryRoutines({...data,assignments},{phase:'AA10B'}).length,1);
 });

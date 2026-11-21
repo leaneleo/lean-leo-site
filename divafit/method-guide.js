@@ -21,7 +21,7 @@ export const METHOD_GUIDE = [
     "Cadenciado",
     "Iniciante",
     "4 × 7, cadência 1012, 60 s",
-    "No exemplo: 1 s na descida, 0 s embaixo, 1 s na subida e 2 s em cima."
+    "Controle a velocidade na descida e na subida. Respeite a pausa indicada."
   ],
   [
     "Isométrico intraset",
@@ -45,7 +45,7 @@ export const METHOD_GUIDE = [
     "B7",
     "Iniciante, com exercícios leves",
     "Agachamento livre + escalador",
-    "Repetições e intervalo dependem da prescrição. Para iniciante, não combine agachamento com barra e búlgaro com halter."
+    "Para iniciante, use combinações leves, como agachamento livre e escalador. Evite combinar agachamento com barra e búlgaro com halter."
   ],
   [
     "Bi-set",
@@ -63,7 +63,7 @@ export const METHOD_GUIDE = [
     "Pirâmide decrescente",
     "Intermediária",
     "Exemplo de 3 séries de 12/10/8, 45 s",
-    "No exemplo, a carga cai cerca de 20% por série."
+    "Reduza a carga entre as séries conforme a prescrição."
   ],
   [
     "Cluster set",
@@ -81,7 +81,7 @@ export const METHOD_GUIDE = [
     "Excêntrico adaptado",
     "Avançada",
     "3 × 10, cadência 3010, 45 s",
-    "Controle a descida por 3 s."
+    "Controle a fase de descida do movimento."
   ],
   [
     "Rest-pause",
@@ -93,6 +93,6 @@ export const METHOD_GUIDE = [
     "Ondulatório",
     "Avançada",
     "4 séries alternando 15 e 6, 60 s",
-    "Registre as cargas usadas nas duas faixas de repetições."
+    "Alterne as cargas conforme a prescrição e registre os pesos usados."
   ]
 ];

@@ -48,3 +48,5 @@
 ## 2026-11-21
 
 - Referência de métodos em três colunas e proposta de VSSAM semanal documentada.
+
+- Financeiro → Le&LeoFit recebeu o cartão Black Friday do Desafio Black. Os cards de Instruções mostram somente observações, e a Biblioteca aceita AA9 e superiores.

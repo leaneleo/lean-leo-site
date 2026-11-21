@@ -21,3 +21,5 @@ VSSAM semanal = soma, para cada sessão, das séries válidas da sessão multipl
 
 A consulta ao DivaFit não retornou uma grade de séries preenchida para nenhuma das 14 rotinas. Os números condicionais não são prescrições confirmadas. A tabela anterior terminava em 280, com NC acima desse teto. É preciso aprovar o tratamento desse limite antes de gravar as novas siglas.
 
+
+Decisão de 21/11/2026 — AA8 mantém 270–280, AA9 cobre 281–289 e AA10 em diante segue por dezenas. As projeções das rotinas 5, 7, 8, 9 e 10 da Ana Galvão ficam para conferência antes de qualquer alteração dos dados.

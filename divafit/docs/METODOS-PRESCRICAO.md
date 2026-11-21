@@ -24,3 +24,5 @@ As faixas são cumulativas. Intermediária usa os métodos de iniciante e os de 
 As faixas de intermediária e avançada desta tabela vêm dos métodos equivalentes já classificados na Referência do DivaFit. Progressivo, regressivo, repetições parciais e demais combinações do arquivo precisam de confirmação quando o nível mínimo não estiver indicado. Os exemplos de aquecimento foram excluídos.
 
 Fonte — https://drive.google.com/file/d/12ptgNhPPALD-Dvabse9bhHDeEa-TDNH6/view
+
+Os cards da aba Instruções exibem o nome e a observação qualitativa. Os exemplos completos de séries, repetições e intervalos são material para os presets do MFIT.
