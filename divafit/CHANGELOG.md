@@ -1,3 +1,7 @@
+## 2026-11-20
+
+- Biblioteca com total e filtros pelas siglas oficiais, Visão Geral com sete dias para alunos novos e revisão dos textos de rotinas. Cálculos acessíveis pelo atendimento.
+
 # Histórico DivaFit
 
 ## CRM, Família e relatórios InfinitePay — 20/11/2026
@@ -40,3 +44,15 @@
 
 - Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
 - Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
+
+## 2026-11-21
+
+- Referência de métodos em três colunas e proposta de VSSAM semanal documentada.
+
+- Financeiro → Le&LeoFit recebeu o cartão Black Friday do Desafio Black. Os cards de Instruções mostram somente observações, e a Biblioteca aceita AA9 e superiores.
+
+## Avaliação corporal por fotos — branch de trabalho
+
+- Fluxo de equipe com consentimento, fotos privadas, rascunho de IA, revisão, histórico e impressão de aprovados. Veja docs/ANALISE-CORPORAL.md.
+
+- Funil de avaliação parcial e página fechada do Desafio 21 dias disponíveis para revisão. Consulte docs/FUNIL-AVALIACAO.md.

@@ -5,7 +5,7 @@ if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL S
 if(key.startsWith('sb_secret_'))throw Error('Use somente a chave pública');
 if(key.split('.').length===3){try{const payload=JSON.parse(Buffer.from(key.split('.')[1],'base64url'));if(payload.role==='service_role')throw Error('Uma chave administrativa não pode ser publicada')}catch(e){throw e}}
 await mkdir('public',{recursive:true});
-for(const file of ['index.html','style.css','student-style.css','app.js','finance-domain.js','finance-ui.js','finance-painel-data.js','finance-painel-ui.js','finance-painel.css','crm-domain.js','crm-ui.js','crm.css','production-domain.js','production-ui.js','student-domain.js','student-ui.js','domain.js','api.js','forms-domain.js','forms-ui.js','copy-domain.js','copy-ui.js'])await copyFile(file,'public/'+file);
+for(const file of ['index.html','style.css','student-style.css','app.js','finance-domain.js','finance-ui.js','finance-painel-data.js','finance-painel-ui.js','finance-painel.css','crm-domain.js','crm-ui.js','crm.css','production-domain.js','production-ui.js','student-domain.js','student-ui.js','body-analysis-ui.js','domain.js','api.js','forms-domain.js','forms-ui.js','copy-domain.js','copy-ui.js'])await copyFile(file,'public/'+file);
 for(const file of ['brand.css','manifest.webmanifest','mobile.js','mobile.css','sw.js','offline.html','offline.css'])await copyFile(file,'public/'+file);
 await buildIcons('public/icons');
 await writeFile('public/config.js','window.DIVAFIT_CONFIG = '+JSON.stringify({supabaseUrl:url,supabaseKey:key})+';');
@@ -32,3 +32,11 @@ await mkdir('public/checkout/divafit/retorno',{recursive:true});
 for(const file of ['index.html','checkout.css','checkout.js','retorno.js','retorno.css'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
 await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.html');
 
+
+for (const [folder,files] of [
+ ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs']],
+ ['desafio-21-dias',['index.html']]
+]) {
+ await mkdir('public/'+folder,{recursive:true});
+ for (const file of files) await copyFile(folder+'/'+file,'public/'+folder+'/'+file);
+}

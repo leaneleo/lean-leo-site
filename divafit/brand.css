@@ -53,3 +53,21 @@ blockquote{color:#7d6253;border-left-color:var(--brand-gold)}
 #install-guide ol{color:#665146}
 .install-note{background:#fff2e2;color:#765339}
 @media(max-width:650px){.brand-wordmark{width:210px;height:68px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}
+
+.library-header-meta { display: flex; align-items: center; gap: .75rem; }
+.library-total { display: grid; justify-items: center; padding: .65rem 1rem; border: 1px solid #c54930; border-radius: 12px; background: #fff; color: #a23621; }
+.library-total strong { font-size: 2rem; line-height: 1.1; }
+.library-total small { font-size: .75rem; }
+
+.method-guide { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.method-guide-card { background: white; border: 1px solid var(--brand-line); border-left: 3px solid var(--brand-action); border-radius: 8px; margin: .65rem 0; padding: .8rem; }
+.method-guide-card h4 { margin: 0; color: var(--brand-action); }
+@media (max-width: 700px) { .method-guide { grid-template-columns: 1fr; } }
+
+.body-analysis-dialog { width: min(850px, 94vw); max-height: 90vh; color: var(--brand-ink); font-family: inherit; }
+.body-analysis-warning { border-left: 3px solid var(--brand-action); padding: .7rem; }
+.body-analysis-dialog .panel { margin-block: .8rem; }
+.body-analysis-record button { margin: .25rem; }
+.body-analysis-photos { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .5rem; }
+.body-analysis-photos img { width: 100%; height: auto; }
+.body-trend progress { width: 100%; accent-color: var(--brand-action); }
