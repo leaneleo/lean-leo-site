@@ -6,7 +6,7 @@ import {email2Copy} from '../../../avaliacao/email2-textos.mjs';
 import {substituir} from '../../../avaliacao/email-textos.mjs';
 import {emailAvaliacao,assuntoAvaliacao} from '../../../avaliacao/email.mjs';
 
-type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string;nome?:string;modalidade?:string;treinos?:number;tempoSentada?:number;sono?:number;alimentacao?:string[]};
+type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string;nome?:string;modalidade?:string|string[];treinos?:number;tempoSentada?:number;sono?:number;alimentacao?:string[]};
 
 function gauge(imc:number,band:number){
   const width=280,height=150,data=new Uint8Array(width*height*4);

@@ -13,13 +13,16 @@ export function alternarAlimento(selecao,item){
 }
 
 export function perfilParcial({modalidade,treinos,tempoSentada,sono,alimentacao}){
-  if(!Object.hasOwn(minutosEquivalentesPorTreino,modalidade)||!Number.isInteger(treinos)||treinos<0||treinos>7||
+  const modalidades=[...new Set(Array.isArray(modalidade)?modalidade:[modalidade])];
+  if(!modalidades.length||modalidades.some(item=>!Object.hasOwn(minutosEquivalentesPorTreino,item))||
+    (modalidades.length>1&&modalidades.includes('nenhum'))||!Number.isInteger(treinos)||treinos<0||treinos>7||
     !['emPe',0,6,8,10,12].includes(tempoSentada)||![4,5,6,7,8].includes(sono)||
     !Array.isArray(alimentacao)) throw Error('Perfil parcial inválido.');
   const selecao=new Set(alimentacao);
   if([...selecao].some(item=>!alimentosFavoraveis.includes(item)&&!alimentosDeAtencao.includes(item))||
     pares.some(par=>par.every(item=>selecao.has(item))))throw Error('Seleção alimentar inválida.');
-  const minutos=treinos*minutosEquivalentesPorTreino[modalidade];
+  const media=modalidades.reduce((total,item)=>total+minutosEquivalentesPorTreino[item],0)/modalidades.length;
+  const minutos=Math.round(treinos*media);
   const condicionamento=minutos>=300?'Muito ativa':minutos>=150?'Ativa':tempoSentada>=10?'Sedentária':'Pouco ativa';
   const qualidadeSono=sono>=7?'Adequado':sono===6?'Atenção':'Insuficiente';
   const favoraveis=alimentosFavoraveis.filter(item=>selecao.has(item)).length;
