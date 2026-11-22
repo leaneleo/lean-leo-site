@@ -1,4 +1,4 @@
-import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
+import {readFile,mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
 import {buildIcons} from './icons.mjs';
 import {emailAvaliacao} from '../avaliacao/email.mjs';
 import {emailDesafio} from '../avaliacao/email-desafio.mjs';
@@ -49,6 +49,9 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
 })+';');
 
 if(process.env.CONTEXT==='deploy-preview'){
+ // A tag final de body é opcional no HTML. Sem ela, a Netlify não injeta o Drawer nesta página.
+ const assessment=await readFile('avaliacao/index.html','utf8');
+ await writeFile('public/avaliacao/index.html',assessment.replace('</body>',''));
  await copyFile('avaliacao/imc-exemplo.svg','public/avaliacao/imc-exemplo.svg');
  await writeFile('public/avaliacao/email-avaliacao.html',emailAvaliacao({idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:'Emagrecimento'},{gordura:32,exemplo:true,nome:'Marina'}));
  await writeFile('public/avaliacao/email-desafio.html',emailDesafio('Marina',{preview:true}));
