@@ -15,24 +15,23 @@ export const parcialCopy={
     "Seis horas ainda ficam abaixo do ideal de 7 a 9. Uma hora a mais de sono pode render mais do que uma hora a mais de treino.",
     "Seu sono está na quantidade certa. Agora cuide da qualidade: horário fixo, quarto escuro, menos tela antes de dormir e nada de café depois das 17h."
   ],
-  "food": [
-    "Você não marcou frutas. O ideal é pelo menos 2 por dia.",
-    "Faltam verduras e legumes. Eles dão fibra, saciedade e vitaminas com poucas calorias. Metade do prato no almoço e no jantar é uma boa meta.",
-    "Proteína é o material de construção da massa magra. Sem ela nas refeições principais, você perde músculo junto com a gordura. Ovos, carnes, frango, peixe, queijos e iogurte ajudam.",
-    "Você marcou carboidrato em excesso. Não precisa cortar, precisa medir: arroz, pão e massa na quantidade certa para o seu objetivo.",
-    "Você marcou gordura em excesso, e às vezes ela vem de onde a gente nem percebe: óleo de preparo, frituras, queijos e molhos.",
-    "Doces e ultraprocessados quase todo dia somam muitas calorias e pouca saciedade. Esse é um dos primeiros ajustes.",
-    "Bebidas adoçadas são calorias que não matam a fome. Troque por água, água com gás ou chá.",
-    "Álcool 3 vezes ou mais por semana atrapalha o sono, a recuperação e a queima de gordura.",
-    "Pular refeições ou beliscar o dia todo bagunça a fome. Ter horários ajuda a comer melhor.",
-    "Hidratação ajuda no rendimento e no controle da fome. Busque 2 litros por dia.",
-    "Sua alimentação tem uma base boa. O próximo passo é ajustar as quantidades para o seu objetivo.",
-    "Antes de culpar a genética, olhe para o básico. É nos pontos acima que está o seu resultado."
-  ],
-  "vegetais": {
-    "soVerduras": "Verduras são ótimas. Os legumes completam o prato: cenoura, abóbora, abobrinha, beterraba e brócolis somam mais fibra, vitaminas e saciedade.",
-    "soLegumes": "Legumes são ótimos. Sem verduras, porém, pode faltar fibra no prato. Uma salada de folhas no almoço e no jantar ajuda a chegar aos 25 g de fibra por dia recomendados."
+  "food": {
+    "carboExcesso": "Você marcou carboidrato em excesso. Não precisa cortar, precisa medir: arroz, pão e massa na quantidade certa para o seu objetivo.",
+    "gorduraExcesso": "gordura é importante na produção de hormônios do corpo, mas em excesso nas carnes gordas, frituras, queijos e molhos vai contra o corpo que você busca.",
+    "doces": "Você pode comer seu docinho, mas se não tiver maturidade pra comer não coma. Ele é viciante, pode aumentar seu colesterol, fome fora de hora por falta de saciedade e dor de cabeça.",
+    "ultraprocessados": "Miojo, salsicha, fast-food não são comida de verdade. Deixe como exceção quando precisar.",
+    "bebidas": "Bebidas adoçadas são calorias que não matam a fome. Troque por água, água com gás ou chá.",
+    "alcool": "Álcool não traz nenhum benefício para o corpo, atrapalha o sono, a recuperação e a queima de gordura. Deixe para ocasiões extremamente especiais.",
+    "refeicoes": "Pular refeições ou beliscar o dia todo bagunça a fome. Planejar e estabelecer horários ajuda a comer melhor. É igual viajar sem roteiro.",
+    "proteina": "Proteína é o material de construção da massa magra. Sem ela nas refeições principais, você perde músculo junto com a gordura. Ovos, carnes, frango, peixe, queijos e iogurte ajudam.",
+    "semLegumes": "Os legumes completam o prato: cenoura, abóbora, abobrinha, beterraba e brócolis somam mais fibra, vitaminas e saciedade.",
+    "semVerduras": "Sem folhas verdes pode faltar fibra no prato. Uma salada de folhas no almoço e no jantar ajuda a chegar aos 25 g de fibra por dia recomendados.",
+    "semVegetais": "Faltam verduras e legumes. Eles dão fibra, saciedade e vitaminas com poucas calorias.",
+    "frutas": "O ideal é pelo menos 2 frutas por dia. O suco é bom, mas sem coar por favor.",
+    "agua": "Hidratação ajuda no rendimento e no controle da fome. O indicado pra você é {peso x 35ml} L/dia.",
+    "semCorrecoes": "Sua alimentação tem uma base boa. O próximo passo é ajustar as quantidades para o seu objetivo.",
+    "finalComNegativos": "Antes de culpar a genética, olhe para o básico. É nos pontos acima que está o seu resultado.",
+    "finalSemNegativos": "Você parece comer bem no dia a dia. Com esses pequenos ajustes, seu resultado aparece mais rápido. 🧡"
   },
-  "finalSemNegativos": "Você já faz o mais difícil, que é comer bem no dia a dia. Com esses pequenos ajustes, seu resultado aparece mais rápido. 🧡",
   "imc": "O IMC é um parâmetro genérico: ele não diferencia gordura de músculo, e a ciência já mostrou que, sozinho, ele não define sua saúde. Vamos analisar sua composição corporal para ter uma referência mais confiável?"
 };

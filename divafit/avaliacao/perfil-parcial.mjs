@@ -33,22 +33,26 @@ export function topicosParciais(respostas,resultado,copy,limite=3){
   const p=perfilParcial(respostas);
   const risco=['Baixo risco','Risco moderado','Risco elevado'].indexOf(resultado.risco);
   const selecao=new Set(respostas.alimentacao);
+  const food=copy.food;
   const negativos=[
-    selecao.has('carboExcesso'),selecao.has('gorduraExcesso'),selecao.has('doces')||selecao.has('ultraprocessados'),
-    selecao.has('bebidas'),selecao.has('alcool'),selecao.has('beliscos')||selecao.has('puloRefeicoes')
-  ].flatMap((marcado,i)=>marcado?[copy.food[i+3]]:[]);
+    ...['carboExcesso','gorduraExcesso','doces','ultraprocessados','bebidas','alcool']
+      .filter(item=>selecao.has(item)).map(item=>food[item]),
+    selecao.has('beliscos')||selecao.has('puloRefeicoes')?food.refeicoes:null
+  ].filter(Boolean);
   const verduras=selecao.has('verduras'), legumes=selecao.has('legumes');
-  const dicaVegetais=verduras?(legumes?null:copy.vegetais.soVerduras):(legumes?copy.vegetais.soLegumes:copy.food[1]);
+  const dicaVegetais=verduras?(legumes?null:food.semLegumes):(legumes?food.semVerduras:food.semVegetais);
+  const litros=(respostas.peso*35/1000).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1});
   const faltantes=[
-    !selecao.has('proteina')&&copy.food[2],dicaVegetais,
-    !selecao.has('frutas')&&copy.food[0],!selecao.has('agua')&&copy.food[9]
+    !selecao.has('proteina')&&food.proteina,dicaVegetais,
+    !selecao.has('frutas')&&food.frutas,
+    !selecao.has('agua')&&food.agua.replace('{peso x 35ml}',litros)
   ].filter(Boolean);
   const dicas=negativos.length?negativos:faltantes;
-  const encerramento=negativos.length?copy.food[11]:copy.finalSemNegativos;
+  const encerramento=negativos.length?food.finalComNegativos:food.finalSemNegativos;
   return [
     ['Risco à saúde',[copy.risk[risco]].filter(Boolean)],
     ['Nível de condicionamento',[copy.activity[['Sedentária','Pouco ativa','Ativa','Muito ativa'].indexOf(p.condicionamento)].replace('{min}',p.minutos)]],
     ['Sono',[copy.sleep[respostas.sono<=5?0:respostas.sono===6?1:2].replace('{h}',respostas.sono)]],
-    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):[copy.food[10]]),encerramento]]
+    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):[food.semCorrecoes]),encerramento]]
   ];
 }

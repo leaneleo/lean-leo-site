@@ -33,13 +33,16 @@ test('Atualização aprovada conta corrida e caminhada e exclui quem fica em pé
 test('Dicas respeitam os quatro casos de verduras e legumes e o encerramento por negativos',async()=>{
   const {topicosParciais}=await import('../avaliacao/perfil-parcial.mjs');
   const {parcialCopy}=await import('../avaliacao/parcial-textos.mjs');
-  const food=alimentacao=>topicosParciais({...base,alimentacao},{risco:'Baixo risco'},parcialCopy).at(-1)[1];
+  const food=alimentacao=>topicosParciais({...base,peso:70,alimentacao},{risco:'Baixo risco'},parcialCopy).at(-1)[1];
+  const foodCopy=parcialCopy.food;
   const outros=['frutas','proteina','agua'];
-  assert.deepEqual(food([...outros,'verduras']),[parcialCopy.vegetais.soVerduras,parcialCopy.finalSemNegativos]);
-  assert.deepEqual(food([...outros,'legumes']),[parcialCopy.vegetais.soLegumes,parcialCopy.finalSemNegativos]);
-  assert.deepEqual(food(outros),[parcialCopy.food[1],parcialCopy.finalSemNegativos]);
-  assert.deepEqual(food([...outros,'verduras','legumes']),[parcialCopy.food[10],parcialCopy.finalSemNegativos]);
-  assert.deepEqual(food(['doces','bebidas']),[parcialCopy.food[5],parcialCopy.food[6],parcialCopy.food[11]]);
+  assert.deepEqual(food([...outros,'verduras']),[foodCopy.semLegumes,foodCopy.finalSemNegativos]);
+  assert.deepEqual(food([...outros,'legumes']),[foodCopy.semVerduras,foodCopy.finalSemNegativos]);
+  assert.deepEqual(food(outros),[foodCopy.semVegetais,foodCopy.finalSemNegativos]);
+  assert.deepEqual(food([...outros,'verduras','legumes']),[foodCopy.semCorrecoes,foodCopy.finalSemNegativos]);
+  assert.deepEqual(food(['doces','ultraprocessados','bebidas']),[foodCopy.doces,foodCopy.ultraprocessados,foodCopy.bebidas,foodCopy.finalComNegativos]);
+  assert.match(foodCopy.doces,/mas se não tiver/);
+  assert.match(food(['verduras','legumes','frutas','proteina'])[0],/2,5 L\/dia/);
 });
 
 test('Os dois e-mails reservam o presente na prévia e só incluem link HTTPS informado',async()=>{

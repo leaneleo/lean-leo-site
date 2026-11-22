@@ -107,3 +107,5 @@ Ajustes de revisão: perguntas centralizadas, alimentação agrupada em pontos p
 O texto da etapa 17 segue o [card do Trello](https://trello.com/c/gKSt0Qrv) e foi aprovado pelo Leandro e usa o perfil @leeleofit. A tela só é habilitada em Deploy Previews. A chamada para conferir o e-mail aparece quando o envio é confirmado. O download da avaliação parcial é manual em PDF. Na avaliação parcial, dicas negativas marcadas têm prioridade e verduras e legumes recebem orientações distintas conforme o caso. Vendas do Desafio continuam fechadas.
 
 Os modelos de e-mail aceitam `ebookUrl`. Enquanto o PDF aprovado não tiver URL, a reserva aparece apenas nas amostras do Deploy Preview. Nenhuma URL de e-book é passada pelo envio real.
+
+Textos de alimentação conforme o [card atualizado](https://trello.com/c/ekcJMkwy). Doces e alimentos industrializados têm dicas independentes. A dica sobre água usa peso em kg × 35 ml, em litros com uma casa decimal.

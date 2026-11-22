@@ -1,3 +1,7 @@
+## Avaliação grátis · textos de alimentação
+
+- Aplica as frases revisadas no Trello, separa doces de industrializados e formata a estimativa de água com peso × 35 ml.
+
 ## Avaliação grátis · revisão da alimentação e do encerramento
 
 - Distingue verduras e legumes, alterna o encerramento do tópico, aplica a aprovação da etapa 17 e reserva o e-book nas duas prévias de e-mail.
