@@ -184,9 +184,11 @@ function contact(r){
     submit.textContent=photoAgreementAt?'Analisar minhas fotos e ver avaliação':'Receber convite do Desafio por e-mail';
     if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
       status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
-    submit.disabled=true;
-    photoChallenge(widget,token=>{challenge=token;submit.disabled=!token;})
-      .catch(()=>{status.textContent='A verificação está indisponível. Você pode continuar sem fotos.';});
+    if(!status.textContent)status.textContent='Carregando a verificação de segurança…';
+    photoChallenge(widget,(token,message)=>{
+      challenge=token;
+      status.textContent=token?'Verificação concluída. Você já pode continuar.':message;
+    }).catch(()=>{status.textContent='Não foi possível carregar a verificação. Volte e tente novamente ou veja o resumo.';});
     box.append(btn('Ver resumo sem aguardar e-mail',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
   }
   box.append(status,submit,btn('← Voltar',()=>render(),'secondary'),
@@ -202,7 +204,12 @@ function contact(r){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
     }
     if(!publicEnabled){complete(r);return;}
-    if(!challenge||submit.disabled)return;
+    if(submit.disabled)return;
+    if(!challenge){
+      if(!status.textContent||status.textContent.startsWith('Carregando'))
+        status.textContent='Aguarde a verificação de segurança. Se ela não aparecer, volte e tente novamente.';
+      return;
+    }
     for(const control of box.elements)control.disabled=true;
     status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
     try{

@@ -7,15 +7,24 @@ export async function photoChallenge(container,update){
   const config=window.DIVAFIT_PUBLIC_BODY;
   scriptReady??=new Promise((resolve,reject)=>{
     const script=document.createElement('script');
-    script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-    script.onload=()=>window.turnstile.ready(resolve);
-    script.onerror=reject;
+    const done=(error)=>{
+      clearTimeout(timeout);
+      delete window.divafitTurnstileLoaded;
+      if(error){script.remove();reject(error);}else resolve();
+    };
+    const timeout=setTimeout(()=>done(Error('Tempo de verificação esgotado.')),15000);
+    window.divafitTurnstileLoaded=()=>done();
+    script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=divafitTurnstileLoaded';
+    script.onerror=()=>done(Error('Não foi possível carregar a verificação.'));
     document.head.append(script);
-  });
+  }).catch(error=>{scriptReady=undefined;throw error;});
   await scriptReady;
-  if(container.isConnected)window.turnstile.render(container,{
+  if(!container.isConnected)return;
+  window.turnstile.render(container,{
     sitekey:config.sitekey,action:'body_analysis',callback:update,
-    'expired-callback':()=>update(''),'error-callback':()=>update('')
+    'expired-callback':()=>update('','A verificação expirou. Aguarde uma nova verificação ou volte e tente novamente.'),
+    'timeout-callback':()=>update('','A verificação demorou demais. Volte e tente novamente.'),
+    'error-callback':()=>{update('','Não foi possível verificar. Volte e tente novamente ou veja o resumo.');return true;}
   });
 }
 

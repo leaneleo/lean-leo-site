@@ -89,3 +89,5 @@ A lista Automações · mensagens automáticas do quadro CONSULTORIA ONLINE DIVA
 O card do E-mail 1 foi marcado como aprovado em 21/11. A revisão aprovada pode ser enviada pela prévia para a lista de teste. O E-mail 2 permanece bloqueado até a revisão do card resolver as duas marcações `[CONFIRMAR]`.
 
 A revisão aprovada do E-mail 2 substitui as duas marcações do Trello e libera o fluxo sem fotos apenas para a lista de teste da prévia, se `PUBLIC_BODY_EMAIL_ENABLED=true`. A aprovação registrada no código substitui o interruptor temporário exclusivo da oferta. A quantidade por lote é regra operacional e fica fora da mensagem.
+
+A etapa 11 carrega o Turnstile com o callback oficial de renderização explícita. Carregamento, expiração e erros aparecem na tela. O resumo continua disponível sem e-mail, sem disparar a função.
