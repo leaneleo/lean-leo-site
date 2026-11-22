@@ -84,4 +84,5 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .summary dd{margin:0;overflow-wrap:anywhere;font-weight:700}
 
 /* O Drawer injetado pela Netlify está fora do formulário e falha sob a CSP da página. */
-.assessment-page > div[data-netlify-deploy-id][data-netlify-site-id]{display:none!important}
+.assessment-page div[data-netlify-deploy-id][data-netlify-site-id],
+.assessment-page iframe[title="Netlify Drawer"]{display:none!important}
