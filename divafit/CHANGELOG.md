@@ -1,3 +1,7 @@
+## Desafio Black na prévia
+
+- A página apresenta os sete itens aprovados no Trello, com vendas fechadas.
+
 ## Revisão da avaliação grátis
 
 - Adiciona perguntas de rotina e leitura parcial com atividade, sono e alimentação. As novas mensagens aguardam aprovação no Trello.
