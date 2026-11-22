@@ -38,6 +38,6 @@ export const trelloCopy={
 };
 
 // Aprovação no Trello exigida individualmente para cada revisão do texto.
-export const trelloAprovado={avaliacao:false,desafio:false};
+export const trelloAprovado={avaliacao:true,desafio:false};
 export const escapar=texto=>String(texto).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 export const substituir=(texto,valores)=>texto.replace(/\{(\w+)\}/g,(_,chave)=>String(valores[chave]??''));

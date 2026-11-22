@@ -85,3 +85,5 @@ A oferta do Desafio substitui o resumo por e-mail no fluxo sem fotos. A peça es
 ### Aprovação editorial no Trello
 
 A lista Automações · mensagens automáticas do quadro CONSULTORIA ONLINE DIVAFIT é a fonte dos textos. E-mail 1: https://trello.com/c/mbQjyTjr. E-mail 2: https://trello.com/c/SWwCIqOY. As prévias com dados fictícios ficam em `/avaliacao/email-avaliacao.html` e `/avaliacao/email-desafio.html`. A revisão atual bloqueia ambos os disparos no servidor até a aprovação individual no Trello. Pendências editoriais do E-mail 2 aparecem na prévia.
+
+O card do E-mail 1 foi marcado como aprovado em 21/11. A revisão aprovada pode ser enviada pela prévia para a lista de teste. O E-mail 2 permanece bloqueado até a revisão do card resolver as duas marcações `[CONFIRMAR]`.
