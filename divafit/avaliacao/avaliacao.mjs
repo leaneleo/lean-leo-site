@@ -153,6 +153,7 @@ function show(r){
 }
 const contactValues={};
 function contact(r){
+  form.hidden=true;result.hidden=false;
   setProgress(fields.length+1);
   const heading=title(photoAgreementAt?'Receba sua avaliação por e-mail':'Finalize sua avaliação inicial');
   const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
