@@ -121,3 +121,22 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .dot-good{background:#327c57;color:#327c57}.dot-attention{background:#e57446;color:#b64e2c}.dot-alert{background:#cf5037;color:#a33a27}
 .imc-callout{font-size:.9rem}
 @media(max-width:400px){.assessment-page .choices-wide{grid-template-columns:1fr}}
+
+.assessment-page .stage>.question{text-align:center}
+.assessment-page .food-groups{grid-template-columns:minmax(0,1fr)}
+.assessment-page .food-section .choices-wide{grid-template-columns:repeat(2,minmax(0,1fr))}
+.food-section .food-wide{grid-column:1/-1}
+.assessment-page .food-section .choice{min-height:54px}
+.assessment-page .food-section .choice span:last-child{overflow-wrap:break-word}
+.partial .gauge{max-width:232px}
+.imc-result{background:#c34d32;color:#fff;border-radius:10px;padding:.38rem .95rem;font-weight:700}
+.partial .indicator,.partial .reading{border-color:var(--result-border,#ded0c8)}
+.partial .indicator{justify-items:center;text-align:center;align-content:center}
+.partial .indicator strong{text-transform:uppercase}
+.partial .indicator-good{--result-border:#327c57}
+.partial .indicator-attention{--result-border:#e57446}
+.partial .indicator-alert{--result-border:#722d4b;background:#fff9fd;box-shadow:none}
+.status-legend,.legend-entry{display:flex;align-items:center;justify-content:center;gap:.4rem}
+.status-legend{gap:1rem;flex-wrap:wrap;font-size:.75rem}
+.legend-entry i{width:8px;height:8px;border-radius:50%}
+.dot-alert{background:#722d4b;color:#722d4b}

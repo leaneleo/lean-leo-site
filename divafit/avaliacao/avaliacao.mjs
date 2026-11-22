@@ -26,9 +26,9 @@ const fields=[
   ['legumes','Legumes (ex: cenoura)'],['proteina','Proteína em todas as refeições'],
   ['carbo','Carboidrato na medida'],['gordura','Gordura na medida'],['agua','2 litros de água ou mais'],
   ['refeicoes','3 a 5 refeições por dia'],['carboExcesso','Carboidrato em excesso'],['gorduraExcesso','Gordura em excesso'],
-  ['doces','Doces quase todo dia'],['ultraprocessados','Ultraprocessados quase todo dia (biscoito, salgadinho, fast food, embutidos)'],
-  ['bebidas','Refrigerante ou suco adoçado'],['alcool','Bebida alcoólica'],
-  ['beliscos','Pulo refeições ou belisco o dia todo']])},
+  ['doces','Doces quase todo dia'],['ultraprocessados','Alimentos industrializados (ex: salsicha)'],
+  ['bebidas','Refrigerante ou bebidas adoçadas'],['alcool','Bebida alcoólica'],
+  ['puloRefeicoes','Pulo refeições'],['beliscos','Belisco o dia todo']])},
  {key:'cintura',label:'Medida da cintura',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
@@ -100,14 +100,16 @@ function render(){
   if(spec.choices){
     const group=el('div',undefined,spec.key==='objetivo'?'choices goal':spec.key==='sexo'?'choices sex':'choices');
     group.classList.add(spec.key==='treinos'?'choices-count':'choices-wide');
-    const sections=spec.multiple?['Hábitos que ajudam','Pontos de atenção'].map(name=>{
+    const sections=spec.multiple?['Pontos positivos','Pontos negativos'].map(name=>{
       const section=el('section',undefined,'food-section');
       const heading=el('h3',name), grid=el('div',undefined,'choices choices-wide');
       section.append(heading,grid);group.append(section);return grid;
     }):null;
     if(sections){group.classList.remove('choices');group.classList.add('food-groups');}
     group.setAttribute('role','group');group.setAttribute('aria-label',spec.label);
-    for(const [value,label,symbol] of spec.choices){
+    const wideFood=['carboExcesso','gorduraExcesso','ultraprocessados'];
+    const options=sections?[...spec.choices].sort(([a],[b])=>Number(wideFood.includes(b))-Number(wideFood.includes(a))):spec.choices;
+    for(const [value,label,symbol] of options){
       const item=el('label',undefined,'choice'), input=el('input');
       input.type=spec.multiple?'checkbox':'radio';input.name=spec.key;input.value=value;
       input.checked=spec.multiple?(answers[spec.key]??[]).includes(value):String(answers[spec.key])===value;
@@ -116,9 +118,10 @@ function render(){
         for(const control of group.querySelectorAll('input'))control.checked=answers[spec.key].includes(control.value);
       });
       const foodIcons={frutas:'🍎',verduras:'🥬',legumes:'🥕',proteina:'🥚',carbo:'🍚',gordura:'🥑',agua:'💧',refeicoes:'🍽️',
-        carboExcesso:'🍞',gorduraExcesso:'🍟',doces:'🍬',ultraprocessados:'🍔',bebidas:'🥤',alcool:'🍺',beliscos:'⏱️'};
+        carboExcesso:'🍞',gorduraExcesso:'🍟',doces:'🍬',ultraprocessados:'🍔',bebidas:'🥤',alcool:'🍺',beliscos:'⏱️',puloRefeicoes:'🍽️'};
       const visual=sections?el('span',foodIcons[value],'food-icon'):icon(symbol);
       visual.setAttribute('aria-hidden','true');
+      if(wideFood.includes(value))item.classList.add('food-wide');
       item.append(input,visual,el('span',label));
       (sections?sections[alimentosFavoraveis.includes(value)?0:1]:group).append(item);
     }
@@ -167,8 +170,8 @@ function resultIndicators(r,dados){
   return [
     ['Risco à saúde','IMC × cintura',risco,['Baixo','Moderado','Elevado'].includes(risco)?tone(risco,'Baixo','Moderado'):'neutral',''],
     ['Nível de condicionamento','Atividade semanal',p.condicionamento,p.minutos>=150?'good':p.condicionamento==='Sedentária'?'alert':'attention',p.minutos+' min/semana'],
-    ['Sono','Horas por noite',p.qualidadeSono,tone(p.qualidadeSono,'Adequado','Atenção'),dados.sono+' h'],
-    ['Alimentação','Nota de 0 a 10',p.qualidadeAlimentacao,tone(p.qualidadeAlimentacao,'Boa','Regular'),p.nota+'/10']
+    ['Sono','Qualidade',p.qualidadeSono,tone(p.qualidadeSono,'Adequado','Atenção'),dados.sono+' h'],
+    ['Alimentação','Nutrição',p.qualidadeAlimentacao,tone(p.qualidadeAlimentacao,'Boa','Regular'),p.nota+'/10']
   ];
 }
 function partialContent(r){
@@ -180,29 +183,28 @@ function partialContent(r){
     item.style.setProperty('--segment',palette[i]);if(i===r.faixa)item.setAttribute('aria-current','true');
     legend.append(item);
   });
-  core.append(el('h2','IMC','imc-title'),el('p','índice de massa corporal','imc-subtitle'),gauge(r),el('strong',format(r.imc,1)),legend);
-  if(r.categoria!==faixasAdulto[r.faixa])core.append(el('p',r.categoria,'imc-subtitle'));
+  core.append(el('h2','IMC','imc-title'),el('p','índice de massa corporal','imc-subtitle'),gauge(r),
+    el('strong',format(r.imc,1)),el('span',r.categoria,'imc-result'),legend);
   const cards=el('div',undefined,'metrics');
-  for(const [label,subtitle,value,status,detail] of resultIndicators(r,answers)){
+  const indicators=resultIndicators(r,answers);
+  for(const [label,subtitle,value,status,detail] of indicators){
     const card=el('article',undefined,'metric indicator indicator-'+status);
     card.append(el('h3',label),el('small',subtitle),el('strong',value));
     if(detail)card.append(el('small',detail));
-    const dots=el('div',undefined,'indicator-dots');
-    for(const [key,legendText] of [['good','Bom'],['attention','Atenção'],['alert','Alerta']]){
-      const dot=el('span',undefined,'dot-'+key);
-      dot.title=legendText;
-      if(status===key)dot.classList.add('current');else dot.setAttribute('aria-hidden','true');
-      dots.append(dot);
-    }
-    dots.setAttribute('aria-label',({good:'Bom',attention:'Atenção',alert:'Alerta',neutral:'Sem classificação'})[status]);
-    card.append(dots);cards.append(card);
+    cards.append(card);
   }
-  wrap.append(core,cards);
-  for(const [name,paragraphs] of topicosParciais(answers,r,parcialCopy)){
-    const topic=el('section',undefined,'panel reading');
+  const statusLegend=el('div',undefined,'status-legend');
+  for(const [key,label] of [['good','Excelente'],['attention','Regular'],['alert','Ruim']]){
+    const entry=el('span',undefined,'legend-entry');
+    entry.append(el('i',undefined,'dot-'+key),document.createTextNode(label));
+    statusLegend.append(entry);
+  }
+  wrap.append(core,cards,statusLegend);
+  topicosParciais(answers,r,parcialCopy).forEach(([name,paragraphs],i)=>{
+    const topic=el('section',undefined,'panel reading indicator-'+indicators[i][3]);
     topic.append(el('h3',name),...paragraphs.map(text=>el('p',text)));
     wrap.append(topic);
-  }
+  });
   return wrap;
 }
 
@@ -293,11 +295,38 @@ function contact(r){
   });
 }
 function baixarParcial(r){
-  const bloco=partialContent(r);
-  const linhas=[answers.nome,...[...bloco.querySelectorAll('h3,strong,.badge,p')].map(node=>node.textContent)];
   const escape=value=>String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[char]);
-  const rows=linhas.flatMap(line=>line.match(/.{1,65}(?:\s|$)|\S+/g)??[]).map(line=>line.trim()).filter(Boolean);
-  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="520" height="${110+rows.length*24}"><rect width="100%" height="100%" fill="#fff8f3"/><text x="24" y="42" style="font:bold 22px sans-serif;fill:#a23822">SUA AVALIAÇÃO PARCIAL</text>${rows.map((line,i)=>`<text x="24" y="${82+i*24}" style="font:14px sans-serif;fill:#29201d">${escape(line)}</text>`).join('')}</svg>`;
+  const colors={good:palette[1],attention:palette[2],alert:palette[5],neutral:'#ded0c8'};
+  const text=(x,y,content,size=14,color='#29201d',bold=false)=>
+    `<text x="${x}" y="${y}" font-size="${size}" fill="${color}" font-weight="${bold?'700':'400'}">${escape(content)}</text>`;
+  const panel=(x,y,w,h,border)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="14" fill="#fff" stroke="${border}" stroke-width="2"/>`;
+  const meter=gauge(r);
+  meter.setAttribute('x','194');meter.setAttribute('y','114');meter.setAttribute('width','212');meter.setAttribute('height','108');
+  for(const path of meter.querySelectorAll('path')){path.setAttribute('fill','none');path.setAttribute('stroke-width','10');}
+  meter.querySelector('line').setAttribute('stroke','#30211d');meter.querySelector('line').setAttribute('stroke-width','3');
+  const indicators=resultIndicators(r,answers);
+  let y=535;
+  const topics=topicosParciais(answers,r,parcialCopy,Infinity).map(([title,paragraphs],i)=>{
+    const lines=paragraphs.flatMap(p=>p.match(/.{1,69}(?:\s|$)|\S+/g)??[]).map(line=>line.trim()).filter(Boolean);
+    const height=65+lines.length*21;
+    const block=panel(25,y,550,height,colors[indicators[i][3]])+text(44,y+31,title,18,'#a23822',true)+
+      lines.map((line,j)=>text(44,y+58+j*21,line)).join('');
+    y+=height+12;return block;
+  }).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="${y+16}" font-family="Arial,sans-serif">
+    <rect width="100%" height="100%" fill="#fff7f2"/>
+    ${text(25,32,'Le&LeoFit',16,'#a23822',true)}${text(25,68,'SUA AVALIAÇÃO PARCIAL',24,'#29201d',true)}
+    ${text(25,96,answers.nome,16)}
+    ${meter.outerHTML}
+    <g text-anchor="middle">${text(300,246,'IMC '+format(r.imc,1),22,'#a23822',true)}${text(300,270,r.categoria,16)}</g>
+    ${faixasAdulto.map((label,i)=>`<g text-anchor="middle"><rect x="${25+i*92}" y="290" width="88" height="4" rx="2" fill="${palette[i]}"/>${text(69+i*92,314,label,11,palette[i],i===r.faixa)}</g>`).join('')}
+    ${indicators.map(([label,subtitle,value,status,detail],i)=>{
+      const x=25+(i%2)*280,y=331+Math.floor(i/2)*88;
+      return panel(x,y,270,78,colors[status])+text(x+12,y+20,label,13,'#29201d',true)+text(x+12,y+40,value.toLocaleUpperCase('pt-BR'),15,'#a23822',true)+text(x+12,y+61,detail||subtitle,12);
+    }).join('')}
+    ${[['good','Excelente'],['attention','Regular'],['alert','Ruim']].map(([status,label],i)=>
+      `<circle cx="${163+i*108}" cy="517" r="4" fill="${colors[status]}"/>`+text(173+i*108,522,label,12)).join('')}
+    ${topics}</svg>`;
   const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
   const link=el('a');link.href=url;link.download='avaliacao-parcial.svg';link.click();
   setTimeout(()=>URL.revokeObjectURL(url),10000);

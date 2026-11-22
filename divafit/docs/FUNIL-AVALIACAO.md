@@ -99,3 +99,5 @@ A prévia das perguntas e da leitura parcial usa os cards vOQ3FzDw e ekcJMkwy do
 A revisão de 22/11 aprovada no Trello tem quatro cartões, sem cintura/altura. O tempo em pé não é sedentário. Corrida tem 40 minutos vigorosos, caminhada e outro têm 30 moderados. Os dois textos podem ser usados na lista de teste da prévia. O envio do E-mail 2 continua condicionado à URL real do checkout do Desafio, assim como o downsell.
 
 A página do Desafio Black mostra os sete itens confirmados no card SWwCIqOY. O Financeiro e a página usam o mesmo cadastro de campanha. A página mantém vendas fechadas e não oferece preço ou pagamento.
+
+Ajustes de revisão: perguntas centralizadas, alimentação agrupada em pontos positivos e negativos, e opções separadas para pular refeições e beliscar. A etapa parcial usa a mesma escala de cores nos cartões e nas explicações. O SVG baixado inclui velocímetro, legenda e os tópicos completos.
