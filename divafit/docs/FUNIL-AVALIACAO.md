@@ -77,3 +77,5 @@ A regra online substitui as colunas BD/BI antigas por duas projeções independe
 ### Resultado inicial e encaminhamento
 
 A etapa 9 mostra a leitura inicial do IMC e explica suas limitações. Cada faixa tem duas mensagens e a variante permanece estável dentro do preenchimento. Fotos ficam na etapa 10 e os contatos na 11. A etapa 12 mostra o resumo informado. Sem fotos, oferece o Desafio. Com fotos, o convite à Consultoria fica no e-mail e a confirmação na tela exige retorno positivo do envio.
+
+Sem fotos, a função usa a mesma verificação Turnstile e a mesma reserva por contato para enviar os indicadores iniciais via Resend. Esse ramo não chama a Anthropic. O e-mail informa “Envie suas fotos para desbloquear” e oferece o Desafio. Os logs registram o modo e o ID retornado pelo Resend, sem nome, telefone ou e-mail.

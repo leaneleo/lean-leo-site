@@ -178,19 +178,19 @@ function contact(r){
   const submit=el('button','Ver minha avaliação','primary');submit.type='submit';
   const status=el('p','','hint');status.setAttribute('role','status');
   let challenge='';
-  if(publicEnabled&&photoAgreementAt){
+  if(publicEnabled){
     const widget=el('div');
     box.append(widget);
-    submit.textContent='Analisar minhas fotos e ver avaliação';
+    submit.textContent=photoAgreementAt?'Analisar minhas fotos e ver avaliação':'Enviar avaliação inicial por e-mail';
     if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
       status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
     submit.disabled=true;
     photoChallenge(widget,token=>{challenge=token;submit.disabled=!token;})
       .catch(()=>{status.textContent='A verificação está indisponível. Você pode continuar sem fotos.';});
-    box.append(btn('Ver avaliação sem fotos',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
+    box.append(btn('Ver resumo sem aguardar e-mail',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
   }
   box.append(status,submit,btn('← Voltar',()=>render(),'secondary'),
-    el('p',publicEnabled&&photoAgreementAt?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
+    el('p',publicEnabled?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
   shell.append(shadow,box);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
   box.addEventListener('submit',async ev=>{
@@ -201,10 +201,10 @@ function contact(r){
     if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
     }
-    if(!publicEnabled||!photoAgreementAt){complete(r);return;}
+    if(!publicEnabled){complete(r);return;}
     if(!challenge||submit.disabled)return;
     for(const control of box.elements)control.disabled=true;
-    status.textContent='Analisando as fotos. Isso pode levar alguns instantes.';
+    status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
     try{
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
         email:box.elements.email.value,whatsapp:phone.value
@@ -233,11 +233,13 @@ function complete(r,dados=answers,analysis={}){
   }
   content.append(heading,summary);
   if(analysis.emailSent){
-    content.append(el('p','Parabéns! Sua avaliação mais aprofundada está no seu e-mail.','notice'));
+    content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! Sua avaliação inicial foi enviada ao seu e-mail.','notice'));
   }else if(photoAgreementAt){
     content.append(el('p',analysis.error||'O envio da sua avaliação por e-mail não foi confirmado.','notice'));
     if(analysis.error)content.append(btn('← Rever fotos',()=>render()));
-  }else{
+  }
+  if(!photoAgreementAt){
+    if(analysis.error||analysis.emailSent===false)content.append(el('p',analysis.error||'O envio do e-mail não foi confirmado.','notice'));
     content.append(el('p','Sua avaliação inicial está pronta. Quer dar o próximo passo? Conheça o Desafio 21 dias.'),
       btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
   }

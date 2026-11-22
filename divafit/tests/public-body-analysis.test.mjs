@@ -8,7 +8,7 @@ function request(overrides={},site=origin,headers={}){
   const data=new FormData();
   for(const [k,v] of Object.entries({email:' TEST@example.test ',whatsapp:'+55 (62) 90000-0000',weight:72,
     height:165,age:35,sex:'feminino',objective:'Emagrecimento',purpose:'body-photo-v1',challenge:'fixture-token',
-    frente:jpg,lado:jpg,costas:jpg,...overrides}))data.set(k,v);
+    frente:jpg,lado:jpg,costas:jpg,...overrides}))if(v!==null)data.set(k,v);
   return new Request(origin+'/public',{method:'POST',headers:{origin:site,...headers},body:data});
 }
 function harness(overrides={}){
@@ -85,4 +85,21 @@ test('Modo de teste requer passe de uso único, marca a reserva e bloqueia e-mai
   assert.deepEqual(flags,[true]);
   assert.equal(calls(),1);
   assert.equal(emails,0);
+});
+
+test('Sem fotos usa Turnstile, lista de e-mail e limite compartilhado sem chamar o modelo',async()=>{
+  const sent=[];
+  const {handler,calls,block}=harness({
+    canEmail:email=>email==='test@example.test',
+    email:async (email,measures,fat)=>{sent.push({email,fat});return true;}
+  });
+  const noPhotos={without_photos:'true',frente:null,lado:null,costas:null};
+  assert.equal((await handler(request({...noPhotos,email:'other@example.test'}))).status,503);
+  const response=await handler(request(noPhotos));
+  assert.deepEqual(await response.json(),{email_enviado:true});
+  assert.deepEqual(sent,[{email:'test@example.test',fat:null}]);
+  assert.equal((await handler(request())).status,429);
+  block();
+  assert.equal((await handler(request({...noPhotos,email:'blocked@example.test'}))).status,403);
+  assert.equal(calls(),0);
 });

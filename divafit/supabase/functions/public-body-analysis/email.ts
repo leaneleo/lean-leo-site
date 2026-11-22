@@ -23,7 +23,7 @@ function gauge(imc:number,band:number){
   return Buffer.from(jpeg.encode({data,width,height},90).data).toString('base64');
 }
 
-export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number,id:string){
+export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number|null,id:string){
   const dados={idade:measures.age,altura:measures.height/100,peso:measures.weight,
     sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist,objetivo:measures.objective};
   const r=avaliar(dados);
@@ -34,5 +34,8 @@ export async function sendAssessmentEmail(key:string,from:string,to:string,measu
       html:emailAvaliacao(dados,{gordura}),
       attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})
   });
-  return response.ok;
+  const receipt=response.ok?await response.json():null;
+  console.info(JSON.stringify({event:'assessment_email_response',mode:gordura===null?'without_photos':'with_photos',status:response.status,
+    emailId:typeof receipt?.id==='string'?receipt.id:undefined}));
+  return response.ok&&typeof receipt?.id==='string';
 }

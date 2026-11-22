@@ -26,8 +26,9 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
+  canEmail:(to:string,origin:string)=>origin===preview&&emailAllowlist.has(to),
   email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
-    ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number,id:string,origin:string)=>
+    ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number|null,id:string,origin:string)=>
       origin===preview&&emailAllowlist.has(to)?sendAssessmentEmail(resend,from,to,measures,fat,id):Promise.resolve(false)
     : undefined,
   async testPass(pass:string,origin:string){
