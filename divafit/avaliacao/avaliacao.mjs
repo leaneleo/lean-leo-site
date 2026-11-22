@@ -17,18 +17,18 @@ const fields=[
  {key:'objetivo',label:'Qual é o seu objetivo principal?',choices:choices(objetivos.map(label=>[label,label]))},
  {key:'modalidade',label:'O que você treina hoje?',choices:choices([
   ['musculacao','Musculação'],['intenso','CrossFit / funcional / HIIT'],['corrida','Corrida'],['caminhada','Caminhada'],
-  ['esportes','Lutas, dança ou esportes'],['nenhum','Ainda não treino']])},
+  ['esportes','Lutas, dança ou esportes'],['outro','Outro'],['nenhum','Nada']])},
  {key:'treinos',label:'Quantas vezes por semana você treina?',choices:choices(Array.from({length:8},(_,i)=>[i,String(i)]))},
- {key:'tempoSentada',label:'Quantas horas por dia você passa sentada?',choices:choices([[0,'Até 6 h'],[6,'6 a 8 h'],[8,'8 a 10 h'],[10,'10 a 12 h'],[12,'Mais de 12 h']])},
+ {key:'tempoSentada',label:'Quantas horas por dia você passa sentada?',choices:choices([[0,'Até 6 h'],[6,'6 a 8 h'],[8,'8 a 10 h'],[10,'10 a 12 h'],[12,'Mais de 12 h'],['emPe','Fico em pé a maior parte do dia']])},
  {key:'sono',label:'Por volta de quantas horas de sono de qualidade você tem por noite?',choices:choices([[4,'4 ou menos'],[5,'5'],[6,'6'],[7,'7'],[8,'8 ou mais']])},
  {key:'alimentacao',label:'O que faz parte da sua alimentação na maioria dos dias?',multiple:true,choices:choices([
-  ['frutas','✅ Frutas (2 ou mais por dia)'],['verduras','✅ Verduras (folhas: alface, rúcula, couve)'],
-  ['legumes','✅ Legumes (cenoura, abobrinha, chuchu, beterraba)'],['proteina','✅ Proteína em todas as refeições principais'],
-  ['carbo','✅ Carboidrato na medida'],['gordura','✅ Gordura na medida'],['agua','✅ 2 litros de água ou mais'],
-  ['refeicoes','✅ 3 a 5 refeições por dia'],['carboExcesso','⚠️ Carboidrato em excesso'],['gorduraExcesso','⚠️ Gordura em excesso'],
-  ['doces','⚠️ Doces quase todo dia'],['ultraprocessados','⚠️ Ultraprocessados quase todo dia (biscoito, salgadinho, fast food, embutidos)'],
-  ['bebidas','⚠️ Refrigerante ou suco adoçado'],['alcool','⚠️ Bebida alcoólica 3 vezes ou mais por semana'],
-  ['beliscos','⚠️ Pulo refeições ou belisco o dia todo']])},
+  ['frutas','Frutas'],['verduras','Verduras (ex: alface)'],
+  ['legumes','Legumes (ex: cenoura)'],['proteina','Proteína em todas as refeições'],
+  ['carbo','Carboidrato na medida'],['gordura','Gordura na medida'],['agua','2 litros de água ou mais'],
+  ['refeicoes','3 a 5 refeições por dia'],['carboExcesso','Carboidrato em excesso'],['gorduraExcesso','Gordura em excesso'],
+  ['doces','Doces quase todo dia'],['ultraprocessados','Ultraprocessados quase todo dia (biscoito, salgadinho, fast food, embutidos)'],
+  ['bebidas','Refrigerante ou suco adoçado'],['alcool','Bebida alcoólica'],
+  ['beliscos','Pulo refeições ou belisco o dia todo']])},
  {key:'cintura',label:'Medida da cintura',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
@@ -150,12 +150,10 @@ function metric(label,value){
 function partialContent(r){
   const profile=perfilParcial(answers), wrap=el('div',undefined,'result-layout partial');
   const core=el('div',undefined,'panel gauge-core');
-  core.append(gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
+  core.append(el('h2','IMC','imc-title'),el('p','índice de massa corporal','imc-subtitle'),gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
   const cards=el('div',undefined,'metrics');
-  const acima=r.razao!==null&&r.razao>.5;
   for(const [label,value,alerta] of [
     ['Risco à saúde · IMC × cintura',r.risco,r.risco==='Risco elevado'],
-    ['Cintura/altura',r.razao===null?'Não informada':format(r.razao,2)+(acima?' (acima do ideal)':' (até 0,5)'),acima],
     ['Nível de condicionamento',profile.minutos+' min/semana ('+profile.condicionamento+')',profile.minutos<150],
     ['Sono',answers.sono+' h ('+profile.qualidadeSono+')',answers.sono<7],
     ['Alimentação',profile.nota+'/10 ('+profile.qualidadeAlimentacao+')',profile.nota<8]
@@ -190,7 +188,7 @@ function contact(r){
   const heading=title(photoAgreementAt?'Receba sua avaliação completa por e-mail':'SUA AVALIAÇÃO PARCIAL');
   const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
   shadow.setAttribute('aria-hidden','true');
-  shadow.append(metric('Composição corporal','— %'),metric('Cintura/altura',r.razao===null?'—':format(r.razao,2)),
+  shadow.append(metric('Composição corporal','— %'),
     metric('Faixa de gordura','— a —'),metric('Indicador IMC × cintura',r.risco));
   const box=el('form',undefined,'lead-form');
   for(const [key,label,example,type,auto] of [
@@ -310,7 +308,7 @@ form.addEventListener('submit',ev=>{
   const raw=new FormData(form).get(spec.key);
   if(spec.multiple){answers[spec.key]??=[];}else if(spec.choices){
     if(raw===null){feedback.textContent='Escolha uma opção para continuar.';return;}
-    answers[spec.key]=['treinos','tempoSentada','sono'].includes(spec.key)?Number(raw):raw;
+    answers[spec.key]=['treinos','tempoSentada','sono'].includes(spec.key)&&raw!=='emPe'?Number(raw):raw;
   }else if(spec.min){
     const value=parseMeasure(raw);
     if(value===null||value<spec.min||value>spec.max||(spec.integer&&!Number.isInteger(value))){

@@ -22,3 +22,10 @@ test('Downsell expira à meia-noite de 30/11 em São Paulo',async()=>{
   assert.equal(checkoutDesafioAte('https://example.test/checkout',new Date('2026-12-01T02:59:59Z')),'https://example.test/checkout');
   assert.equal(checkoutDesafioAte('https://example.test/checkout',new Date('2026-12-01T03:00:00Z')),null);
 });
+
+test('Atualização aprovada conta corrida e caminhada e exclui quem fica em pé do sedentarismo',()=>{
+  assert.equal(perfilParcial({...base,modalidade:'corrida',treinos:2}).minutos,160);
+  assert.equal(perfilParcial({...base,modalidade:'caminhada',treinos:2}).minutos,60);
+  assert.equal(perfilParcial({...base,modalidade:'outro',treinos:2}).minutos,60);
+  assert.equal(perfilParcial({...base,modalidade:'nenhum',treinos:7,tempoSentada:'emPe'}).condicionamento,'Pouco ativa');
+});

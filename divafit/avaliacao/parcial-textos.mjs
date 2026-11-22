@@ -2,11 +2,10 @@ export const parcialCopy={
   "risk": [
     "Seu risco pela relação IMC × cintura está baixo. Ótimo sinal. Mas lembre: o IMC não diferencia gordura de músculo.",
     "Seu risco está moderado. A gordura na cintura é a mais ligada a pressão alta, diabetes e problemas no coração. Poucos centímetros a menos já mudam esse indicador.",
-    "Seu risco está elevado. Gordura acumulada na cintura é o principal sinal de alerta para o coração e o metabolismo. Não é sobre estética, é sobre saúde. E dá para mudar começando pelo básico bem feito.",
-    "Sua cintura passou da metade da sua altura, um limite simples que a ciência usa como alerta."
+    "Seu risco está elevado. Gordura acumulada na cintura é o principal sinal de alerta para o coração e o metabolismo. Não é sobre estética, é sobre saúde. E dá para mudar começando pelo básico bem feito."
   ],
   "activity": [
-    "Você passa mais de 10 horas sentada e não chega aos 150 minutos de atividade por semana que a OMS recomenda. Isso é sedentarismo, mesmo indo à academia. Comece pela Clínica do Movimento: os artigos de lá ajudam a quebrar o tempo sentada no dia a dia.",
+    "Você passa mais de 10 horas sentada e não chega aos 150 minutos de atividade por semana que a OMS recomenda. Isso é sedentarismo, mesmo indo à academia.",
     "Pelas suas respostas, você soma cerca de {min} minutos ativos por semana. A OMS recomenda pelo menos 150 moderados ou 75 intensos. Uma hora de musculação tem, em média, só 30 minutos realmente ativos; o resto é descanso.",
     "Você atinge a recomendação da OMS, com cerca de {min} minutos ativos por semana. Agora o ganho está na qualidade: intensidade, progressão e constância.",
     "Você passa do dobro da recomendação da OMS. Seu desafio não é treinar mais, é treinar melhor e se recuperar bem."

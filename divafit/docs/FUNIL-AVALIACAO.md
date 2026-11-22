@@ -95,3 +95,5 @@ A etapa 11 carrega o Turnstile com o callback oficial de renderização explíci
 ### Revisão do funil de 22/11
 
 A prévia das perguntas e da leitura parcial usa os cards vOQ3FzDw e ekcJMkwy do Trello. O resultado aparece antes da captura de contato. Frequência, modalidade, tempo sentada, sono e alimentação entram no perfil do lead apenas quando o contato é enviado. As respostas ficam em esquema privado, vinculadas ao CRM. Nenhuma foto fica no CRM. Os dois novos e-mails ficam em revisão, sem disparo. O checkout de consultoria já tem rota própria; o link de checkout do Desafio e o downsell dependem de URL real cadastrada. A oferta de saída perde validade em 01/12 às 00h no horário de São Paulo. Nenhum preço novo foi configurado.
+
+A revisão de 22/11 aprovada no Trello tem quatro cartões, sem cintura/altura. O tempo em pé não é sedentário. Corrida tem 40 minutos vigorosos, caminhada e outro têm 30 moderados. Os dois textos podem ser usados na lista de teste da prévia. O envio do E-mail 2 continua condicionado à URL real do checkout do Desafio, assim como o downsell.

@@ -1,6 +1,6 @@
 // Trello: https://trello.com/c/vOQ3FzDw. As faixas são calculadas sem depender da apresentação.
 export const minutosEquivalentesPorTreino=Object.freeze({
-  musculacao:30, intenso:44, corrida:60, caminhada:40, esportes:40, nenhum:0
+  musculacao:30, intenso:44, corrida:80, caminhada:30, esportes:40, outro:30, nenhum:0
 });
 export const alimentosFavoraveis=Object.freeze(['frutas','verduras','legumes','proteina','carbo','gordura','agua','refeicoes']);
 export const alimentosDeAtencao=Object.freeze(['carboExcesso','gorduraExcesso','doces','ultraprocessados','bebidas','alcool','beliscos']);
@@ -14,7 +14,7 @@ export function alternarAlimento(selecao,item){
 
 export function perfilParcial({modalidade,treinos,tempoSentada,sono,alimentacao}){
   if(!Object.hasOwn(minutosEquivalentesPorTreino,modalidade)||!Number.isInteger(treinos)||treinos<0||treinos>7||
-    ![0,6,8,10,12].includes(tempoSentada)||![4,5,6,7,8].includes(sono)||
+    !['emPe',0,6,8,10,12].includes(tempoSentada)||![4,5,6,7,8].includes(sono)||
     !Array.isArray(alimentacao)) throw Error('Perfil parcial inválido.');
   const selecao=new Set(alimentacao);
   if([...selecao].some(item=>!alimentosFavoraveis.includes(item)&&!alimentosDeAtencao.includes(item))||
@@ -32,14 +32,13 @@ export function perfilParcial({modalidade,treinos,tempoSentada,sono,alimentacao}
 export function topicosParciais(respostas,resultado,copy,limite=3){
   const p=perfilParcial(respostas);
   const risco=['Baixo risco','Risco moderado','Risco elevado'].indexOf(resultado.risco);
-  const alerta=resultado.razao!==null&&resultado.razao>.5;
   const selecao=new Set(respostas.alimentacao);
   const problemas=[!selecao.has('frutas'),!selecao.has('verduras')||!selecao.has('legumes'),!selecao.has('proteina'),
     selecao.has('carboExcesso'),selecao.has('gorduraExcesso'),selecao.has('doces')||selecao.has('ultraprocessados'),
     selecao.has('bebidas'),selecao.has('alcool'),selecao.has('beliscos'),!selecao.has('agua')];
   const dicas=problemas.flatMap((item,i)=>item?[copy.food[i]]:[]);
   return [
-    ['Risco à saúde',[copy.risk[risco],alerta?copy.risk[3]:null].filter(Boolean)],
+    ['Risco à saúde',[copy.risk[risco]].filter(Boolean)],
     ['Nível de condicionamento',[copy.activity[['Sedentária','Pouco ativa','Ativa','Muito ativa'].indexOf(p.condicionamento)].replace('{min}',p.minutos)]],
     ['Sono',[copy.sleep[respostas.sono<=5?0:respostas.sono===6?1:2].replace('{h}',respostas.sono)]],
     ['Alimentação',[...(dicas.length?dicas.slice(0,limite):[copy.food[10]]),copy.food[11]]]

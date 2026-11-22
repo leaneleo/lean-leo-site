@@ -14,7 +14,6 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false,nome='',checkou
   const rows=[
     ['Idade',dados.idade+' anos'],['Altura',fmt(dados.altura,2)+' m'],['Peso',fmt(dados.peso)+' kg'],
     ['Cintura',cintura],['Risco à saúde · IMC × cintura',r.risco],
-    ['Cintura/altura',r.razao===null?'Não informada':fmt(r.razao,2)],
     ['Taxa metabólica de repouso',fmt(c.tmr,0)+' kcal/dia'],
     ['Gordura corporal',gordura===null?bloqueado:fmt(c.gordura)+'% · '+c.classeGordura],
     ['Massa magra',gordura===null?bloqueado:fmt(c.magra)+'% · '+fmt(c.magraKg,2)+' kg'],
@@ -36,7 +35,7 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false,nome='',checkou
   <strong>Le&amp;LeoFit</strong><h1 style="font-size:29px;margin:16px 0 0">Sua avaliação completa</h1>
   ${exemplo?'<p>Exemplo fictício para revisão</p>':''}</td></tr>
   <tr><td style="padding:24px 18px;text-align:center">
-  <img src="${exemplo?'./imc-exemplo.svg':'cid:imc-gauge'}" width="260" alt="Velocímetro do IMC" style="display:block;max-width:100%;height:auto;margin:auto">
+  <h2 style="font-size:28px;line-height:1.1;margin:10px 0 2px">IMC</h2><p style="font-size:12px;margin:0 0 8px">índice de massa corporal</p><img src="${exemplo?'./imc-exemplo.svg':'cid:imc-gauge'}" width="260" alt="Velocímetro do IMC" style="display:block;max-width:100%;height:auto;margin:auto">
   <p style="font-size:32px;margin:10px 0"><strong>${fmt(r.imc)}</strong></p>
   <span style="display:inline-block;padding:8px 14px;border-radius:20px;background:#f9e4dc;color:#942b19">${r.categoria}</span>
   </td></tr><tr><td style="padding:0 12px"><table role="presentation" style="width:100%;border-spacing:0 8px"></table>
