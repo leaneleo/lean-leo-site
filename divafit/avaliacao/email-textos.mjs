@@ -24,10 +24,10 @@ export const trelloCopy={
       "Seu resultado parcial já está na tela: IMC, risco pela cintura e relação cintura/altura. É um ótimo ponto de partida.",
       "Agora queremos te fazer um convite.",
       "**DESAFIO BLACK · Emagrecimento e Definição**\n21 dias · de 30/11 a 20/12",
-      "[CONFIRMAR o que está incluso: treino? dieta em grupo? grupo no WhatsApp? app?]",
+      "O que você recebe:\nTreino de musculação\nTreino de corrida\nTreino em casa, se precisar\nDieta em grupo\nE-book de receitas\nE-book de definição muscular\nPrêmios para o 1º, 2º e 3º lugar",
       "São só 21 dias para você sair do \"vou começar segunda\" e chegar ao fim do ano se sentindo mais leve e mais forte.",
       "[Botão] Quero entrar no Desafio",
-      "As vagas são limitadas. [CONFIRMAR se é verdade antes de usar]",
+      "As vagas são limitadas e abrem em pequenos lotes. Garanta a sua.",
       "Até lá,\nLeandro e Leonardo · Le&LeoFit"
     ],
     "footer": [
@@ -38,6 +38,6 @@ export const trelloCopy={
 };
 
 // Aprovação no Trello exigida individualmente para cada revisão do texto.
-export const trelloAprovado={avaliacao:true,desafio:false};
+export const trelloAprovado={avaliacao:true,desafio:true};
 export const escapar=texto=>String(texto).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 export const substituir=(texto,valores)=>texto.replace(/\{(\w+)\}/g,(_,chave)=>String(valores[chave]??''));

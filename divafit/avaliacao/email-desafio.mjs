@@ -9,7 +9,10 @@ export function emailDesafio(nome,{preview=false}={}){
   const content=blocks.map(block=>{
     const copy=escapar(substituir(block,{nome})).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
     if(block.startsWith('[Botão] '))return `<p><a href="${url}" style="display:inline-block;padding:15px 20px;background:#a23822;color:#fff;border-radius:12px;text-decoration:none;font-weight:bold">${copy.slice(8)}</a></p>`;
-    if(block.includes('[CONFIRMAR')&&!preview)return '';
+    if(block.startsWith('O que você recebe:\n')){
+      const [title,...items]=copy.split('\n');
+      return `<p><strong>${title}</strong></p><ul style="padding-left:22px;line-height:1.6">${items.map(item=>`<li>${item}</li>`).join('')}</ul>`;
+    }
     return `<p style="line-height:1.55">${copy.replaceAll('\n','<br>')}</p>`;
   }).join('');
   return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

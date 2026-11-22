@@ -82,3 +82,12 @@ test('Cada faixa de IMC tem duas mensagens distintas',()=>{
   assert.ok(all.every(msg=>msg.length>80));
   assert.equal(mensagemImc({faixa:0,categoria:'Normal'},0),mensagemImc({faixa:1},0));
 });
+
+test('Oferta aprovada renderiza sete itens e mantém a quantidade por lote fora do e-mail',async()=>{
+  const {emailDesafio}=await import('../avaliacao/email-desafio.mjs');
+  const html=emailDesafio('Marina');
+  assert.equal((html.match(/<li>/g)||[]).length,7);
+  assert.match(html,/O que você recebe:/);
+  assert.match(html,/As vagas são limitadas e abrem em pequenos lotes\. Garanta a sua\./);
+  assert.doesNotMatch(html,/CONFIRMAR|lotes de 10/);
+});
