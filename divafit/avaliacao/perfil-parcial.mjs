@@ -23,7 +23,7 @@ export function perfilParcial({modalidade,treinos,tempoSentada,sono,alimentacao}
   const condicionamento=minutos>=300?'Muito ativa':minutos>=150?'Ativa':tempoSentada>=10?'Sedentária':'Pouco ativa';
   const qualidadeSono=sono>=7?'Adequado':sono===6?'Atenção':'Insuficiente';
   const favoraveis=alimentosFavoraveis.filter(item=>selecao.has(item)).length;
-  const atencao=alimentosDeAtencao.filter(item=>selecao.has(item)).length;
+  const atencao=alimentosDeAtencao.filter(item=>selecao.has(item)).length-Number(selecao.has('puloRefeicoes')&&selecao.has('beliscos'));
   const nota=Math.max(0,Math.round(10*favoraveis/alimentosFavoraveis.length-atencao));
   return {minutos,condicionamento,qualidadeSono,nota,
     qualidadeAlimentacao:nota>=8?'Boa':nota>=5?'Regular':'Precisa de atenção'};

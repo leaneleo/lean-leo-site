@@ -46,7 +46,7 @@ async function jpeg(file){
 
 export async function sendPublicPhotos(config,data,photos,contacts,challenge){
   const fields={without_photos:!photos.size,purpose:'body-photo-v1',challenge,name:contacts.nome,email:contacts.email,whatsapp:contacts.whatsapp,
-    profile:JSON.stringify({modalidade:data.modalidade,treinos:data.treinos,tempoSentada:data.tempoSentada,sono:data.sono,alimentacao:data.alimentacao}),objective:data.objetivo,weight:data.peso,height:data.altura*100,age:data.idade,sex:data.sexo==='F'?'feminino':'masculino'};
+    profile:JSON.stringify({modalidade:data.modalidade,treinos:data.treinos,tempoSentada:data.tempoSentada,sono:data.sono,alimentacao:[...new Set(data.alimentacao.map(item=>item==='puloRefeicoes'?'beliscos':item))]}),objective:data.objetivo,weight:data.peso,height:data.altura*100,age:data.idade,sex:data.sexo==='F'?'feminino':'masculino'};
   if(data.cintura!==null)fields.waist=data.cintura;
   const body=new FormData();
   for(const [key,value] of Object.entries(fields))body.set(key,String(value));
