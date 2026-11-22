@@ -36,7 +36,7 @@ await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.ht
 
 
 for (const [folder,files] of [
- ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs']],
+ ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs','download-pdf.mjs']],
  ['desafio-21-dias',['index.html','desafio.js']]
 ]) {
  await mkdir('public/'+folder,{recursive:true});
@@ -44,6 +44,7 @@ for (const [folder,files] of [
 }
 
 await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_BODY = '+JSON.stringify({
+  thanksPreview:process.env.CONTEXT==='deploy-preview',
   endpoint:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_ENDPOINT||'':'',
   sitekey:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||'1x00000000000000000000AA':''
 })+';');

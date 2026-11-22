@@ -101,3 +101,7 @@ A revisão de 22/11 aprovada no Trello tem quatro cartões, sem cintura/altura. 
 A página do Desafio Black mostra os sete itens confirmados no card SWwCIqOY. O Financeiro e a página usam o mesmo cadastro de campanha. A página mantém vendas fechadas e não oferece preço ou pagamento.
 
 Ajustes de revisão: perguntas centralizadas, alimentação agrupada em pontos positivos e negativos, e opções separadas para pular refeições e beliscar. A etapa parcial usa a mesma escala de cores nos cartões e nas explicações. O SVG baixado inclui velocímetro, legenda e os tópicos completos.
+
+## Revisão das etapas 13 e 17
+
+O texto da etapa 17 segue o [card do Trello](https://trello.com/c/gKSt0Qrv) e está pendente de aprovação, inclusive o endereço do Instagram do card. A tela só é habilitada em Deploy Previews. A chamada para conferir o e-mail aparece quando o envio é confirmado. O download da avaliação parcial é manual em PDF. Na avaliação parcial, dicas negativas marcadas têm prioridade e verduras ou legumes já atendem ao item conjunto. Vendas do Desafio continuam fechadas.

@@ -1,3 +1,7 @@
+## Avaliação grátis na prévia
+
+- Centraliza a etapa 13, corrige a prioridade das dicas alimentares, acrescenta emojis e move o download manual em PDF para o fim. A etapa 17 está em revisão.
+
 ## Desafio Black na prévia
 
 - A página apresenta os sete itens aprovados no Trello, com vendas fechadas.

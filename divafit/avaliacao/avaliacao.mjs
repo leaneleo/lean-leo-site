@@ -1,3 +1,4 @@
+import {svgToPdf} from './download-pdf.mjs';
 import {perfilParcial,alternarAlimento,topicosParciais,alimentosFavoraveis} from './perfil-parcial.mjs';
 import {parcialCopy} from './parcial-textos.mjs';
 import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
@@ -8,6 +9,12 @@ const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedba
 const progress=$('#progress'), progressLabel=$('#progress-label');
 const publicEnabled=publicPhotosEnabled(window.DIVAFIT_PUBLIC_BODY);
 const choices=(values)=>values.map(([value,label])=>[String(value),label,'activity']);
+const choiceEmoji={
+  objetivo:Object.fromEntries(objetivos.map((label,i)=>[label,['⚖️','🎯','💪'][i]])),
+  modalidade:{musculacao:'🏋️',intenso:'🔥',corrida:'🏃',caminhada:'🚶',esportes:'⚽',outro:'✨',nenhum:'⏸️'},
+  tempoSentada:{0:'🪑',6:'🪑',8:'🪑',10:'🪑',12:'🪑',emPe:'🧍'},
+  sono:{4:'🥱',5:'😴',6:'😐',7:'🙂',8:'😄'}
+};
 const fields=[
  {key:'nome',label:'Qual é o seu primeiro nome?',placeholder:'Seu nome'},
  {key:'sexo',label:'Sexo biológico:',choices:[['F','Feminino','person'],['M','Masculino','person']]},
@@ -32,7 +39,8 @@ const fields=[
  {key:'cintura',label:'Medida da cintura',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
-const total=fields.length+3, answers={}, photoFiles=new Map();
+const thanksPreview=window.DIVAFIT_PUBLIC_BODY?.thanksPreview===true;
+const total=fields.length+(thanksPreview?4:3), answers={}, photoFiles=new Map();
 let current=0, photoAgreementAt=null;
 progress.max=total;
 const el=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;};
@@ -119,7 +127,8 @@ function render(){
       });
       const foodIcons={frutas:'🍎',verduras:'🥬',legumes:'🥕',proteina:'🥚',carbo:'🍚',gordura:'🥑',agua:'💧',refeicoes:'🍽️',
         carboExcesso:'🍞',gorduraExcesso:'🍟',doces:'🍬',ultraprocessados:'🍔',bebidas:'🥤',alcool:'🍺',beliscos:'⏱️',puloRefeicoes:'🍽️'};
-      const visual=sections?el('span',foodIcons[value],'food-icon'):icon(symbol);
+      const emoji=sections?foodIcons[value]:choiceEmoji[spec.key]?.[value];
+      const visual=emoji?el('span',emoji,'food-icon'):icon(symbol);
       visual.setAttribute('aria-hidden','true');
       if(wideFood.includes(value))item.classList.add('food-wide');
       item.append(input,visual,el('span',label));
@@ -211,13 +220,18 @@ function partialContent(r){
 function show(r){
   form.hidden=true;result.hidden=false;
   setProgress(fields.length-1);
-  const heading=title('SUA AVALIAÇÃO PARCIAL');
+  const heading=title();
+  heading.append(el('span',answers.nome.toLocaleUpperCase('pt-BR'),'partial-name'),el('span',', SUA AVALIAÇÃO PARCIAL'));
   heading.classList.add('partial-title');
   const content=partialContent(r);
   content.prepend(heading);
-  content.append(el('strong','O IMC não distingue gordura de músculo. Quer conhecer sua composição corporal?','imc-callout'),btn('Sim, quero saber minha composição',()=>render(),'primary'),
+  const callout=el('p',undefined,'imc-callout');
+  callout.append(el('strong','IMC NÃO DIFERENCIA GORDURA DE MÚSCULO.'),el('span','Quer conhecer sua composição corporal?'));
+  const actions=el('div',undefined,'partial-actions');
+  actions.append(callout,btn('Sim, quero saber minha composição',()=>render(),'primary'),
     btn('Não, só isso está bom',()=>{photoAgreementAt=null;photoFiles.clear();contact(r);}),
     btn('Rever respostas',()=>{current=0;render();}));
+  content.append(actions);
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
 const contactValues={};
@@ -261,10 +275,10 @@ function contact(r){
 
   }
   submit.textContent='Enviar';
-  if(!photoAgreementAt)box.prepend(btn('Baixar avaliação parcial',()=>baixarParcial(r)));
-  box.append(status,submit,btn('Voltar',()=>photoAgreementAt?render():show(r),'secondary'),
+  const previous=btn('Voltar',()=>photoAgreementAt?render():show(r),'secondary');
+  box.append(status,submit,
     el('p',publicEnabled?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
-  shell.append(shadow,box);result.replaceChildren(heading,shell);
+  shell.append(shadow,box,previous);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
   box.addEventListener('submit',async ev=>{
     ev.preventDefault();
@@ -274,7 +288,7 @@ function contact(r){
     if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
     }
-    if(!publicEnabled){if(!photoAgreementAt)baixarParcial(r);complete(r);return;}
+    if(!publicEnabled){complete(r);return;}
     if(submit.disabled)return;
     if(!challenge){
       if(!status.textContent||status.textContent.startsWith('Carregando'))
@@ -282,19 +296,20 @@ function contact(r){
       return;
     }
     for(const control of box.elements)control.disabled=true;
+    previous.disabled=true;
+    if(thanksPreview)setProgress(fields.length+2);
     status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
     try{
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
         nome:name.value.trim(),email:box.elements.email.value,whatsapp:phone.value
       },challenge);
-      if(!photoAgreementAt)baixarParcial(r);
       complete(r,answers,{emailSent:response.email_enviado===true,awaitingApproval:response.aguardando_aprovacao===true});
     }catch(error){
       complete(r,answers,{error:error.message});
     }
   });
 }
-function baixarParcial(r){
+async function baixarParcial(r){
   const escape=value=>String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[char]);
   const colors={good:palette[1],attention:palette[2],alert:palette[5],neutral:'#ded0c8'};
   const text=(x,y,content,size=14,color='#29201d',bold=false)=>
@@ -327,13 +342,34 @@ function baixarParcial(r){
     ${[['good','Excelente'],['attention','Regular'],['alert','Ruim']].map(([status,label],i)=>
       `<circle cx="${163+i*108}" cy="517" r="4" fill="${colors[status]}"/>`+text(173+i*108,522,label,12)).join('')}
     ${topics}</svg>`;
-  const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
-  const link=el('a');link.href=url;link.download='avaliacao-parcial.svg';link.click();
+  const url=URL.createObjectURL(await svgToPdf(svg,600,y+16));
+  const link=el('a');link.href=url;link.download='avaliacao-parcial.pdf';link.click();
   setTimeout(()=>URL.revokeObjectURL(url),10000);
 }
 
 function complete(r,dados=answers,analysis={}){
   setProgress(total,'Etapa '+total+' de '+total+' · Concluída');
+  if(thanksPreview&&!analysis.error){
+    const heading=title(`Obrigado, ${dados.nome}! 🧡`);
+    const content=el('div',undefined,'panel result-layout reveal thanks-page');
+    content.dataset.approval='pending';
+    content.append(heading,el('p','Sua participação é muito importante para nós.'));
+    if(analysis.emailSent){
+      const message=el('p','📩 ');
+      message.append(el('strong','Confere seu e-mail.'),' Lá tem um presente para você.');
+      content.append(message,el('p','(Se não achar, olha na caixa de spam ou promoções.)'));
+    }else if(publicEnabled){
+      content.append(el('p','O envio do e-mail não foi confirmado.','notice'));
+    }
+    const instagram=el('a','Voltar para o Instagram @leaneleofit','primary');
+    instagram.href='https://instagram.com/leaneleofit';
+    content.append(instagram,el('p','Leandro e Leonardo · Le&LeoFit'));
+    if(!photoAgreementAt)content.append(btn('Baixar avaliação parcial',()=>baixarParcial(r)));
+    result.replaceChildren(content);
+    window.scrollTo(0,0);
+    heading.focus({preventScroll:true});
+    return;
+  }
   const nome=contactValues.nomeCompleto||dados.nome||'';
   const heading=title('Obrigado');
   const content=el('div',undefined,'result-layout reveal'), summary=el('dl',undefined,'panel summary');

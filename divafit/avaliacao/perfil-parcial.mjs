@@ -33,14 +33,19 @@ export function topicosParciais(respostas,resultado,copy,limite=3){
   const p=perfilParcial(respostas);
   const risco=['Baixo risco','Risco moderado','Risco elevado'].indexOf(resultado.risco);
   const selecao=new Set(respostas.alimentacao);
-  const problemas=[!selecao.has('frutas'),!selecao.has('verduras')||!selecao.has('legumes'),!selecao.has('proteina'),
+  const negativos=[
     selecao.has('carboExcesso'),selecao.has('gorduraExcesso'),selecao.has('doces')||selecao.has('ultraprocessados'),
-    selecao.has('bebidas'),selecao.has('alcool'),(selecao.has('beliscos')||selecao.has('puloRefeicoes')),!selecao.has('agua')];
-  const dicas=problemas.flatMap((item,i)=>item?[copy.food[i]]:[]);
+    selecao.has('bebidas'),selecao.has('alcool'),selecao.has('beliscos')||selecao.has('puloRefeicoes')
+  ].flatMap((marcado,i)=>marcado?[copy.food[i+3]]:[]);
+  const faltantes=[
+    [0,!selecao.has('frutas')],[1,!selecao.has('verduras')&&!selecao.has('legumes')],
+    [2,!selecao.has('proteina')],[9,!selecao.has('agua')]
+  ].flatMap(([i,falta])=>falta?[copy.food[i]]:[]);
+  const dicas=negativos.length?negativos:faltantes;
   return [
     ['Risco à saúde',[copy.risk[risco]].filter(Boolean)],
     ['Nível de condicionamento',[copy.activity[['Sedentária','Pouco ativa','Ativa','Muito ativa'].indexOf(p.condicionamento)].replace('{min}',p.minutos)]],
     ['Sono',[copy.sleep[respostas.sono<=5?0:respostas.sono===6?1:2].replace('{h}',respostas.sono)]],
-    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):[copy.food[10]]),copy.food[11]]]
+    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):['Nada a corrigir']),copy.food[11]]]
   ];
 }

@@ -140,3 +140,12 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .status-legend{gap:1rem;flex-wrap:wrap;font-size:.75rem}
 .legend-entry i{width:8px;height:8px;border-radius:50%}
 .dot-alert{background:#722d4b;color:#722d4b}
+
+.assessment-page .partial-title{display:flex;justify-content:center;white-space:nowrap;font-size:clamp(.85rem,4vw,1.65rem)}
+.partial-name{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.partial-actions,.imc-callout,.thanks-page{display:grid;justify-items:center;text-align:center}
+.partial-actions{gap:.5rem}
+.partial-actions button{width:min(100%,22rem)}
+.imc-callout{gap:.2rem}
+.lead-shell>button{width:100%;margin-top:.5rem}
+.thanks-page .primary{border-radius:12px;padding:.65rem .9rem;text-decoration:none}
