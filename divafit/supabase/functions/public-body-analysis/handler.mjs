@@ -23,6 +23,7 @@ export function createPublicHandler(deps) {
     if(req.method!=='POST')return json({message:'Método não permitido.'},405);
     if(!deps.ready())return json({message:'Análise por fotos indisponível.'},503);
     let id;
+    let stage='request';
     let keep=false;
     let isTest=false;
     const usage={input_tokens:0,output_tokens:0};
@@ -59,11 +60,13 @@ export function createPublicHandler(deps) {
       if(withoutPhotos&&!profile&&(!deps.email||deps.canEmail?.(identity[0],origin)===false))return json({message:'O envio por e-mail ainda não está disponível.'},503);
       if(withoutPhotos&&!profile&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
       if(withoutPhotos&&(!nome||nome.length>120))return json({message:'Informe seu nome completo.'},400);
+      stage='reserve';
       const hashes=await Promise.all(identity.map((value,i)=>deps.hash(i+':'+value)));
       const candidate=crypto.randomUUID();
       const reserved=await deps.reserve(candidate,...hashes,isTest);
       if(reserved!=='ok')return json({message:reserved==='limit'?'Limite diário atingido. Tente amanhã.':'Este contato já foi usado ou tem uma análise em andamento.'},429);
       id=candidate;
+      stage='lead';
       if(profile&&!isTest&&deps.lead&&deps.leadOrigin?.(origin)===true)await deps.lead(id,nome,...identity,{...profile,...measures,objective,withPhotos:!withoutPhotos});
       if(withoutPhotos&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
       if(withoutPhotos){
@@ -75,6 +78,7 @@ export function createPublicHandler(deps) {
         photos=[];
         for(const file of files)photos.push(await deps.resize(file));
       }catch{return json({message:'Uma foto não pôde ser lida. Escolha as três imagens novamente.'},400);}
+      stage='estimate';
       const {result}=await generateEstimate(async (...args)=>{
         const reply=await deps.call(...args);
         for(const key of ['input_tokens','output_tokens'])usage[key]+=Number(reply.usage?.[key])||0;
@@ -86,6 +90,16 @@ export function createPublicHandler(deps) {
       return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...(profile&&!emailSent&&deps.approvalPending?.()?{aguardando_aprovacao:true}:{}),...diagnostics()}:
         {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
     }catch(error){
+      const status=Number.isInteger(error?.status)&&error.status>=400&&error.status<=599?error.status:null;
+      const allowedReasons=['max_tokens','refusal','invalid_json','invalid_schema'];
+      const reasons=error?.code==='INVALID_ESTIMATE'&&Array.isArray(error.reasons)
+        ? error.reasons.filter(reason=>allowedReasons.includes(reason)):[];
+      const message=reasons.length?'A Anthropic retornou dois resultados inválidos.'
+        :status?'Serviço de estimativa indisponível.'
+        :['TimeoutError','AbortError'].includes(error?.name)?'Tempo limite atingido.'
+        :error?.message==='Métricas da Anthropic indisponíveis.'?error.message
+        :'Falha ao processar a avaliação.';
+      console.error(JSON.stringify({event:'public_body_analysis_error',stage,message,upstream_status:status,reasons}));
       return json({message:'A análise está indisponível. Você ainda pode ver os demais indicadores.',...diagnostics(),
         ...(isTest&&Number.isInteger(error?.status)?{upstream_status:error.status}:{})},502);
     }finally{

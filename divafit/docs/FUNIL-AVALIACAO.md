@@ -109,3 +109,12 @@ O texto da etapa 17 segue o [card do Trello](https://trello.com/c/gKSt0Qrv) e fo
 Os modelos de e-mail aceitam `ebookUrl`. Enquanto o PDF aprovado não tiver URL, a reserva aparece apenas nas amostras do Deploy Preview. Nenhuma URL de e-book é passada pelo envio real.
 
 Textos de alimentação conforme o [card atualizado](https://trello.com/c/ekcJMkwy). Doces e alimentos industrializados têm dicas independentes. A dica sobre água usa peso em kg × 35 ml, em litros com uma casa decimal.
+
+## Liberação de produção após aprovação
+
+- Página oficial prevista: https://app.leeleo.com.br/avaliacao/. Primeiro, validar a prévia 7 com fotos e sem fotos, inclusive recebimento no Resend e conta de teste. A versão atual da função aceita apenas a origem da prévia.
+- No widget de produção do Cloudflare Turnstile, autorizar `app.leeleo.com.br`. Manter o widget oficial e validar no servidor hostname e ação `body_analysis`. Guardar a configuração secreta apenas no Supabase.
+- No Supabase, acrescentar `https://app.leeleo.com.br` ao `PUBLIC_BODY_ORIGINS`. Na função, aceitar a origem oficial na validação e no envio, mantendo a lista de destinatários apenas na prévia. Confirmar o domínio remetente do Resend e `PUBLIC_BODY_EMAIL_ENABLED`. Manter Turnstile, deduplicação de contatos e limite diário.
+- No Netlify, habilitar `PUBLIC_BODY_ENDPOINT` e a chave pública do widget no contexto Production. Ajustar o build para entregar essa configuração e a etapa de obrigado no domínio oficial. Trocar links de ação dos dois e-mails para os respectivos destinos oficiais.
+- Confirmar o link HTTPS aprovado do e-book e preencher `PUBLIC_BODY_EBOOK_URL`. O e-mail parcial aponta para a página fechada do Desafio enquanto o checkout não for autorizado. Testar a URL oficial da página do Desafio antes de usá-la.
+- Confirmar política de gravação dos leads da origem oficial antes de estender a gravação atual, restrita à prévia. Não remover proteções nem habilitar a origem oficial nesta etapa.

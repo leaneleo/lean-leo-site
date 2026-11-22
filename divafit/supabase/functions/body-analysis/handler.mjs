@@ -49,6 +49,7 @@ export function readMeasures(form) {
 
 export async function generateEstimate(call, photos, measures) {
   let input_tokens = 0, output_tokens = 0;
+  const reasons=[];
   for (let attempt=0; attempt<2; attempt++) {
     const response = await call(photos,measures,attempt);
     for (const key of ['input_tokens','output_tokens']) {
@@ -56,14 +57,23 @@ export async function generateEstimate(call, photos, measures) {
     }
     input_tokens += response.usage.input_tokens;
     output_tokens += response.usage.output_tokens;
+    if(['max_tokens','refusal'].includes(response.stop_reason)){
+      reasons.push(response.stop_reason);
+      continue;
+    }
     let result;
     try {
-      const output = response.content.filter(block=>block.type==='text').map(block=>block.text).join('');
-      result = validateEstimate(JSON.parse(output),measures.weight,Boolean(measures.anterior));
-    } catch { /* One retry for an invalid model response. */ }
+      const output = response.content.filter(block=>block.type==='text').map(block=>block.text).join('').trim();
+      const fenced=output.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+      result = validateEstimate(JSON.parse(fenced?.[1]??output),measures.weight,Boolean(measures.anterior));
+    } catch {
+      reasons.push('invalid_json');
+      continue;
+    }
     if (result) return {result,input_tokens,output_tokens,model:MODEL};
+    reasons.push('invalid_schema');
   }
-  throw Error('A Anthropic retornou dois resultados inválidos. Nenhum rascunho foi salvo.');
+  throw Object.assign(Error('A Anthropic retornou dois resultados inválidos. Nenhum rascunho foi salvo.'),{code:'INVALID_ESTIMATE',reasons});
 }
 
 const maxRequest = 6500000;

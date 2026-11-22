@@ -21,7 +21,7 @@ export async function photoChallenge(container,update){
   await scriptReady;
   if(!container.isConnected)return;
   window.turnstile.render(container,{
-    sitekey:config.sitekey,action:'body_analysis',callback:update,
+    sitekey:config.sitekey,action:'body_analysis',callback:update,'response-field':false,
     'expired-callback':()=>update('','A verificação expirou. Aguarde uma nova verificação ou volte e tente novamente.'),
     'timeout-callback':()=>update('','A verificação demorou demais. Volte e tente novamente.'),
     'error-callback':()=>{update('','Não foi possível verificar. Volte e tente novamente ou veja o resumo.');return true;}

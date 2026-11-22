@@ -16,9 +16,10 @@ const testMode=turnstile===dummyTurnstile;
 const salt=env('PUBLIC_BODY_CONTACT_SECRET')||(testMode?(keys.default||env('SUPABASE_SERVICE_ROLE_KEY')):'');
 const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM')||'avaliacao@envios.leeleo.com.br';
 const challengeCheckout=env('PUBLIC_BODY_CHALLENGE_CHECKOUT');
+const ebook=env('PUBLIC_BODY_EBOOK_URL');
 const preview='https://deploy-preview-7--consultoria-divafit.netlify.app';
 const emailAllowlist=new Set(env('PUBLIC_BODY_EMAIL_TEST_RECIPIENTS').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
-const origins=testMode?[preview]:env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(Boolean);
+const origins=testMode?[preview]:env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(origin=>origin===preview);
 const encoder=new TextEncoder();
 async function rpc(name:string,args:Record<string,unknown>){
   const {data,error}=await client.rpc(name,args);
@@ -28,7 +29,7 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
-  canSendChallenge:()=>trelloAprovado.desafio&&Boolean(challengeCheckout),
+  canSendChallenge:()=>trelloAprovado.desafio,
   leadOrigin:(origin:string)=>origin===preview,
   approvalPending:()=>!trelloAprovado.avaliacao,
   lead:(id:string,name:string,email:string,phone:string,profile:unknown)=>
@@ -36,7 +37,7 @@ Deno.serve(createPublicHandler({
   canEmail:(to:string,origin:string)=>origin===preview&&emailAllowlist.has(to),
   email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
     ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number|null,id:string,origin:string)=>
-      origin===preview&&emailAllowlist.has(to)&&(fat===null?trelloAprovado.desafio:trelloAprovado.avaliacao)?sendAssessmentEmail(resend,from,to,measures,fat,id,challengeCheckout):Promise.resolve(false)
+      origin===preview&&emailAllowlist.has(to)&&(fat===null?trelloAprovado.desafio:trelloAprovado.avaliacao)?sendAssessmentEmail(resend,from,to,measures,fat,id,challengeCheckout,ebook):Promise.resolve(false)
     : undefined,
   async testPass(pass:string,origin:string){
     if(origin!==preview||!(/^[a-f0-9]{64}$/.test(pass)))return false;

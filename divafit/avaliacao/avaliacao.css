@@ -149,3 +149,9 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .imc-callout{gap:.2rem}
 .lead-shell>button{width:100%;margin-top:.5rem}
 .thanks-page .primary{border-radius:12px;padding:.65rem .9rem;text-decoration:none}
+
+.contact-controls{margin-top:.5rem}
+.assessment-loading{display:flex;align-items:center;justify-content:center;gap:.65rem;padding:1rem;color:#a23822}
+.assessment-spinner{height:1.5rem;width:1.5rem;flex:none;border:.2rem solid #f5d5ca;border-top-color:#a23822;border-radius:50%;animation:assessment-spin .85s linear infinite}
+@keyframes assessment-spin{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){.assessment-spinner{animation:none}}

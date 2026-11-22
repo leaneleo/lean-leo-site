@@ -258,30 +258,34 @@ function contact(r){
     const frame=el('span',undefined,'input-slot');
     frame.append(control);field.append(frame);box.append(field);
   }
-  const submit=el('button','Ver minha avaliação','primary');submit.type='submit';
+  const submit=el('button','Enviar','primary');submit.type='button';
   const status=el('p','','hint');status.setAttribute('role','status');
   let challenge='';
+  const widget=el('div',undefined,'security-widget');
   if(publicEnabled){
-    const widget=el('div');
-    box.append(widget);
-    submit.textContent='Enviar';
+
     if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
       status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
     if(!status.textContent)status.textContent='Carregando a verificação de segurança…';
     photoChallenge(widget,(token,message)=>{
+      if(!widget.isConnected)return;
       challenge=token;
       status.textContent=token?'Verificação concluída. Você já pode continuar.':message;
     }).catch(()=>{status.textContent='Não foi possível carregar a verificação. Volte e tente novamente ou veja o resumo.';});
 
   }
-  submit.textContent='Enviar';
-  const previous=btn('Voltar',()=>photoAgreementAt?render():show(r),'secondary');
-  box.append(status,submit,
+  const previous=btn('Voltar',event=>{
+    if(event.isTrusted&&!previous.disabled)photoAgreementAt?render():show(r);
+  },'secondary');
+  box.append(
     el('p',publicEnabled?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
-  shell.append(shadow,box,previous);result.replaceChildren(heading,shell);
+  const controls=el('div',undefined,'lead-form contact-controls');
+  controls.append(widget,status,submit,previous);
+  shell.append(shadow,box,controls);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
-  box.addEventListener('submit',async ev=>{
-    ev.preventDefault();
+  box.addEventListener('submit',event=>event.preventDefault());
+  submit.addEventListener('click',async event=>{
+    if(!event.isTrusted||submit.disabled||!box.reportValidity())return;
     const name=box.elements.nomeCompleto, phone=box.elements.whatsapp;
     Object.assign(contactValues,{nomeCompleto:name.value.trim(),whatsapp:phone.value.trim(),email:box.elements.email.value.trim()});
     if(name.value.trim().split(/\s+/).length<2){name.setCustomValidity('Informe seu nome e sobrenome.');name.reportValidity();return;}
@@ -297,8 +301,13 @@ function contact(r){
     }
     for(const control of box.elements)control.disabled=true;
     previous.disabled=true;
+    submit.disabled=true;
     if(thanksEnabled)setProgress(fields.length+2);
-    status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
+    const loading=el('div',undefined,'assessment-loading');
+    loading.setAttribute('role','status');
+    loading.append(el('span',undefined,'assessment-spinner'),
+      el('strong',photoAgreementAt?'Analisando suas fotos…':'Enviando sua avaliação…'));
+    controls.replaceChildren(loading);
     try{
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
         nome:name.value.trim(),email:box.elements.email.value,whatsapp:phone.value

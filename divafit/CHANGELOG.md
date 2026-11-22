@@ -1,3 +1,7 @@
+## Avaliação grátis · diagnóstico e envio na prévia
+
+- Registra falhas por etapa sem dados pessoais, aceita JSON delimitado válido, separa verificação das ações e mostra o carregamento. E-mail parcial pode usar a página fechada do Desafio.
+
 ## Avaliação grátis · textos de alimentação
 
 - Aplica as frases revisadas no Trello, separa doces de industrializados e formata a estimativa de água com peso × 35 ml.

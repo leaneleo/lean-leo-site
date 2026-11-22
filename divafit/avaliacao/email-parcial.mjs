@@ -23,10 +23,9 @@ export function emailParcial(dados,{nome='',preview=false,checkout=null,ebookUrl
   const paragrafo=texto=>`<p>${escapar(texto).replaceAll('\n','<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</p>`;
   const greeting=email2Copy.body.match(/^Oi, .+$/m)[0];
   const closing=email2Copy.body.split('\n\n').at(-1);
+  const desafio=checkout||'https://deploy-preview-7--consultoria-divafit.netlify.app/desafio-21-dias/';
   const offer=email2Copy.offer.split('\n\n').map(bloco=>{
-    if(bloco.startsWith('[Botão]'))return checkout
-      ?`<p><a style="color:#fff;background:#a23822;padding:12px;text-decoration:none" href="${escapar(checkout)}">Quero entrar no Desafio</a></p>`
-      :'<p><strong>Quero entrar no Desafio</strong></p>';
+    if(bloco.startsWith('[Botão]'))return `<p><a style="color:#fff;background:#a23822;padding:12px;text-decoration:none" href="${escapar(desafio)}">Quero entrar no Desafio</a></p>`;
     return paragrafo(bloco);
   }).join('');
   const src=preview?'./imc-exemplo.svg':'cid:imc-gauge';

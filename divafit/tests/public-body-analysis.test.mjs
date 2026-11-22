@@ -122,3 +122,29 @@ test('Fluxo parcial salva perfil no lead sem chamar a Anthropic nem disparar tex
   assert.equal(saves[0][4].tempoSentada,10);
   assert.equal(calls(),0);
 });
+
+test('Rejeição do upstream gera diagnóstico sanitizado e resposta pública genérica',async t=>{
+  const log=t.mock.method(console,'error',()=>{});
+  const {handler}=harness({call:async()=>{throw Object.assign(Error('não registrar contatos ou payload'),{status:429});}});
+  const response=await handler(request());
+  assert.equal(response.status,502);
+  assert.deepEqual(JSON.parse(log.mock.calls[0].arguments[0]),{
+    event:'public_body_analysis_error',stage:'estimate',message:'Serviço de estimativa indisponível.',upstream_status:429,reasons:[]
+  });
+  assert.doesNotMatch(await response.text(),/upstream_status|payload/);
+});
+
+test('Separadores Markdown não invalidam um JSON de estimativa válido',async()=>{
+  const base=harness();
+  const first=await base.handler(request());
+  assert.equal(first.status,200);
+  const {generateEstimate}=await import('../supabase/functions/body-analysis/handler.mjs');
+  const result=await generateEstimate(async()=>({usage:{input_tokens:1,output_tokens:1},content:[{
+    type:'text',text:'```json\n'+JSON.stringify({
+      fotos_ok:false,problemas_fotos:['Luz insuficiente.'],gordura_percentual:null,confianca:'baixa',
+      motivo_confianca:'',comparacao_anterior:'',limitacoes:'',sugestoes_para_o_personal:[],
+      observacoes:{distribuicao_gordura:'',definicao_muscular:'',postura:'',assimetrias:''}
+    })+'\n```'
+  }]}),[],{weight:70});
+  assert.equal(result.result.fotos_ok,false);
+});

@@ -26,7 +26,7 @@ function gauge(imc:number,band:number){
   return Buffer.from(jpeg.encode({data,width,height},90).data).toString('base64');
 }
 
-export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number|null,id:string,checkout:string){
+export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number|null,id:string,checkout:string,ebookUrl:string){
   const dados={idade:measures.age,altura:measures.height/100,peso:measures.weight,
     sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist,objetivo:measures.objective,modalidade:measures.modalidade,treinos:measures.treinos,tempoSentada:measures.tempoSentada,sono:measures.sono,alimentacao:measures.alimentacao};
   const r=avaliar(dados);
@@ -34,7 +34,7 @@ export async function sendAssessmentEmail(key:string,from:string,to:string,measu
     method:'POST',signal:AbortSignal.timeout(9000),
     headers:{Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':'body-assessment/'+id},
     body:JSON.stringify({from,to:[to],subject:gordura===null?substituir(email2Copy.subject,{nome:measures.nome??''}):assuntoAvaliacao(measures.nome??''),
-      html:gordura===null?emailParcial(dados,{nome:measures.nome??'',checkout}):emailAvaliacao(dados,{gordura,nome:measures.nome??''}),
+      html:gordura===null?emailParcial(dados,{nome:measures.nome??'',checkout,ebookUrl}):emailAvaliacao(dados,{gordura,nome:measures.nome??'',ebookUrl}),
       attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})
   });
   const receipt=response.ok?await response.json():null;
