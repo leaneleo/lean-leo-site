@@ -91,3 +91,7 @@ O card do E-mail 1 foi marcado como aprovado em 21/11. A revisão aprovada pode 
 A revisão aprovada do E-mail 2 substitui as duas marcações do Trello e libera o fluxo sem fotos apenas para a lista de teste da prévia, se `PUBLIC_BODY_EMAIL_ENABLED=true`. A aprovação registrada no código substitui o interruptor temporário exclusivo da oferta. A quantidade por lote é regra operacional e fica fora da mensagem.
 
 A etapa 11 carrega o Turnstile com o callback oficial de renderização explícita. Carregamento, expiração e erros aparecem na tela. O resumo continua disponível sem e-mail, sem disparar a função.
+
+### Revisão do funil de 22/11
+
+A prévia das perguntas e da leitura parcial usa os cards vOQ3FzDw e ekcJMkwy do Trello. O resultado aparece antes da captura de contato. Frequência, modalidade, tempo sentada, sono e alimentação entram no perfil do lead apenas quando o contato é enviado. As respostas ficam em esquema privado, vinculadas ao CRM. Nenhuma foto fica no CRM. Os dois novos e-mails ficam em revisão, sem disparo. O checkout de consultoria já tem rota própria; o link de checkout do Desafio e o downsell dependem de URL real cadastrada. A oferta de saída perde validade em 01/12 às 00h no horário de São Paulo. Nenhum preço novo foi configurado.

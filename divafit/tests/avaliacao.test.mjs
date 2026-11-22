@@ -46,10 +46,10 @@ test('Composição usa faixas da planilha e o meta BC da planilha',()=>{
 
 test('Quatro cenários escolhem a mensagem pelos resultados e renderizam tela e email sem traços',()=>{
   const cases=[
-    [72,32,'Definição Muscular',2.15691868758917,5.04,5040,/recomposição corporal/],
-    [80,32,'Hipertrofia',2.39657631954352,0,0,/reduzir gordura preservando/],
+    [72,32,'Definição muscular',2.15691868758917,5.04,5040,/recomposição corporal/],
+    [80,32,'Ganho de massa magra',2.39657631954352,0,0,/reduzir gordura preservando/],
     [60,16,'Emagrecimento',0,1.3275,1328,/superávit de 400 kcal/],
-    [65,16,'Hipertrofia',0,0,0,/Parabéns/]
+    [65,16,'Ganho de massa magra',0,0,0,/Parabéns/]
   ];
   for(const [peso,gordura,objetivo,perda,ganho,gramas,esperado] of cases){
     const dados={idade:35,sexo:'F',altura:1.65,peso,cintura:null,objetivo};

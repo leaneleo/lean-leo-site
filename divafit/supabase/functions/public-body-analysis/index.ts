@@ -15,6 +15,7 @@ const turnstile=env('PUBLIC_BODY_TURNSTILE_SECRET')||dummyTurnstile;
 const testMode=turnstile===dummyTurnstile;
 const salt=env('PUBLIC_BODY_CONTACT_SECRET')||(testMode?(keys.default||env('SUPABASE_SERVICE_ROLE_KEY')):'');
 const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM')||'avaliacao@envios.leeleo.com.br';
+const challengeCheckout=env('PUBLIC_BODY_CHALLENGE_CHECKOUT');
 const preview='https://deploy-preview-7--consultoria-divafit.netlify.app';
 const emailAllowlist=new Set(env('PUBLIC_BODY_EMAIL_TEST_RECIPIENTS').split(',').map(s=>s.trim().toLowerCase()).filter(Boolean));
 const origins=testMode?[preview]:env('PUBLIC_BODY_ORIGINS').split(',').map(s=>s.trim()).filter(Boolean);
@@ -27,11 +28,15 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
-  canSendChallenge:()=>trelloAprovado.desafio,
+  canSendChallenge:()=>trelloAprovado.desafio&&Boolean(challengeCheckout),
+  leadOrigin:(origin:string)=>origin===preview,
+  approvalPending:()=>!trelloAprovado.avaliacao,
+  lead:(id:string,name:string,email:string,phone:string,profile:unknown)=>
+    rpc('crm_record_preview_assessment',{p_id:id,p_name:name,p_email:email,p_phone:phone,p_profile:profile}),
   canEmail:(to:string,origin:string)=>origin===preview&&emailAllowlist.has(to),
   email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
     ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number|null,id:string,origin:string)=>
-      origin===preview&&emailAllowlist.has(to)&&(fat===null?trelloAprovado.desafio:trelloAprovado.avaliacao)?sendAssessmentEmail(resend,from,to,measures,fat,id):Promise.resolve(false)
+      origin===preview&&emailAllowlist.has(to)&&(fat===null?trelloAprovado.desafio:trelloAprovado.avaliacao)?sendAssessmentEmail(resend,from,to,measures,fat,id,challengeCheckout):Promise.resolve(false)
     : undefined,
   async testPass(pass:string,origin:string){
     if(origin!==preview||!(/^[a-f0-9]{64}$/.test(pass)))return false;

@@ -30,7 +30,7 @@ const gorduraLimites={
   M:[[4,6.9,10.9,13.9,16.9,20.9,23.9],[8,11.9,15.9,18.9,20.9,23.9,26.9],
     [10,14.9,18.9,21.9,23.9,25.9,28.9],[12,16.9,20.9,23.9,25.9,27.9,29.9],[13,18.9,21.9,23.9,25.9,27.9,29.9]]
 };
-export const objetivos=['Emagrecimento','Definição Muscular','Hipertrofia'];
+export const objetivos=['Emagrecimento','Definição muscular','Ganho de massa magra'];
 const classes=['Muito Baixo','Excelente','Muito Bom','Bom','Adequado','Moderadamente Alto','Alto','Muito Alto'];
 const metas={
   F:[[31.9,28.9,24.9,19.9,16.9],[33.9,29.9,25.9,20.9,16.9],[35.9,31.9,27.9,23.9,19.9],

@@ -1,20 +1,35 @@
+import {perfilParcial,alternarAlimento,topicosParciais} from './perfil-parcial.mjs';
+import {parcialCopy} from './parcial-textos.mjs';
 import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
-import {avaliar,faixasAdulto,parseMeasure,objetivos,mensagemImc} from './calculos.mjs';
+import {avaliar,faixasAdulto,parseMeasure,objetivos} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
 const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedback'), back=$('#back'), next=$('#next');
 const progress=$('#progress'), progressLabel=$('#progress-label');
 const publicEnabled=publicPhotosEnabled(window.DIVAFIT_PUBLIC_BODY);
-const aviso='Estimativa feita por IA e fórmulas, pode conter erros e não substitui avaliação presencial.';
+const choices=(values)=>values.map(([value,label])=>[String(value),label,'activity']);
 const fields=[
- {key:'nome',label:'Qual é seu primeiro nome?',placeholder:'Seu nome'},
- {key:'sexo',label:'Qual é seu sexo biológico?',choices:[['F','Feminino','person'],['M','Masculino','person']]},
- {key:'idade',label:'Qual é sua idade?',placeholder:'Ex.: 35',unit:'anos',min:18,max:120,integer:true},
- {key:'altura',label:'Qual é sua altura?',placeholder:'Ex.: 1,65',unit:'m',min:1,max:2.5},
- {key:'peso',label:'Qual é seu peso?',placeholder:'Ex.: 68,5',unit:'kg',min:25,max:350},
- {key:'treinos',label:'Quantas vezes você treina por semana?',choices:Array.from({length:8},(_,i)=>[String(i),i===0?'Não treino':i===1?'1 vez':i+' vezes','activity'])},
- {key:'objetivo',label:'Qual é o seu objetivo principal?',choices:objetivos.map(label=>[label,label,'activity'])},
- {key:'cintura',label:'Qual é a medida da sua cintura?',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
+ {key:'nome',label:'Qual é o seu primeiro nome?',placeholder:'Seu nome'},
+ {key:'sexo',label:'Sexo biológico:',choices:[['F','Feminino','person'],['M','Masculino','person']]},
+ {key:'idade',label:'Idade',placeholder:'Ex.: 35',unit:'anos',min:18,max:120,integer:true},
+ {key:'altura',label:'Altura',placeholder:'Ex.: 1,65',unit:'m',min:1,max:2.5},
+ {key:'peso',label:'Peso',placeholder:'Ex.: 68,5',unit:'kg',min:25,max:350},
+ {key:'objetivo',label:'Qual é o seu objetivo principal?',choices:choices(objetivos.map(label=>[label,label]))},
+ {key:'modalidade',label:'O que você treina hoje?',choices:choices([
+  ['musculacao','Musculação'],['intenso','CrossFit / funcional / HIIT'],['corrida','Corrida'],['caminhada','Caminhada'],
+  ['esportes','Lutas, dança ou esportes'],['nenhum','Ainda não treino']])},
+ {key:'treinos',label:'Quantas vezes por semana você treina?',choices:choices(Array.from({length:8},(_,i)=>[i,String(i)]))},
+ {key:'tempoSentada',label:'Quantas horas por dia você passa sentada?',choices:choices([[0,'Até 6 h'],[6,'6 a 8 h'],[8,'8 a 10 h'],[10,'10 a 12 h'],[12,'Mais de 12 h']])},
+ {key:'sono',label:'Por volta de quantas horas de sono de qualidade você tem por noite?',choices:choices([[4,'4 ou menos'],[5,'5'],[6,'6'],[7,'7'],[8,'8 ou mais']])},
+ {key:'alimentacao',label:'O que faz parte da sua alimentação na maioria dos dias?',multiple:true,choices:choices([
+  ['frutas','✅ Frutas (2 ou mais por dia)'],['verduras','✅ Verduras (folhas: alface, rúcula, couve)'],
+  ['legumes','✅ Legumes (cenoura, abobrinha, chuchu, beterraba)'],['proteina','✅ Proteína em todas as refeições principais'],
+  ['carbo','✅ Carboidrato na medida'],['gordura','✅ Gordura na medida'],['agua','✅ 2 litros de água ou mais'],
+  ['refeicoes','✅ 3 a 5 refeições por dia'],['carboExcesso','⚠️ Carboidrato em excesso'],['gorduraExcesso','⚠️ Gordura em excesso'],
+  ['doces','⚠️ Doces quase todo dia'],['ultraprocessados','⚠️ Ultraprocessados quase todo dia (biscoito, salgadinho, fast food, embutidos)'],
+  ['bebidas','⚠️ Refrigerante ou suco adoçado'],['alcool','⚠️ Bebida alcoólica 3 vezes ou mais por semana'],
+  ['beliscos','⚠️ Pulo refeições ou belisco o dia todo']])},
+ {key:'cintura',label:'Medida da cintura',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
 const total=fields.length+3, answers={}, photoFiles=new Map();
@@ -87,7 +102,12 @@ function render(){
     group.setAttribute('role','group');group.setAttribute('aria-label',spec.label);
     for(const [value,label,symbol] of spec.choices){
       const item=el('label',undefined,'choice'), input=el('input');
-      input.type='radio';input.name=spec.key;input.value=value;input.checked=String(answers[spec.key])===value;
+      input.type=spec.multiple?'checkbox':'radio';input.name=spec.key;input.value=value;
+      input.checked=spec.multiple?(answers[spec.key]??[]).includes(value):String(answers[spec.key])===value;
+      if(spec.multiple)input.addEventListener('change',()=>{
+        answers[spec.key]=alternarAlimento(answers[spec.key]??[],value);
+        for(const control of group.querySelectorAll('input'))control.checked=answers[spec.key].includes(control.value);
+      });
       item.append(input,icon(symbol),el('span',label));group.append(item);
     }
     step.append(group);return;
@@ -127,35 +147,47 @@ const format=(value,digits)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigit
 function metric(label,value){
   const node=el('article',undefined,'metric');node.append(el('h3',label),el('strong',value));return node;
 }
-const imcVariant=Math.random()<.5?0:1;
+function partialContent(r){
+  const profile=perfilParcial(answers), wrap=el('div',undefined,'result-layout partial');
+  const core=el('div',undefined,'panel gauge-core');
+  core.append(gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
+  const cards=el('div',undefined,'metrics');
+  const acima=r.razao!==null&&r.razao>.5;
+  for(const [label,value,alerta] of [
+    ['Risco à saúde · IMC × cintura',r.risco,r.risco==='Risco elevado'],
+    ['Cintura/altura',r.razao===null?'Não informada':format(r.razao,2)+(acima?' (acima do ideal)':' (até 0,5)'),acima],
+    ['Nível de condicionamento',profile.minutos+' min/semana ('+profile.condicionamento+')',profile.minutos<150],
+    ['Sono',answers.sono+' h ('+profile.qualidadeSono+')',answers.sono<7],
+    ['Alimentação',profile.nota+'/10 ('+profile.qualidadeAlimentacao+')',profile.nota<8]
+  ]){
+    const card=metric(label,value);if(alerta)card.classList.add('metric-alert');cards.append(card);
+  }
+  wrap.append(core,cards);
+  for(const [name,paragraphs] of topicosParciais(answers,r,parcialCopy)){
+    const topic=el('section',undefined,'panel reading');
+    topic.append(el('h3',name),...paragraphs.map(text=>el('p',text)));
+    wrap.append(topic);
+  }
+  return wrap;
+}
+
 function show(r){
   form.hidden=true;result.hidden=false;
   setProgress(fields.length-1);
-  const heading=title('Sua avaliação parcial');
-  const content=el('div',undefined,'result-layout reveal'), indicator=el('article',undefined,'risk');
-  const tone=r.risco==='Baixo risco'?'safe':r.risco==='Risco moderado'?'mid':'';
-  indicator.append(el('h3','Indicador principal · IMC × cintura'),el('strong',r.risco),el('p','Este indicador cruza o IMC com a medida da cintura.','hint'));
-  const panel=el('article',undefined,'panel'), core=el('div',undefined,'gauge-core'), legends=el('div',undefined,'gauge-labels');
-  core.append(gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge '+tone));
-  faixasAdulto.forEach((name,i)=>{const item=el('span',name,i===r.faixa?'active':'');item.style.setProperty('--segment',palette[i]);legends.append(item);});
-  panel.append(core,legends);
-  if(answers.idade>=60)panel.append(el('p','O velocímetro usa a escala adulta. O selo aplica as faixas de 60 anos ou mais.','hint'));
-  const metrics=el('div',undefined,'metrics');
-  metrics.append(metric('IMC',format(r.imc,1)),metric('Cintura',answers.cintura===null?'Não informada':format(answers.cintura,1)+' cm'),
-    metric('Cintura/altura',r.razao===null?'Indisponível':format(r.razao,2)),metric('Faixa de gordura',photoAgreementAt?'Aguardando análise':'Disponível com fotos'));
-  const reading=el('section',undefined,'panel reading');
-  reading.append(el('h3','O que seu IMC sugere'),el('p',mensagemImc(r,imcVariant)),
-    el('p','O IMC relaciona peso e altura. Ele não distingue músculo de gordura e, sozinho, não dá um diagnóstico.','hint'));
-  content.append(heading,reading,indicator,panel,metrics);
-  if(answers.treinos>=5)content.append(el('p','Em pessoas com muita massa muscular o IMC pode indicar peso acima do real; por isso olhamos também a cintura e as fotos.','hint'));
-  content.append(el('p',aviso,'hint'),btn('Quero uma avaliação mais aprofundada',()=>render(),'primary'),btn('← Rever medidas',()=>{current--;render();},'secondary'));
+  const heading=title('SUA AVALIAÇÃO PARCIAL');
+  heading.classList.add('partial-title');
+  const content=partialContent(r);
+  content.prepend(heading);
+  content.append(el('p',parcialCopy.imc),btn('Sim, quero saber minha composição',()=>render(),'primary'),
+    btn('Não, só isso está bom',()=>{photoAgreementAt=null;photoFiles.clear();contact(r);}),
+    btn('Rever respostas',()=>{current=0;render();}));
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
 const contactValues={};
 function contact(r){
   form.hidden=true;result.hidden=false;
   setProgress(fields.length+1);
-  const heading=title(photoAgreementAt?'Receba sua avaliação por e-mail':'Finalize sua avaliação inicial');
+  const heading=title(photoAgreementAt?'Receba sua avaliação completa por e-mail':'SUA AVALIAÇÃO PARCIAL');
   const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
   shadow.setAttribute('aria-hidden','true');
   shadow.append(metric('Composição corporal','— %'),metric('Cintura/altura',r.razao===null?'—':format(r.razao,2)),
@@ -181,7 +213,7 @@ function contact(r){
   if(publicEnabled){
     const widget=el('div');
     box.append(widget);
-    submit.textContent=photoAgreementAt?'Analisar minhas fotos e ver avaliação':'Receber convite do Desafio por e-mail';
+    submit.textContent='Enviar';
     if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
       status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
     if(!status.textContent)status.textContent='Carregando a verificação de segurança…';
@@ -189,9 +221,11 @@ function contact(r){
       challenge=token;
       status.textContent=token?'Verificação concluída. Você já pode continuar.':message;
     }).catch(()=>{status.textContent='Não foi possível carregar a verificação. Volte e tente novamente ou veja o resumo.';});
-    box.append(btn('Ver resumo sem aguardar e-mail',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
+
   }
-  box.append(status,submit,btn('← Voltar',()=>render(),'secondary'),
+  submit.textContent='Enviar';
+  if(!photoAgreementAt)box.prepend(btn('Baixar avaliação parcial',()=>baixarParcial(r)));
+  box.append(status,submit,btn('Voltar',()=>photoAgreementAt?render():show(r),'secondary'),
     el('p',publicEnabled?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
   shell.append(shadow,box);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
@@ -203,7 +237,7 @@ function contact(r){
     if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
     }
-    if(!publicEnabled){complete(r);return;}
+    if(!publicEnabled){if(!photoAgreementAt)baixarParcial(r);complete(r);return;}
     if(submit.disabled)return;
     if(!challenge){
       if(!status.textContent||status.textContent.startsWith('Carregando'))
@@ -216,16 +250,28 @@ function contact(r){
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
         nome:name.value.trim(),email:box.elements.email.value,whatsapp:phone.value
       },challenge);
+      if(!photoAgreementAt)baixarParcial(r);
       complete(r,answers,{emailSent:response.email_enviado===true,awaitingApproval:response.aguardando_aprovacao===true});
     }catch(error){
       complete(r,answers,{error:error.message});
     }
   });
 }
+function baixarParcial(r){
+  const bloco=partialContent(r);
+  const linhas=[answers.nome,...[...bloco.querySelectorAll('h3,strong,.badge,p')].map(node=>node.textContent)];
+  const escape=value=>String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[char]);
+  const rows=linhas.flatMap(line=>line.match(/.{1,65}(?:\s|$)|\S+/g)??[]).map(line=>line.trim()).filter(Boolean);
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="520" height="${110+rows.length*24}"><rect width="100%" height="100%" fill="#fff8f3"/><text x="24" y="42" style="font:bold 22px sans-serif;fill:#a23822">SUA AVALIAÇÃO PARCIAL</text>${rows.map((line,i)=>`<text x="24" y="${82+i*24}" style="font:14px sans-serif;fill:#29201d">${escape(line)}</text>`).join('')}</svg>`;
+  const url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+  const link=el('a');link.href=url;link.download='avaliacao-parcial.svg';link.click();
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+
 function complete(r,dados=answers,analysis={}){
-  setProgress(total,'Etapa 12 de 12 · Concluída');
+  setProgress(total,'Etapa '+total+' de '+total+' · Concluída');
   const nome=contactValues.nomeCompleto||dados.nome||'';
-  const heading=title(nome?'Sua avaliação inicial, '+nome:'Sua avaliação inicial');
+  const heading=title('Obrigado');
   const content=el('div',undefined,'result-layout reveal'), summary=el('dl',undefined,'panel summary');
   for(const [label,value] of [
     ['Nome',nome],['Sexo',dados.sexo==='F'?'Feminino':'Masculino'],['Idade',dados.idade+' anos'],
@@ -242,14 +288,13 @@ function complete(r,dados=answers,analysis={}){
   if(analysis.emailSent){
     content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! O convite do Desafio Black foi enviado ao seu e-mail.','notice'));
   }else if(photoAgreementAt){
-    content.append(el('p',analysis.error||'O envio da sua avaliação por e-mail não foi confirmado.','notice'));
+    content.append(el('p',analysis.error||(analysis.awaitingApproval?'O envio da avaliação aguarda aprovação.':'O envio da sua avaliação por e-mail não foi confirmado.'),'notice'));
     if(analysis.error)content.append(btn('← Rever fotos',()=>render()));
   }
   if(!photoAgreementAt){
     if(analysis.awaitingApproval)content.append(el('p','O convite por e-mail aguarda aprovação.','notice'));
     else if(analysis.error||analysis.emailSent===false)content.append(el('p',analysis.error||'O envio do e-mail não foi confirmado.','notice'));
-    content.append(el('p','Sua avaliação inicial está pronta. Quer dar o próximo passo? Conheça o Desafio 21 dias.'),
-      btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
+    content.append(btn('Baixar avaliação parcial',()=>baixarParcial(r)));
   }
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
@@ -263,9 +308,9 @@ form.addEventListener('submit',ev=>{
     contact(avaliar(answers));return;
   }
   const raw=new FormData(form).get(spec.key);
-  if(spec.choices){
+  if(spec.multiple){answers[spec.key]??=[];}else if(spec.choices){
     if(raw===null){feedback.textContent='Escolha uma opção para continuar.';return;}
-    answers[spec.key]=spec.key==='treinos'?Number(raw):raw;
+    answers[spec.key]=['treinos','tempoSentada','sono'].includes(spec.key)?Number(raw):raw;
   }else if(spec.min){
     const value=parseMeasure(raw);
     if(value===null||value<spec.min||value>spec.max||(spec.integer&&!Number.isInteger(value))){
@@ -280,7 +325,8 @@ form.addEventListener('submit',ev=>{
   current++;if(fields[current].key==='fotos')show(avaliar(answers));else render();
 });
 if(new URLSearchParams(location.search).get('exemplo')==='1'){
-  const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:objetivos[0]};
-  form.hidden=true;result.hidden=false;
-  complete(avaliar(exemplo),exemplo);
+  Object.assign(answers,{nome:'Marina',idade:35,sexo:'F',altura:1.65,peso:72,cintura:92,objetivo:objetivos[0],
+    modalidade:'musculacao',treinos:3,tempoSentada:8,sono:6,alimentacao:['proteina','agua','doces']});
+  current=fields.length-1;
+  show(avaliar(answers));
 }else render();

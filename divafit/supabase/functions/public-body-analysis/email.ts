@@ -1,10 +1,12 @@
 import {Buffer} from 'node:buffer';
 import jpeg from 'npm:jpeg-js@0.4.4';
 import {avaliar} from '../../../avaliacao/calculos.mjs';
-import {emailDesafio,assuntoDesafio} from '../../../avaliacao/email-desafio.mjs';
+import {emailParcial} from '../../../avaliacao/email-parcial.mjs';
+import {email2Copy} from '../../../avaliacao/email2-textos.mjs';
+import {substituir} from '../../../avaliacao/email-textos.mjs';
 import {emailAvaliacao,assuntoAvaliacao} from '../../../avaliacao/email.mjs';
 
-type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string;nome?:string};
+type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string;nome?:string;modalidade?:string;treinos?:number;tempoSentada?:number;sono?:number;alimentacao?:string[]};
 
 function gauge(imc:number,band:number){
   const width=280,height=150,data=new Uint8Array(width*height*4);
@@ -24,16 +26,16 @@ function gauge(imc:number,band:number){
   return Buffer.from(jpeg.encode({data,width,height},90).data).toString('base64');
 }
 
-export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number|null,id:string){
+export async function sendAssessmentEmail(key:string,from:string,to:string,measures:Measures,gordura:number|null,id:string,checkout:string){
   const dados={idade:measures.age,altura:measures.height/100,peso:measures.weight,
-    sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist,objetivo:measures.objective};
+    sexo:measures.sex==='feminino'?'F':'M',cintura:measures.waist,objetivo:measures.objective,modalidade:measures.modalidade,treinos:measures.treinos,tempoSentada:measures.tempoSentada,sono:measures.sono,alimentacao:measures.alimentacao};
   const r=avaliar(dados);
   const response=await fetch('https://api.resend.com/emails',{
     method:'POST',signal:AbortSignal.timeout(9000),
     headers:{Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':'body-assessment/'+id},
-    body:JSON.stringify({from,to:[to],subject:gordura===null?assuntoDesafio(measures.nome??''):assuntoAvaliacao(measures.nome??''),
-      html:gordura===null?emailDesafio(measures.nome??''):emailAvaliacao(dados,{gordura,nome:measures.nome??''}),
-      ...(gordura===null?{}:{attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})})
+    body:JSON.stringify({from,to:[to],subject:gordura===null?substituir(email2Copy.subject,{nome:measures.nome??''}):assuntoAvaliacao(measures.nome??''),
+      html:gordura===null?emailParcial(dados,{nome:measures.nome??'',checkout}):emailAvaliacao(dados,{gordura,nome:measures.nome??''}),
+      attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})
   });
   const receipt=response.ok?await response.json():null;
   console.info(JSON.stringify({event:'assessment_email_response',mode:gordura===null?'without_photos':'with_photos',status:response.status,

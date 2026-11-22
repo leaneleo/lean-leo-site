@@ -1,7 +1,7 @@
 import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
 import {buildIcons} from './icons.mjs';
 import {emailAvaliacao} from '../avaliacao/email.mjs';
-import {emailDesafio} from '../avaliacao/email-desafio.mjs';
+import {emailParcial} from '../avaliacao/email-parcial.mjs';
 const url=process.env.DIVAFIT_SUPABASE_URL||'', key=process.env.DIVAFIT_SUPABASE_PUBLIC_KEY||'';
 if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL Supabase inválida');
 if(key.startsWith('sb_secret_'))throw Error('Use somente a chave pública');
@@ -31,12 +31,12 @@ for(const file of ['comfortaa.ttf','OFL.txt'])await copyFile('assets/brand/'+fil
 console.log(url&&key?'Interface preparada. Valide o banco antes de usar dados reais.':'Interface preparada em modo de apresentação, sem conexão ou dados.');
 
 await mkdir('public/checkout/divafit/retorno',{recursive:true});
-for(const file of ['index.html','checkout.css','checkout.js','retorno.js','retorno.css'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
+for(const file of ['index.html','checkout.css','checkout.js','desafio-saida.mjs','retorno.js','retorno.css'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
 await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.html');
 
 
 for (const [folder,files] of [
- ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs']],
+ ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs']],
  ['desafio-21-dias',['index.html','desafio.js']]
 ]) {
  await mkdir('public/'+folder,{recursive:true});
@@ -50,6 +50,12 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
 
 if(process.env.CONTEXT==='deploy-preview'){
  await copyFile('avaliacao/imc-exemplo.svg','public/avaliacao/imc-exemplo.svg');
- await writeFile('public/avaliacao/email-avaliacao.html',emailAvaliacao({idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:'Emagrecimento'},{gordura:32,exemplo:true,nome:'Marina'}));
- await writeFile('public/avaliacao/email-desafio.html',emailDesafio('Marina',{preview:true}));
+ const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:92,objetivo:'Emagrecimento',
+  modalidade:'musculacao',treinos:3,tempoSentada:8,sono:6,alimentacao:['proteina','agua','doces']};
+ await writeFile('public/avaliacao/email-avaliacao.html',emailAvaliacao(exemplo,{gordura:32,exemplo:true,nome:'Marina'}));
+ await writeFile('public/avaliacao/email-desafio.html',emailParcial(exemplo,{preview:true,nome:'Marina'}));
 }
+
+await writeFile('public/checkout/divafit/desafio-config.js','window.DIVAFIT_CHALLENGE_CHECKOUT = '+JSON.stringify(
+ process.env.CONTEXT==='deploy-preview'?process.env.DIVAFIT_CHALLENGE_CHECKOUT||'':''
+)+';');

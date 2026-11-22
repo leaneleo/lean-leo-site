@@ -1,3 +1,7 @@
+## Revisão da avaliação grátis
+
+- Adiciona perguntas de rotina e leitura parcial com atividade, sono e alimentação. As novas mensagens aguardam aprovação no Trello.
+
 ## Leitura do IMC e conclusão do funil
 
 - Corrige a largura do cartão de fotos, adiciona duas leituras em cada faixa de IMC e separa o envio da avaliação por e-mail da oferta do Desafio sem fotos.

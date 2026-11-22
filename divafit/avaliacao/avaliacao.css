@@ -86,3 +86,10 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 /* O Drawer injetado pela Netlify está fora do formulário e falha sob a CSP da página. */
 .assessment-page div[data-netlify-deploy-id][data-netlify-site-id],
 .assessment-page iframe[title="Netlify Drawer"]{display:none!important}
+
+.assessment-page .partial-title{text-align:center;font-weight:700}
+.partial .metric{padding:.65rem;font-size:.8rem}
+.partial .metric strong{font-size:1rem}
+.partial .metric-alert{background:#fff0e8;border-color:#cc7559;color:#863521}
+.partial .reading{font-size:.85rem}
+.assessment-page .choice span{min-width:0;overflow-wrap:anywhere}

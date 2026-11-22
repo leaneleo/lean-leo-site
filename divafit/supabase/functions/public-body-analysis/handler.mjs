@@ -1,3 +1,4 @@
+import {perfilParcial} from '../../../avaliacao/perfil-parcial.mjs';
 import {objetivos} from '../../../avaliacao/calculos.mjs';
 import {ANGLES,generateEstimate,readForm,readMeasures} from '../body-analysis/handler.mjs';
 
@@ -46,16 +47,27 @@ export function createPublicHandler(deps) {
       }
       if(typeof token!=='string'||!token||token.length>2048||!await deps.challenge(token,new URL(origin).hostname))
         return json({message:'Refaça a verificação de segurança.'},403);
-      if(withoutPhotos&&(!deps.email||deps.canEmail?.(identity[0],origin)===false))return json({message:'O envio por e-mail ainda não está disponível.'},503);
-      if(withoutPhotos&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
+      let profile=null;
+      if(form.has('profile')){
+        try {
+          const {modalidade,treinos,tempoSentada,sono,alimentacao}=JSON.parse(form.get('profile'));
+          profile={modalidade,treinos,tempoSentada,sono,alimentacao};
+          perfilParcial(profile);
+        }catch{return json({message:'Confira as respostas da avaliação parcial.'},400);}
+        if(!nome||nome.length>120)return json({message:'Informe seu nome completo.'},400);
+      }
+      if(withoutPhotos&&!profile&&(!deps.email||deps.canEmail?.(identity[0],origin)===false))return json({message:'O envio por e-mail ainda não está disponível.'},503);
+      if(withoutPhotos&&!profile&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
       if(withoutPhotos&&(!nome||nome.length>120))return json({message:'Informe seu nome completo.'},400);
       const hashes=await Promise.all(identity.map((value,i)=>deps.hash(i+':'+value)));
       const candidate=crypto.randomUUID();
       const reserved=await deps.reserve(candidate,...hashes,isTest);
       if(reserved!=='ok')return json({message:reserved==='limit'?'Limite diário atingido. Tente amanhã.':'Este contato já foi usado ou tem uma análise em andamento.'},429);
       id=candidate;
+      if(profile&&!isTest&&deps.lead&&deps.leadOrigin?.(origin)===true)await deps.lead(id,nome,...identity,{...profile,...measures,objective,withPhotos:!withoutPhotos});
+      if(withoutPhotos&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
       if(withoutPhotos){
-        keep=!isTest&&await deps.email(identity[0],{...measures,objective,nome},null,id,origin).catch(()=>false);
+        keep=!isTest&&!!deps.email&&await deps.email(identity[0],{...measures,...profile,objective,nome},null,id,origin).catch(()=>false);
         return json({email_enviado:keep});
       }
       let photos;
@@ -70,8 +82,8 @@ export function createPublicHandler(deps) {
       },photos,measures);
       const percentage=result.gordura_percentual;
       keep=result.fotos_ok&&percentage?.estimado>0&&percentage.estimado<100;
-      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],{...measures,objective,nome:nome.slice(0,120)},percentage.estimado,id,origin).catch(()=>false):false;
-      return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...diagnostics()}:
+      const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],{...measures,...profile,objective,nome:nome.slice(0,120)},percentage.estimado,id,origin).catch(()=>false):false;
+      return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...(profile&&!emailSent&&deps.approvalPending?.()?{aguardando_aprovacao:true}:{}),...diagnostics()}:
         {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
     }catch(error){
       return json({message:'A análise está indisponível. Você ainda pode ver os demais indicadores.',...diagnostics(),

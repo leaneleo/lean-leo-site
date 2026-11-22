@@ -111,3 +111,14 @@ test('Oferta sem fotos aguarda aprovação sem consumir a reserva ou disparar e-
   assert.deepEqual(await reply.json(),{email_enviado:false,aguardando_aprovacao:true});
   assert.deepEqual(keys,[]);
 });
+
+test('Fluxo parcial salva perfil no lead sem chamar a Anthropic nem disparar texto pendente',async()=>{
+  const saves=[];
+  const {handler,calls}=harness({lead:async(...args)=>saves.push(args),leadOrigin:()=>true,canSendChallenge:()=>false});
+  const profile={modalidade:'corrida',treinos:2,tempoSentada:10,sono:6,alimentacao:['frutas']};
+  const response=await handler(request({name:'Pessoa de Teste',without_photos:'true',frente:null,lado:null,costas:null,profile:JSON.stringify(profile)}));
+  assert.deepEqual(await response.json(),{email_enviado:false,aguardando_aprovacao:true});
+  assert.equal(saves.length,1);assert.deepEqual(saves[0][4].alimentacao,['frutas']);
+  assert.equal(saves[0][4].tempoSentada,10);
+  assert.equal(calls(),0);
+});
