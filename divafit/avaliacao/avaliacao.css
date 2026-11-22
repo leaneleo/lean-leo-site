@@ -156,3 +156,6 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .assessment-spinner{height:1.5rem;width:1.5rem;flex:none;border:.2rem solid #f5d5ca;border-top-color:#a23822;border-radius:50%;animation:assessment-spin .85s linear infinite}
 @keyframes assessment-spin{to{transform:rotate(1turn)}}
 @media(prefers-reduced-motion:reduce){.assessment-spinner{animation:none}}
+
+.photo-guide{display:grid;gap:.5rem;padding:.9rem;margin-bottom:.35rem;border:1px solid #eaded7;border-radius:16px;background:#fff4ed;text-align:center;font-size:.84rem;line-height:1.45}
+.photo-guide h3{font-size:1rem;color:#a23822}

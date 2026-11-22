@@ -81,7 +81,14 @@ function render(){
   next.textContent=spec.key==='fotos'?'Continuar sem fotos':'Continuar';
   heading.focus({preventScroll:true});
   if(spec.key==='fotos'){
-    step.append(el('p','Inclua frente, lado e costas, com o corpo inteiro e boa iluminação.','hint'));
+    const guide=el('section',undefined,'photo-guide');
+    guide.append(el('h3',"Como tirar suas 3 fotos 📸"));
+    for(const [before,emphasis,after] of [["📐 ","Frente, lado e costas",": uma foto de cada."],["🧍‍♀️ ","Corpo inteiro",": da cabeça aos pés, braços soltos ao lado do corpo."],["💡 ","Boa luz",": de dia, perto de uma janela, funciona muito bem."],["👙 ","Pode ser de biquíni, maiô, top com short ou legging."," Evite roupa larga."],["🤳 ","Dica",": peça ajuda a alguém ou use o temporizador, com o celular na altura da cintura."],["🔒 Suas fotos são usadas só para calcular a sua avaliação."]]){
+      const line=el('p',before);
+      if(emphasis)line.append(el('strong',emphasis),after);
+      guide.append(line);
+    }
+    step.append(guide);
     if(publicEnabled)step.append(el('p','Ao enviar as fotos, você solicita seu processamento pela Anthropic para estimar a composição corporal.','hint'));
     const photos=el('div',undefined,'photos');
     for(const angle of ['Frente','Lado','Costas']){
