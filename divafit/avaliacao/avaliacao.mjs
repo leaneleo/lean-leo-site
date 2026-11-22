@@ -22,7 +22,7 @@ const fields=[
  {key:'altura',label:'Altura',placeholder:'Ex.: 1,65',unit:'m',min:1,max:2.5},
  {key:'peso',label:'Peso',placeholder:'Ex.: 68,5',unit:'kg',min:25,max:350},
  {key:'objetivo',label:'Qual é o seu objetivo principal?',choices:choices(objetivos.map(label=>[label,label]))},
- {key:'modalidade',label:'O que você treina hoje?',choices:choices([
+ {key:'modalidade',multiple:true,label:'O que você treina hoje?',choices:choices([
   ['musculacao','Musculação'],['intenso','CrossFit / funcional / HIIT'],['corrida','Corrida'],['caminhada','Caminhada'],
   ['esportes','Lutas, dança ou esportes'],['outro','Outro'],['nenhum','Nada']])},
  {key:'treinos',label:'Quantas vezes por semana você treina?',choices:choices(Array.from({length:8},(_,i)=>[i,String(i)]))},
@@ -108,7 +108,7 @@ function render(){
   if(spec.choices){
     const group=el('div',undefined,spec.key==='objetivo'?'choices goal':spec.key==='sexo'?'choices sex':'choices');
     group.classList.add(spec.key==='treinos'?'choices-count':'choices-wide');
-    const sections=spec.multiple?['Pontos positivos','Pontos negativos'].map(name=>{
+    const sections=spec.key==='alimentacao'?['Pontos positivos','Pontos negativos'].map(name=>{
       const section=el('section',undefined,'food-section');
       const heading=el('h3',name), grid=el('div',undefined,'choices choices-wide');
       section.append(heading,grid);group.append(section);return grid;
@@ -121,7 +121,13 @@ function render(){
       const item=el('label',undefined,'choice'), input=el('input');
       input.type=spec.multiple?'checkbox':'radio';input.name=spec.key;input.value=value;
       input.checked=spec.multiple?(answers[spec.key]??[]).includes(value):String(answers[spec.key])===value;
-      if(spec.multiple)input.addEventListener('change',()=>{
+      if(spec.key==='modalidade')input.addEventListener('change',()=>{
+        if(!input.checked)return;
+        for(const control of group.querySelectorAll('input:checked')){
+          if(control!==input&&(value==='nenhum'||control.value==='nenhum'))control.checked=false;
+        }
+      });
+      if(sections)input.addEventListener('change',()=>{
         answers[spec.key]=alternarAlimento(answers[spec.key]??[],value);
         for(const control of group.querySelectorAll('input'))control.checked=answers[spec.key].includes(control.value);
       });
@@ -239,10 +245,7 @@ function contact(r){
   form.hidden=true;result.hidden=false;
   setProgress(fields.length+1);
   const heading=title(photoAgreementAt?'Receba sua avaliação completa por e-mail':'SUA AVALIAÇÃO PARCIAL');
-  const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
-  shadow.setAttribute('aria-hidden','true');
-  shadow.append(metric('Composição corporal','— %'),
-    metric('Faixa de gordura','— a —'),metric('Indicador IMC × cintura',r.risco));
+  const shell=el('div',undefined,'lead-shell reveal');
   const box=el('form',undefined,'lead-form');
   for(const [key,label,example,type,auto] of [
     ['nomeCompleto','Nome completo','Seu nome e sobrenome','text','name'],
@@ -281,7 +284,7 @@ function contact(r){
     el('p',publicEnabled?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
   const controls=el('div',undefined,'lead-form contact-controls');
   controls.append(widget,status,submit,previous);
-  shell.append(shadow,box,controls);result.replaceChildren(heading,shell);
+  shell.append(box,controls);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
   box.addEventListener('submit',event=>event.preventDefault());
   submit.addEventListener('click',async event=>{
@@ -415,8 +418,13 @@ form.addEventListener('submit',ev=>{
     photoAgreementAt=photoFiles.size===3?new Date().toISOString():null;
     contact(avaliar(answers));return;
   }
-  const raw=new FormData(form).get(spec.key);
-  if(spec.multiple){answers[spec.key]??=[];}else if(spec.choices){
+  const data=new FormData(form);
+  const raw=data.get(spec.key);
+  if(spec.key==='modalidade'){
+    const selected=data.getAll(spec.key);
+    if(!selected.length){feedback.textContent='Escolha uma opção para continuar.';return;}
+    answers.modalidade=selected;
+  }else if(spec.multiple){answers[spec.key]??=[];}else if(spec.choices){
     if(raw===null){feedback.textContent='Escolha uma opção para continuar.';return;}
     answers[spec.key]=['treinos','tempoSentada','sono'].includes(spec.key)&&raw!=='emPe'?Number(raw):raw;
   }else if(spec.min){
