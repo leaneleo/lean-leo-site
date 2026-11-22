@@ -1,3 +1,63 @@
+## Avaliação grátis · diagnóstico e envio na prévia
+
+- Registra falhas por etapa sem dados pessoais, aceita JSON delimitado válido, separa verificação das ações e mostra o carregamento. E-mail parcial pode usar a página fechada do Desafio.
+
+## Avaliação grátis · textos de alimentação
+
+- Aplica as frases revisadas no Trello, separa doces de industrializados e formata a estimativa de água com peso × 35 ml.
+
+## Avaliação grátis · revisão da alimentação e do encerramento
+
+- Distingue verduras e legumes, alterna o encerramento do tópico, aplica a aprovação da etapa 17 e reserva o e-book nas duas prévias de e-mail.
+
+## Avaliação grátis na prévia
+
+- Centraliza a etapa 13, corrige a prioridade das dicas alimentares, acrescenta emojis e move o download manual em PDF para o fim. A etapa 17 está em revisão.
+
+## Desafio Black na prévia
+
+- A página apresenta os sete itens aprovados no Trello, com vendas fechadas.
+
+## Revisão da avaliação grátis
+
+- Adiciona perguntas de rotina e leitura parcial com atividade, sono e alimentação. As novas mensagens aguardam aprovação no Trello.
+
+## Leitura do IMC e conclusão do funil
+
+- Corrige a largura do cartão de fotos, adiciona duas leituras em cada faixa de IMC e separa o envio da avaliação por e-mail da oferta do Desafio sem fotos.
+
+## Metas independentes na avaliação
+
+- Calcula perda de gordura e ganho muscular separadamente. Tela e e-mail exibem apenas prazos aplicáveis e escolhem a mensagem pelos resultados.
+
+## Objetivo na avaliação
+
+- Adiciona três objetivos ao funil e reproduz as metas e mensagens da planilha na tela e no e-mail.
+
+## Prévia de avaliação, Biblioteca e Financeiro
+
+- Avaliação compacta, total e siglas na Biblioteca, renda familiar anual e Desafio Black com visual escuro. E-mail de teste protegido por lista de destinatários.
+
+## Card Desafio Black — 21/11/2026
+
+- Financeiro mostra tema, datas, dieta em grupo e vendas fechadas, com link para a página do Desafio. Os dois pontos leem as mesmas informações.
+
+## Homologação da análise pública
+
+- Prévia aponta para a função do Supabase com passe de teste de uso único. Envio Resend preparado e desativado por padrão.
+
+## Funil público de fotos — 21/11/2026
+
+- Fluxo opcional de fotos com função pública independente, Turnstile, limite diário e deduplicação por contato. Desafio disponível na prévia e com vendas fechadas.
+
+## 2026-11-21
+
+- Funil de avaliação com contatos reunidos, espaçamento mobile, aviso com o número da LGPD e demonstração da composição corporal com fórmulas da planilha.
+
+## 2026-11-20
+
+- Biblioteca com total e filtros pelas siglas oficiais, Visão Geral com sete dias para alunos novos e revisão dos textos de rotinas. Cálculos acessíveis pelo atendimento.
+
 # Histórico DivaFit
 
 ## CRM, Família e relatórios InfinitePay — 20/11/2026
@@ -40,3 +100,15 @@
 
 - Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
 - Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
+
+## 2026-11-21
+
+- Referência de métodos em três colunas e proposta de VSSAM semanal documentada.
+
+- Financeiro → Le&LeoFit recebeu o cartão Black Friday do Desafio Black. Os cards de Instruções mostram somente observações, e a Biblioteca aceita AA9 e superiores.
+
+## Avaliação corporal por fotos — branch de trabalho
+
+- Fluxo de equipe com consentimento, fotos privadas, rascunho de IA, revisão, histórico e impressão de aprovados. Veja docs/ANALISE-CORPORAL.md.
+
+- Funil de avaliação parcial e página fechada do Desafio 21 dias disponíveis para revisão. Consulte docs/FUNIL-AVALIACAO.md.

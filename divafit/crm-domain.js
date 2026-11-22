@@ -8,13 +8,13 @@ export const PRESCRIPTION_CENTS=5000; // Elisângela: cerca de R$ 50 por treino 
 export const EXTENSION_CENTS=2000;    // Prorrogação: R$ 20 para manter o mesmo treino por mais um mês.
 export const SITUATIONS=[
  ['cobrar','Cobrar','Pagamento pendente ou vencido.'],
- ['devendo','Devendo treino','A ficha está acabando e o plano ainda tem treino a entregar.'],
- ['renovar','Renovar ou prorrogar','A ficha termina em até 7 dias (ou terminou há pouco) e o plano foi entregue.'],
- ['montando','Treino em preparo','Há uma ficha em elaboração.'],
- ['em_dia','Em dia','Ficha vigente por mais de 7 dias.'],
- ['conferir','Conferir dados','Falta data de término da ficha.'],
- ['inativa','Reativar','Ficha terminou há mais de 30 dias.'],
- ['sem_ficha','Sem ficha','Nenhuma ficha registrada.']
+ ['devendo','Devendo treino','A rotina está acabando e o plano ainda tem treino a entregar.'],
+ ['renovar','Renovar ou prorrogar','A rotina termina em até 7 dias (ou terminou há pouco) e o plano foi entregue.'],
+ ['montando','Treino em preparo','Há uma rotina em elaboração.'],
+ ['em_dia','Em dia','Rotina vigente por mais de 7 dias.'],
+ ['conferir','Conferir dados','Falta data de término da rotina.'],
+ ['inativa','Reativar','Rotina terminou há mais de 30 dias.'],
+ ['sem_ficha','Sem rotina','Nenhuma rotina registrada.']
 ];
 const normalize=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 export function planInfo(plan){const t=normalize(plan);
