@@ -26,6 +26,7 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
+  canSendChallenge:()=>env('PUBLIC_BODY_CHALLENGE_EMAIL_APPROVED')==='true',
   canEmail:(to:string,origin:string)=>origin===preview&&emailAllowlist.has(to),
   email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
     ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number|null,id:string,origin:string)=>

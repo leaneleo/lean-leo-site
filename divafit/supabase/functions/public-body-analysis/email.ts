@@ -1,9 +1,10 @@
 import {Buffer} from 'node:buffer';
 import jpeg from 'npm:jpeg-js@0.4.4';
 import {avaliar} from '../../../avaliacao/calculos.mjs';
+import {emailDesafio,assuntoDesafio} from '../../../avaliacao/email-desafio.mjs';
 import {emailAvaliacao} from '../../../avaliacao/email.mjs';
 
-type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string};
+type Measures={weight:number;height:number;age:number;sex:string;waist:number|null;objective:string;nome?:string};
 
 function gauge(imc:number,band:number){
   const width=280,height=150,data=new Uint8Array(width*height*4);
@@ -30,9 +31,9 @@ export async function sendAssessmentEmail(key:string,from:string,to:string,measu
   const response=await fetch('https://api.resend.com/emails',{
     method:'POST',signal:AbortSignal.timeout(9000),
     headers:{Authorization:'Bearer '+key,'Content-Type':'application/json','Idempotency-Key':'body-assessment/'+id},
-    body:JSON.stringify({from,to:[to],subject:'Sua avaliação física Le&LeoFit',
-      html:emailAvaliacao(dados,{gordura}),
-      attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})
+    body:JSON.stringify({from,to:[to],subject:gordura===null?assuntoDesafio:'Sua avaliação física Le&LeoFit',
+      html:gordura===null?emailDesafio(measures.nome??''):emailAvaliacao(dados,{gordura}),
+      ...(gordura===null?{}:{attachments:[{filename:'velocimetro-imc.jpg',content:gauge(r.imc,r.faixa),content_id:'imc-gauge'}]})})
   });
   const receipt=response.ok?await response.json():null;
   console.info(JSON.stringify({event:'assessment_email_response',mode:gordura===null?'without_photos':'with_photos',status:response.status,

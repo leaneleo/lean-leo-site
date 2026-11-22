@@ -34,6 +34,7 @@ export function createPublicHandler(deps) {
       const withoutPhotos=form.get('without_photos')==='true';
       if(!objetivos.includes(objective)||!identity||!measures||!['feminino','masculino'].includes(measures.sex)||form.get('purpose')!=='body-photo-v1')
         return json({message:'Confira os dados da avaliação.'},400);
+      const nome=String(form.get('name')??'').trim();
       const files=ANGLES.map(angle=>form.get(angle));
       if(withoutPhotos?files.some(file=>file!==null):files.some((file,i)=>!(file instanceof Blob)||file.type!=='image/jpeg'||!file.size||
          file.size>2097152||form.getAll(ANGLES[i]).length!==1))
@@ -46,13 +47,15 @@ export function createPublicHandler(deps) {
       if(typeof token!=='string'||!token||token.length>2048||!await deps.challenge(token,new URL(origin).hostname))
         return json({message:'Refaça a verificação de segurança.'},403);
       if(withoutPhotos&&(!deps.email||deps.canEmail?.(identity[0],origin)===false))return json({message:'O envio por e-mail ainda não está disponível.'},503);
+      if(withoutPhotos&&deps.canSendChallenge?.()!==true)return json({email_enviado:false,aguardando_aprovacao:true});
+      if(withoutPhotos&&(!nome||nome.length>120))return json({message:'Informe seu nome completo.'},400);
       const hashes=await Promise.all(identity.map((value,i)=>deps.hash(i+':'+value)));
       const candidate=crypto.randomUUID();
       const reserved=await deps.reserve(candidate,...hashes,isTest);
       if(reserved!=='ok')return json({message:reserved==='limit'?'Limite diário atingido. Tente amanhã.':'Este contato já foi usado ou tem uma análise em andamento.'},429);
       id=candidate;
       if(withoutPhotos){
-        keep=!isTest&&await deps.email(identity[0],{...measures,objective},null,id,origin).catch(()=>false);
+        keep=!isTest&&await deps.email(identity[0],{...measures,objective,nome},null,id,origin).catch(()=>false);
         return json({email_enviado:keep});
       }
       let photos;

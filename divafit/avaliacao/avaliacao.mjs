@@ -181,7 +181,7 @@ function contact(r){
   if(publicEnabled){
     const widget=el('div');
     box.append(widget);
-    submit.textContent=photoAgreementAt?'Analisar minhas fotos e ver avaliação':'Enviar avaliação inicial por e-mail';
+    submit.textContent=photoAgreementAt?'Analisar minhas fotos e ver avaliação':'Receber convite do Desafio por e-mail';
     if(window.DIVAFIT_PUBLIC_BODY.sitekey==='1x00000000000000000000AA')
       status.textContent='Modo de teste. Use apenas imagens fictícias. A análise exige um passe temporário.';
     submit.disabled=true;
@@ -207,9 +207,9 @@ function contact(r){
     status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
     try{
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
-        email:box.elements.email.value,whatsapp:phone.value
+        nome:name.value.trim(),email:box.elements.email.value,whatsapp:phone.value
       },challenge);
-      complete(r,answers,{emailSent:response.email_enviado===true});
+      complete(r,answers,{emailSent:response.email_enviado===true,awaitingApproval:response.aguardando_aprovacao===true});
     }catch(error){
       complete(r,answers,{error:error.message});
     }
@@ -233,13 +233,14 @@ function complete(r,dados=answers,analysis={}){
   }
   content.append(heading,summary);
   if(analysis.emailSent){
-    content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! Sua avaliação inicial foi enviada ao seu e-mail.','notice'));
+    content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! O convite do Desafio Black foi enviado ao seu e-mail.','notice'));
   }else if(photoAgreementAt){
     content.append(el('p',analysis.error||'O envio da sua avaliação por e-mail não foi confirmado.','notice'));
     if(analysis.error)content.append(btn('← Rever fotos',()=>render()));
   }
   if(!photoAgreementAt){
-    if(analysis.error||analysis.emailSent===false)content.append(el('p',analysis.error||'O envio do e-mail não foi confirmado.','notice'));
+    if(analysis.awaitingApproval)content.append(el('p','O convite por e-mail aguarda aprovação.','notice'));
+    else if(analysis.error||analysis.emailSent===false)content.append(el('p',analysis.error||'O envio do e-mail não foi confirmado.','notice'));
     content.append(el('p','Sua avaliação inicial está pronta. Quer dar o próximo passo? Conheça o Desafio 21 dias.'),
       btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
   }

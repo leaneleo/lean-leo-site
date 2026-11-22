@@ -91,9 +91,10 @@ test('Sem fotos usa Turnstile, lista de e-mail e limite compartilhado sem chamar
   const sent=[];
   const {handler,calls,block}=harness({
     canEmail:email=>email==='test@example.test',
+    canSendChallenge:()=>true,
     email:async (email,measures,fat)=>{sent.push({email,fat});return true;}
   });
-  const noPhotos={without_photos:'true',frente:null,lado:null,costas:null};
+  const noPhotos={name:'Pessoa de Teste',without_photos:'true',frente:null,lado:null,costas:null};
   assert.equal((await handler(request({...noPhotos,email:'other@example.test'}))).status,503);
   const response=await handler(request(noPhotos));
   assert.deepEqual(await response.json(),{email_enviado:true});
@@ -102,4 +103,11 @@ test('Sem fotos usa Turnstile, lista de e-mail e limite compartilhado sem chamar
   block();
   assert.equal((await handler(request({...noPhotos,email:'blocked@example.test'}))).status,403);
   assert.equal(calls(),0);
+});
+
+test('Oferta sem fotos aguarda aprovação sem consumir a reserva ou disparar e-mail',async()=>{
+  const {handler,keys}=harness({email:async()=>{throw Error('Envio indevido');},canSendChallenge:()=>false});
+  const reply=await handler(request({name:'Pessoa de Teste',without_photos:'true',frente:null,lado:null,costas:null}));
+  assert.deepEqual(await reply.json(),{email_enviado:false,aguardando_aprovacao:true});
+  assert.deepEqual(keys,[]);
 });

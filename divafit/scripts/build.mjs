@@ -1,5 +1,6 @@
 import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
 import {buildIcons} from './icons.mjs';
+import {emailDesafio} from '../avaliacao/email-desafio.mjs';
 const url=process.env.DIVAFIT_SUPABASE_URL||'', key=process.env.DIVAFIT_SUPABASE_PUBLIC_KEY||'';
 if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL Supabase inválida');
 if(key.startsWith('sb_secret_'))throw Error('Use somente a chave pública');
@@ -45,3 +46,7 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
   endpoint:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_ENDPOINT||'':'',
   sitekey:process.env.CONTEXT==='deploy-preview'?process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||'1x00000000000000000000AA':''
 })+';');
+
+if(process.env.CONTEXT==='deploy-preview'){
+ await writeFile('public/avaliacao/email-desafio.html',emailDesafio('Marina',{preview:true}));
+}
