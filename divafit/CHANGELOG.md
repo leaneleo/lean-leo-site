@@ -1,3 +1,7 @@
+## Leitura do IMC e conclusão do funil
+
+- Corrige a largura do cartão de fotos, adiciona duas leituras em cada faixa de IMC e separa o envio da avaliação por e-mail da oferta do Desafio sem fotos.
+
 ## Metas independentes na avaliação
 
 - Calcula perda de gordura e ganho muscular separadamente. Tela e e-mail exibem apenas prazos aplicáveis e escolhem a mensagem pelos resultados.

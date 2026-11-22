@@ -73,3 +73,7 @@ Verificação com fórmulas copiadas de Histórico para três linhas fictícias,
 ### Metas independentes no funil
 
 A regra online substitui as colunas BD/BI antigas por duas projeções independentes. Gordura a eliminar: AV − AU × BC / (1 − BC), com BC da planilha para todos os objetivos e prazo em kg × 7700 / 500. Ganho de músculo: BF/BG por objetivo como ponto de partida. Para IMLG abaixo de Excelente, a meta fica dentro do intervalo Excelente. Quem já alcançou esse intervalo ou está acima dele não recebe meta adicional de ganho. O prazo é kg × 30, e a tela e o e-mail mostram o ganho também em gramas. Metas abaixo de 0,5 kg ficam sem prazo. Gordura e IMLG excelentes geram mensagem de manutenção. A mensagem depende dos resultados calculados e os prazos não são somados.
+
+### Resultado inicial e encaminhamento
+
+A etapa 9 mostra a leitura inicial do IMC e explica suas limitações. Cada faixa tem duas mensagens e a variante permanece estável dentro do preenchimento. Fotos ficam na etapa 10 e os contatos na 11. A etapa 12 mostra o resumo informado. Sem fotos, oferece o Desafio. Com fotos, o convite à Consultoria fica no e-mail e a confirmação na tela exige retorno positivo do envio.

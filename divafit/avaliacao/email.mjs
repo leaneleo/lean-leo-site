@@ -31,6 +31,7 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false}={}){
   <span style="display:inline-block;padding:8px 14px;border-radius:20px;background:#f9e4dc;color:#942b19">${r.categoria}</span>
   </td></tr><tr><td style="padding:0 12px"><table role="presentation" style="width:100%;border-spacing:0 8px">${cards}</table>
   ${gordura===null?'':`<p>${notaMeta}</p><p>${mensagemMeta(c)}</p>`}
+  <p style="padding:14px;background:#fff3eb;border-radius:12px"><strong>Consultoria Online Le&amp;LeoFit</strong><br>Quer um treino orientado para seu objetivo? <a href="https://leeleo.com.br/#consultoria">Conheça a Consultoria Online</a>.</p>
   <p style="padding:10px;font-size:13px">Estimativa feita por IA e fórmulas, pode conter erros e não substitui avaliação presencial.</p></td></tr>
   </table></body></html>`;
 }

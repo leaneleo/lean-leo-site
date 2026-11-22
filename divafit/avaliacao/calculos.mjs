@@ -100,3 +100,23 @@ export function linhasMeta({alvo,gorduraMeta,musculoMeta}){
     ...(musculoMeta.kg?[['Prazo de ganho · superávit de 400 kcal/dia',numero(musculoMeta.dias,1)+' dias']]:[])
   ];
 }
+
+const mensagensImc=[
+  ['Seu IMC está na faixa abaixo do peso. Vale olhar sua rotina, seu histórico e sua massa muscular para entender o que esse número representa.',
+   'O peso ficou abaixo da faixa de referência para sua altura. Seu objetivo e sua composição corporal ajudam a decidir quais próximos passos fazem sentido.'],
+  ['Seu IMC está na faixa de peso normal. A avaliação aprofundada ajuda a olhar aspectos como massa muscular e gordura corporal.',
+   'Seu peso está na faixa de referência para a altura. Podemos olhar além da balança para entender como seu treino e sua composição corporal se relacionam com seu objetivo.'],
+  ['Seu IMC está na faixa de sobrepeso. Há espaço para entender se o peso vem principalmente de gordura ou se a massa muscular influencia esse resultado.',
+   'O IMC ficou na faixa de sobrepeso. Antes de estabelecer uma meta de peso, vale considerar a medida da cintura e a composição corporal.'],
+  ['Seu IMC está na faixa de obesidade grau 1. Cintura, composição corporal e histórico ajudam a interpretar o resultado no seu contexto.',
+   'A leitura inicial indica a faixa de obesidade grau 1. Uma análise mais detalhada ajuda a planejar os próximos passos de acordo com a sua realidade.'],
+  ['Seu IMC está na faixa de obesidade grau 2. Uma avaliação com um profissional de saúde pode ajudar a entender o resultado junto com seu histórico.',
+   'Sua relação entre peso e altura ficou na faixa de obesidade grau 2. Vale olhar outros indicadores e combinar próximos passos com um profissional de saúde.'],
+  ['Seu IMC está na faixa de obesidade grau 3. Vale conversar com um profissional de saúde para interpretar esse resultado e planejar cuidados de forma individualizada.',
+   'A leitura inicial indica a faixa de obesidade grau 3. Um acompanhamento de saúde pode considerar sua história, suas medidas e o que faz sentido para você agora.']
+];
+
+export function mensagemImc(resultado,variante){
+  const faixa={'Magreza':0,'Normal':1,'Sobrepeso':2}[resultado.categoria]??resultado.faixa;
+  return mensagensImc[faixa][variante];
+}

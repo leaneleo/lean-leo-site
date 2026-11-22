@@ -1,5 +1,5 @@
 import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
-import {avaliar,composicao,faixasAdulto,parseMeasure,objetivos,linhasMeta,mensagemMeta,notaMeta} from './calculos.mjs';
+import {avaliar,faixasAdulto,parseMeasure,objetivos,mensagemImc} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
 const form=$('#form'), step=$('#step'), result=$('#result'), feedback=$('#feedback'), back=$('#back'), next=$('#next');
@@ -17,7 +17,7 @@ const fields=[
  {key:'cintura',label:'Qual é a medida da sua cintura?',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
-const total=fields.length+2, answers={}, photoFiles=new Map();
+const total=fields.length+3, answers={}, photoFiles=new Map();
 let current=0, photoAgreementAt=null;
 progress.max=total;
 const el=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;};
@@ -47,14 +47,15 @@ function textField(key,label,placeholder,type='text',unit){
   return {wrap,control};
 }
 function render(){
-  setProgress(current);
+  setProgress(current+(fields[current].key==='fotos'?1:0));
   result.hidden=true;form.hidden=false;
   const spec=fields[current];
   const heading=title(spec.label);
   step.classList.remove('stage');step.replaceChildren(heading);requestAnimationFrame(()=>step.classList.add('stage'));
   feedback.textContent='';
   back.hidden=current===0;
-  next.textContent=spec.key==='fotos'?'Ver avaliação parcial':'Continuar';
+  next.hidden=false;
+  next.textContent=spec.key==='fotos'?'Continuar sem fotos':'Continuar';
   heading.focus({preventScroll:true});
   if(spec.key==='fotos'){
     step.append(el('p','Inclua frente, lado e costas, com o corpo inteiro e boa iluminação.','hint'));
@@ -64,18 +65,20 @@ function render(){
       const pick=el('label',undefined,'pick-file'), file=el('input'), label=el('span',angle,'file-text');
       file.type='file';file.accept='image/jpeg,image/png,image/webp';file.setAttribute('aria-label','Foto de '+angle.toLowerCase());
       const previous=photoFiles.get(angle);
-      if(previous)label.textContent=angle+' · '+previous.name;
+      if(previous)label.textContent=angle+' · Foto selecionada';
       file.addEventListener('change',()=>{
         const chosen=file.files[0];
         if(chosen)photoFiles.set(angle,chosen);else photoFiles.delete(angle);
-        label.textContent=chosen?angle+' · '+chosen.name:angle;
-        next.textContent=photoFiles.size?'Enviar fotos e ver avaliação':'Ver avaliação parcial';
+        label.textContent=chosen?angle+' · Foto selecionada':angle;
+        next.hidden=!photoFiles.size;
+        next.textContent=photoFiles.size?'Usar fotos na avaliação':'Continuar sem fotos';
         feedback.textContent='';
       });
       pick.append(file,icon('camera'),label);photos.append(pick);
     }
-    if(photoFiles.size)next.textContent='Enviar fotos e ver avaliação';
-    step.append(photos,btn('Continuar sem fotos',()=>{photoFiles.clear();photoAgreementAt=null;show(avaliar(answers));},'subtle'),
+    next.hidden=!photoFiles.size;
+    if(photoFiles.size)next.textContent='Usar fotos na avaliação';
+    step.append(photos,btn('Continuar sem fotos',()=>{photoFiles.clear();photoAgreementAt=null;contact(avaliar(answers));},'subtle'),
       el('p','🔒 Seus dados estão protegidos pela Lei Geral de Proteção de Dados (LGPD): Lei n. 13.709, de 14 de agosto de 2018. Nada será publicado sem sua autorização.','notice'));
     return;
   }
@@ -97,7 +100,7 @@ function render(){
   step.append(wrap);
   if(spec.key==='cintura'){
     step.append(el('p','Passe um barbante na altura do umbigo, marque com caneta e meça com régua ou trena.','hint'),
-      btn('Não consigo medir',()=>{answers.cintura=null;current++;render();},'subtle'));
+      btn('Não consigo medir',()=>{answers.cintura=null;current++;show(avaliar(answers));},'subtle'));
   }
 }
 const palette=['#39769d','#327c57','#e57446','#cf5037','#ab333e','#722d4b'];
@@ -124,9 +127,10 @@ const format=(value,digits)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigit
 function metric(label,value){
   const node=el('article',undefined,'metric');node.append(el('h3',label),el('strong',value));return node;
 }
+const imcVariant=Math.random()<.5?0:1;
 function show(r){
   form.hidden=true;result.hidden=false;
-  setProgress(fields.length,`Avaliação parcial · ${fields.length} de ${total} etapas`);
+  setProgress(fields.length-1);
   const heading=title('Sua avaliação parcial');
   const content=el('div',undefined,'result-layout reveal'), indicator=el('article',undefined,'risk');
   const tone=r.risco==='Baixo risco'?'safe':r.risco==='Risco moderado'?'mid':'';
@@ -139,15 +143,18 @@ function show(r){
   const metrics=el('div',undefined,'metrics');
   metrics.append(metric('IMC',format(r.imc,1)),metric('Cintura',answers.cintura===null?'Não informada':format(answers.cintura,1)+' cm'),
     metric('Cintura/altura',r.razao===null?'Indisponível':format(r.razao,2)),metric('Faixa de gordura',photoAgreementAt?'Aguardando análise':'Disponível com fotos'));
-  content.append(heading,indicator,panel,metrics);
+  const reading=el('section',undefined,'panel reading');
+  reading.append(el('h3','O que seu IMC sugere'),el('p',mensagemImc(r,imcVariant)),
+    el('p','O IMC relaciona peso e altura. Ele não distingue músculo de gordura e, sozinho, não dá um diagnóstico.','hint'));
+  content.append(heading,reading,indicator,panel,metrics);
   if(answers.treinos>=5)content.append(el('p','Em pessoas com muita massa muscular o IMC pode indicar peso acima do real; por isso olhamos também a cintura e as fotos.','hint'));
-  content.append(el('p',aviso,'hint'),btn('Desbloquear avaliação completa',()=>contact(r),'primary'));
+  content.append(el('p',aviso,'hint'),btn('Quero uma avaliação mais aprofundada',()=>render(),'primary'),btn('← Rever medidas',()=>{current--;render();},'secondary'));
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
 const contactValues={};
 function contact(r){
   setProgress(fields.length+1);
-  const heading=title('Desbloqueie sua avaliação completa');
+  const heading=title(photoAgreementAt?'Receba sua avaliação por e-mail':'Finalize sua avaliação inicial');
   const shell=el('div',undefined,'lead-shell reveal'), shadow=el('div',undefined,'lead-shadow metrics');
   shadow.setAttribute('aria-hidden','true');
   shadow.append(metric('Composição corporal','— %'),metric('Cintura/altura',r.razao===null?'—':format(r.razao,2)),
@@ -181,13 +188,14 @@ function contact(r){
       .catch(()=>{status.textContent='A verificação está indisponível. Você pode continuar sem fotos.';});
     box.append(btn('Ver avaliação sem fotos',()=>{photoAgreementAt=null;photoFiles.clear();complete(r);}));
   }
-  box.append(status,submit,btn('← Voltar',()=>show(r),'secondary'),
+  box.append(status,submit,btn('← Voltar',()=>render(),'secondary'),
     el('p',publicEnabled&&photoAgreementAt?'O e-mail e o WhatsApp são usados para limitar a análise a uma por contato.':'Os contatos ficam nesta tela de teste.','hint'));
   shell.append(shadow,box);result.replaceChildren(heading,shell);
   window.scrollTo(0,0);heading.focus({preventScroll:true});
   box.addEventListener('submit',async ev=>{
     ev.preventDefault();
     const name=box.elements.nomeCompleto, phone=box.elements.whatsapp;
+    Object.assign(contactValues,{nomeCompleto:name.value.trim(),whatsapp:phone.value.trim(),email:box.elements.email.value.trim()});
     if(name.value.trim().split(/\s+/).length<2){name.setCustomValidity('Informe seu nome e sobrenome.');name.reportValidity();return;}
     if(!/^\+?[0-9(). -]+$/.test(phone.value)||!(/^(?:55)?[1-9]\d9\d{8}$/.test(phone.value.replace(/\D/g,'')))){
       phone.setCustomValidity('Informe um celular brasileiro com DDD.');phone.reportValidity();return;
@@ -200,64 +208,48 @@ function contact(r){
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
         email:box.elements.email.value,whatsapp:phone.value
       },challenge);
-      complete(r,answers,response.gordura.estimado,{range:response.gordura});
+      complete(r,answers,{emailSent:response.email_enviado===true});
     }catch(error){
-      complete(r,answers,null,{error:error.message});
+      complete(r,answers,{error:error.message});
     }
   });
 }
-function complete(r,dados=answers,gordura=null,analysis={}){
-  setProgress(total,'Preenchimento concluído');
-  const body=composicao(dados,gordura);
-  const heading=title('Sua avaliação completa');
-  const content=el('div',undefined,'result-layout reveal');
-  const panel=el('article',undefined,'panel gauge-core');
-  panel.append(gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
-  const measures=el('div',undefined,'metrics');
-  measures.append(metric('Idade',dados.idade+' anos'),metric('Altura',format(dados.altura,2)+' m'),
-    metric('Peso',format(dados.peso,1)+' kg'),metric('Cintura',dados.cintura===null?'Não informada':format(dados.cintura,1)+' cm'),
-    metric('Risco à saúde · IMC × cintura',r.risco),metric('Cintura/altura',r.razao===null?'Não informada':format(r.razao,2)),
-    metric('Objetivo principal',dados.objetivo),metric('Taxa metabólica de repouso',format(body.tmr,0)+' kcal/dia'));
-  const locked=el('section',undefined,'panel locked');
-  const items=el('div',undefined,'metrics');
-  for(const label of ['Gordura corporal e classificação','Massa magra','IMLG e classificação','Gordura alvo','Gordura a eliminar','Músculo a ganhar']){
-    items.append(metric(label,'Bloqueado'));
+function complete(r,dados=answers,analysis={}){
+  setProgress(total,'Etapa 12 de 12 · Concluída');
+  const nome=contactValues.nomeCompleto||dados.nome||'';
+  const heading=title(nome?'Sua avaliação inicial, '+nome:'Sua avaliação inicial');
+  const content=el('div',undefined,'result-layout reveal'), summary=el('dl',undefined,'panel summary');
+  for(const [label,value] of [
+    ['Nome',nome],['Sexo',dados.sexo==='F'?'Feminino':'Masculino'],['Idade',dados.idade+' anos'],
+    ['Altura',format(dados.altura,2)+' m'],['Peso',format(dados.peso,1)+' kg'],
+    ['Treinos por semana',dados.treinos],['Objetivo principal',dados.objetivo],
+    ['Cintura',dados.cintura===null?'Não informada':format(dados.cintura,1)+' cm'],
+    ['IMC',format(r.imc,1)+' · '+r.categoria],['IMC × cintura',r.risco],
+    ['E-mail',contactValues.email],['WhatsApp',contactValues.whatsapp],
+    ['Fotos',photoAgreementAt?'Três fotos selecionadas':'Sem fotos']
+  ]){
+    if(value!==undefined&&value!=='')summary.append(el('dt',label),el('dd',String(value)));
   }
-  locked.append(el('h3','Composição corporal'),items);
-  if(gordura!==null){
-    locked.replaceChildren(el('h3','Composição corporal'),el('p',analysis.range?'Faixa estimada: '+format(analysis.range.min,1)+'% a '+format(analysis.range.max,1)+'%.':'Exemplo fictício para revisão do layout.','hint'));
-    const bodyMetrics=el('div',undefined,'metrics');
-    bodyMetrics.append(metric('Gordura corporal',format(body.gordura,1)+'% · '+body.classeGordura),
-      metric('Massa magra',format(body.magra,1)+'% · '+format(body.magraKg,2)+' kg'),
-      metric('Massa gorda',format(body.gorduraKg,2)+' kg'),metric('IMLG',format(body.imlg,1)+' · '+body.classeImlg),
-      ...linhasMeta(body).map(([label,value])=>metric(label,value)));
-    locked.append(bodyMetrics);
-    if(body.gorduraMeta.kg>0){
-      const track=el('div',undefined,'target-track');
-      track.append(el('span','Atual '+format(body.gordura,1)+'%'),el('span','Alvo '+format(body.alvo,1)+'%'));
-      locked.append(track);
-    }
-    locked.append(el('p',notaMeta,'hint'),el('p',mensagemMeta(body)));
-  }else if(analysis.error){
-    locked.append(el('p',analysis.error,'hint'),btn('Voltar à etapa de fotos',()=>{current=fields.length-1;render();window.scrollTo(0,0);}));
+  content.append(heading,summary);
+  if(analysis.emailSent){
+    content.append(el('p','Parabéns! Sua avaliação mais aprofundada está no seu e-mail.','notice'));
   }else if(photoAgreementAt){
-    locked.append(el('p','As fotos selecionadas ficam no dispositivo. A análise por fotos ainda está em preparação.','hint'));
+    content.append(el('p',analysis.error||'O envio da sua avaliação por e-mail não foi confirmado.','notice'));
+    if(analysis.error)content.append(btn('← Rever fotos',()=>render()));
   }else{
-    locked.append(btn('Envie suas fotos para desbloquear',()=>{current=fields.length-1;render();window.scrollTo(0,0);}));
+    content.append(el('p','Sua avaliação inicial está pronta. Quer dar o próximo passo? Conheça o Desafio 21 dias.'),
+      btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
   }
-  content.append(heading,panel,measures,locked,el('p',aviso,'hint'),
-    el('h3','Consultoria Online'),el('p','Treino com acompanhamento personalizado.'),
-    btn('Conhecer o Desafio 21 dias',()=>location.assign('/desafio-21-dias/'),'primary'));
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
 }
-back.addEventListener('click',()=>{if(current>0){current--;render();}});
+back.addEventListener('click',()=>{if(fields[current].key==='fotos'){show(avaliar(answers));return;}if(current>0){current--;render();}});
 form.addEventListener('submit',ev=>{
   ev.preventDefault();
   const spec=fields[current];
   if(spec.key==='fotos'){
     if(photoFiles.size!==0&&photoFiles.size!==3){feedback.textContent='Escolha os três ângulos ou continue sem fotos.';return;}
     photoAgreementAt=photoFiles.size===3?new Date().toISOString():null;
-    show(avaliar(answers));return;
+    contact(avaliar(answers));return;
   }
   const raw=new FormData(form).get(spec.key);
   if(spec.choices){
@@ -274,10 +266,10 @@ form.addEventListener('submit',ev=>{
     if(!value){feedback.textContent='Informe seu primeiro nome.';return;}
     answers[spec.key]=value;
   }
-  current++;render();
+  current++;if(fields[current].key==='fotos')show(avaliar(answers));else render();
 });
 if(new URLSearchParams(location.search).get('exemplo')==='1'){
   const exemplo={idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:objetivos[0]};
   form.hidden=true;result.hidden=false;
-  complete(avaliar(exemplo),exemplo,32);
+  complete(avaliar(exemplo),exemplo);
 }else render();

@@ -74,3 +74,11 @@ body.challenge-black{color-scheme:dark;background:#100f0e;color:#fff7f2}
 .challenge-black ul{margin:0;padding-inline-start:1.2rem;display:grid;gap:.55rem}
 
 .assessment-page .choices.goal{grid-template-columns:1fr}
+
+.assessment-page :is(.flow,.stage,.photos,.pick-file,.file-text,.result-layout){min-width:0}
+.assessment-page .stage,.assessment-page .photos{grid-template-columns:minmax(0,1fr)}
+.assessment-page .pick-file{width:100%;overflow:hidden}
+.assessment-page .file-text{flex:1}
+.reading{display:grid;gap:.65rem}
+.summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:.45rem .7rem;margin:0;font-size:.85rem}
+.summary dd{margin:0;overflow-wrap:anywhere;font-weight:700}

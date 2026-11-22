@@ -1,7 +1,7 @@
 import {emailAvaliacao} from '../avaliacao/email.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {avaliar,composicao,parseMeasure,mensagemMeta,linhasMeta} from '../avaliacao/calculos.mjs';
+import {avaliar,composicao,parseMeasure,mensagemImc,mensagemMeta,linhasMeta} from '../avaliacao/calculos.mjs';
 const base={idade:30,altura:2,peso:100,sexo:'F',objetivo:'Emagrecimento',cintura:88};
 test('Faixas adultas e camada de 60+ acompanham a planilha',()=>{
   assert.deepEqual([70,74,100,120,140,160].map(peso=>avaliar({...base,peso}).faixa),[0,1,2,3,4,5]);
@@ -74,4 +74,11 @@ test('Metas inferiores a 500 g ficam fora e 500 g entram',()=>{
   const r=composicao({...dados,peso},16);
   assert.equal(r.musculoMeta.kg,0);
   assert.match(mensagemMeta(r),/não há meta/);
+});
+
+test('Cada faixa de IMC tem duas mensagens distintas',()=>{
+  const all=[0,1,2,3,4,5].flatMap(faixa=>[0,1].map(variante=>mensagemImc({faixa},variante)));
+  assert.equal(new Set(all).size,12);
+  assert.ok(all.every(msg=>msg.length>80));
+  assert.equal(mensagemImc({faixa:0,categoria:'Normal'},0),mensagemImc({faixa:1},0));
 });
