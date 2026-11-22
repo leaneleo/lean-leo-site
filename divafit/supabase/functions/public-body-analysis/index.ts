@@ -1,3 +1,4 @@
+import {trelloAprovado} from '../../../avaliacao/email-textos.mjs';
 import {createClient} from 'npm:@supabase/supabase-js@2.57.4';
 import {Buffer} from 'node:buffer';
 import {ANGLES,MODEL,SYSTEM} from '../body-analysis/handler.mjs';
@@ -26,11 +27,11 @@ async function rpc(name:string,args:Record<string,unknown>){
 
 Deno.serve(createPublicHandler({
   origins,testMode,
-  canSendChallenge:()=>env('PUBLIC_BODY_CHALLENGE_EMAIL_APPROVED')==='true',
+  canSendChallenge:()=>trelloAprovado.desafio&&env('PUBLIC_BODY_CHALLENGE_EMAIL_APPROVED')==='true',
   canEmail:(to:string,origin:string)=>origin===preview&&emailAllowlist.has(to),
   email:!testMode&&resend&&emailAllowlist.size&&env('PUBLIC_BODY_EMAIL_ENABLED')==='true'
     ? (to:string,measures:Parameters<typeof sendAssessmentEmail>[3],fat:number|null,id:string,origin:string)=>
-      origin===preview&&emailAllowlist.has(to)?sendAssessmentEmail(resend,from,to,measures,fat,id):Promise.resolve(false)
+      origin===preview&&emailAllowlist.has(to)&&(fat===null?trelloAprovado.desafio:trelloAprovado.avaliacao)?sendAssessmentEmail(resend,from,to,measures,fat,id):Promise.resolve(false)
     : undefined,
   async testPass(pass:string,origin:string){
     if(origin!==preview||!(/^[a-f0-9]{64}$/.test(pass)))return false;

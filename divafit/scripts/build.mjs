@@ -1,5 +1,6 @@
 import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
 import {buildIcons} from './icons.mjs';
+import {emailAvaliacao} from '../avaliacao/email.mjs';
 import {emailDesafio} from '../avaliacao/email-desafio.mjs';
 const url=process.env.DIVAFIT_SUPABASE_URL||'', key=process.env.DIVAFIT_SUPABASE_PUBLIC_KEY||'';
 if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL Supabase inválida');
@@ -48,5 +49,7 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
 })+';');
 
 if(process.env.CONTEXT==='deploy-preview'){
+ await copyFile('avaliacao/imc-exemplo.svg','public/avaliacao/imc-exemplo.svg');
+ await writeFile('public/avaliacao/email-avaliacao.html',emailAvaliacao({idade:35,sexo:'F',altura:1.65,peso:72,cintura:86,objetivo:'Emagrecimento'},{gordura:32,exemplo:true,nome:'Marina'}));
  await writeFile('public/avaliacao/email-desafio.html',emailDesafio('Marina',{preview:true}));
 }

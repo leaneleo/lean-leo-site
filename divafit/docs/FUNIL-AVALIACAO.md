@@ -81,3 +81,7 @@ A etapa 9 mostra a leitura inicial do IMC e explica suas limitações. Cada faix
 Sem fotos, a função usa a mesma verificação Turnstile e a mesma reserva por contato para enviar os indicadores iniciais via Resend. Esse ramo não chama a Anthropic. O e-mail informa “Envie suas fotos para desbloquear” e oferece o Desafio. Os logs registram o modo e o ID retornado pelo Resend, sem nome, telefone ou e-mail.
 
 A oferta do Desafio substitui o resumo por e-mail no fluxo sem fotos. A peça está em `/avaliacao/email-desafio.html` somente na prévia. O disparo dessa oferta exige aprovação e `PUBLIC_BODY_CHALLENGE_EMAIL_APPROVED=true`, além dos controles já existentes. O ramo com fotos continua enviando a avaliação completa.
+
+### Aprovação editorial no Trello
+
+A lista Automações · mensagens automáticas do quadro CONSULTORIA ONLINE DIVAFIT é a fonte dos textos. E-mail 1: https://trello.com/c/mbQjyTjr. E-mail 2: https://trello.com/c/SWwCIqOY. As prévias com dados fictícios ficam em `/avaliacao/email-avaliacao.html` e `/avaliacao/email-desafio.html`. A revisão atual bloqueia ambos os disparos no servidor até a aprovação individual no Trello. Pendências editoriais do E-mail 2 aparecem na prévia.

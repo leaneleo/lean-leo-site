@@ -60,7 +60,7 @@ test('Quatro cenários escolhem a mensagem pelos resultados e renderizam tela e 
     assert.equal(r.gorduraMeta.dias,r.gorduraMeta.kg*7700/500);
     assert.equal(r.musculoMeta.dias,r.musculoMeta.kg*30);
     assert.match(msg,esperado);
-    assert.ok(emailAvaliacao(dados,{gordura}).includes(msg));
+    assert.ok(emailAvaliacao(dados,{gordura,nome:'Marina'}).includes('Marina'))
     assert.doesNotMatch(JSON.stringify(linhasMeta(r))+msg,/"-"|eliminar -|NaN/);
   }
 });
