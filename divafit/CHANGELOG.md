@@ -1,3 +1,7 @@
+## Avaliação grátis em produção
+
+- Publica a avaliação física gratuita, a página fechada do Desafio e a entrega por e-mail no domínio oficial. A prévia conserva a lista de testes.
+
 # Histórico DivaFit
 
 ## CRM, Família e relatórios InfinitePay — 20/11/2026

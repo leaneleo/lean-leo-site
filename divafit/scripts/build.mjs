@@ -32,3 +32,23 @@ await mkdir('public/checkout/divafit/retorno',{recursive:true});
 for(const file of ['index.html','checkout.css','checkout.js','retorno.js','retorno.css'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
 await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.html');
 
+
+const productionAssessment=process.env.CONTEXT==='production';
+const previewAssessment=process.env.CONTEXT==='deploy-preview';
+const assessmentEnabled=productionAssessment||previewAssessment;
+const assessmentSitekey=process.env.PUBLIC_BODY_TURNSTILE_SITE_KEY||'';
+if(productionAssessment&&!/^0x[A-Za-z0-9_-]+$/.test(assessmentSitekey))throw Error('Sitekey pública do Turnstile da avaliação ausente ou inválida.');
+const assessmentEndpoint='https://ycchdswqaekdupmrnszz.supabase.co/functions/v1/public-body-analysis';
+for(const [folder,files] of [
+  ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs','download-pdf.mjs']],
+  ['desafio-21-dias',['index.html','desafio.js']]
+]){
+  await mkdir('public/'+folder,{recursive:true});
+  for(const file of files)await copyFile(folder+'/'+file,'public/'+folder+'/'+file);
+}
+await copyFile('desafio-config.js','public/desafio-config.js');
+await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_BODY = '+JSON.stringify({
+  thanksPreview:assessmentEnabled,
+  endpoint:assessmentEnabled?assessmentEndpoint:'',
+  sitekey:assessmentEnabled?assessmentSitekey:''
+})+';');
