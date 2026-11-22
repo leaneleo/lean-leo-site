@@ -53,3 +53,11 @@ blockquote{color:#7d6253;border-left-color:var(--brand-gold)}
 #install-guide ol{color:#665146}
 .install-note{background:#fff2e2;color:#765339}
 @media(max-width:650px){.brand-wordmark{width:210px;height:68px}.brand{font-size:23px}.app-install strong{font-size:12px}.app-install span{font-size:10px}nav button{font-size:12px}}
+
+.body-analysis-dialog { width: min(850px, 94vw); max-height: 90vh; color: var(--brand-ink); font-family: inherit; }
+.body-analysis-warning { border-left: 3px solid var(--brand-action); padding: .7rem; }
+.body-analysis-dialog .panel { margin-block: .8rem; }
+.body-analysis-record button { margin: .25rem; }
+.body-analysis-photos { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .5rem; }
+.body-analysis-photos img { width: 100%; height: auto; }
+.body-trend progress { width: 100%; accent-color: var(--brand-action); }
