@@ -1,4 +1,4 @@
-import {perfilParcial,alternarAlimento,topicosParciais} from './perfil-parcial.mjs';
+import {perfilParcial,alternarAlimento,topicosParciais,alimentosFavoraveis} from './perfil-parcial.mjs';
 import {parcialCopy} from './parcial-textos.mjs';
 import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
 import {avaliar,faixasAdulto,parseMeasure,objetivos} from './calculos.mjs';
@@ -99,6 +99,13 @@ function render(){
   }
   if(spec.choices){
     const group=el('div',undefined,spec.key==='objetivo'?'choices goal':spec.key==='sexo'?'choices sex':'choices');
+    group.classList.add(spec.key==='treinos'?'choices-count':'choices-wide');
+    const sections=spec.multiple?['Hábitos que ajudam','Pontos de atenção'].map(name=>{
+      const section=el('section',undefined,'food-section');
+      const heading=el('h3',name), grid=el('div',undefined,'choices choices-wide');
+      section.append(heading,grid);group.append(section);return grid;
+    }):null;
+    if(sections){group.classList.remove('choices');group.classList.add('food-groups');}
     group.setAttribute('role','group');group.setAttribute('aria-label',spec.label);
     for(const [value,label,symbol] of spec.choices){
       const item=el('label',undefined,'choice'), input=el('input');
@@ -108,7 +115,12 @@ function render(){
         answers[spec.key]=alternarAlimento(answers[spec.key]??[],value);
         for(const control of group.querySelectorAll('input'))control.checked=answers[spec.key].includes(control.value);
       });
-      item.append(input,icon(symbol),el('span',label));group.append(item);
+      const foodIcons={frutas:'🍎',verduras:'🥬',legumes:'🥕',proteina:'🥚',carbo:'🍚',gordura:'🥑',agua:'💧',refeicoes:'🍽️',
+        carboExcesso:'🍞',gorduraExcesso:'🍟',doces:'🍬',ultraprocessados:'🍔',bebidas:'🥤',alcool:'🍺',beliscos:'⏱️'};
+      const visual=sections?el('span',foodIcons[value],'food-icon'):icon(symbol);
+      visual.setAttribute('aria-hidden','true');
+      item.append(input,visual,el('span',label));
+      (sections?sections[alimentosFavoraveis.includes(value)?0:1]:group).append(item);
     }
     step.append(group);return;
   }
@@ -147,18 +159,43 @@ const format=(value,digits)=>new Intl.NumberFormat('pt-BR',{minimumFractionDigit
 function metric(label,value){
   const node=el('article',undefined,'metric');node.append(el('h3',label),el('strong',value));return node;
 }
+const riscoCurto=risco=>({'Baixo risco':'Baixo','Risco moderado':'Moderado','Risco elevado':'Elevado'})[risco]??risco;
+function resultIndicators(r,dados){
+  const p=perfilParcial(dados);
+  const tone=(name,good,attention)=>name===good?'good':name===attention?'attention':'alert';
+  const risco=riscoCurto(r.risco);
+  return [
+    ['Risco à saúde','IMC × cintura',risco,['Baixo','Moderado','Elevado'].includes(risco)?tone(risco,'Baixo','Moderado'):'neutral',''],
+    ['Nível de condicionamento','Atividade semanal',p.condicionamento,p.minutos>=150?'good':p.condicionamento==='Sedentária'?'alert':'attention',p.minutos+' min/semana'],
+    ['Sono','Horas por noite',p.qualidadeSono,tone(p.qualidadeSono,'Adequado','Atenção'),dados.sono+' h'],
+    ['Alimentação','Nota de 0 a 10',p.qualidadeAlimentacao,tone(p.qualidadeAlimentacao,'Boa','Regular'),p.nota+'/10']
+  ];
+}
 function partialContent(r){
-  const profile=perfilParcial(answers), wrap=el('div',undefined,'result-layout partial');
+  const wrap=el('div',undefined,'result-layout partial');
   const core=el('div',undefined,'panel gauge-core');
-  core.append(el('h2','IMC','imc-title'),el('p','índice de massa corporal','imc-subtitle'),gauge(r),el('strong',format(r.imc,1)),el('span',r.categoria,'badge'));
+  const legend=el('div',undefined,'gauge-labels');
+  faixasAdulto.forEach((label,i)=>{
+    const item=el('span',label,i===r.faixa?'active':'');
+    item.style.setProperty('--segment',palette[i]);if(i===r.faixa)item.setAttribute('aria-current','true');
+    legend.append(item);
+  });
+  core.append(el('h2','IMC','imc-title'),el('p','índice de massa corporal','imc-subtitle'),gauge(r),el('strong',format(r.imc,1)),legend);
+  if(r.categoria!==faixasAdulto[r.faixa])core.append(el('p',r.categoria,'imc-subtitle'));
   const cards=el('div',undefined,'metrics');
-  for(const [label,value,alerta] of [
-    ['Risco à saúde · IMC × cintura',r.risco,r.risco==='Risco elevado'],
-    ['Nível de condicionamento',profile.minutos+' min/semana ('+profile.condicionamento+')',profile.minutos<150],
-    ['Sono',answers.sono+' h ('+profile.qualidadeSono+')',answers.sono<7],
-    ['Alimentação',profile.nota+'/10 ('+profile.qualidadeAlimentacao+')',profile.nota<8]
-  ]){
-    const card=metric(label,value);if(alerta)card.classList.add('metric-alert');cards.append(card);
+  for(const [label,subtitle,value,status,detail] of resultIndicators(r,answers)){
+    const card=el('article',undefined,'metric indicator indicator-'+status);
+    card.append(el('h3',label),el('small',subtitle),el('strong',value));
+    if(detail)card.append(el('small',detail));
+    const dots=el('div',undefined,'indicator-dots');
+    for(const [key,legendText] of [['good','Bom'],['attention','Atenção'],['alert','Alerta']]){
+      const dot=el('span',undefined,'dot-'+key);
+      dot.title=legendText;
+      if(status===key)dot.classList.add('current');else dot.setAttribute('aria-hidden','true');
+      dots.append(dot);
+    }
+    dots.setAttribute('aria-label',({good:'Bom',attention:'Atenção',alert:'Alerta',neutral:'Sem classificação'})[status]);
+    card.append(dots);cards.append(card);
   }
   wrap.append(core,cards);
   for(const [name,paragraphs] of topicosParciais(answers,r,parcialCopy)){
@@ -176,7 +213,7 @@ function show(r){
   heading.classList.add('partial-title');
   const content=partialContent(r);
   content.prepend(heading);
-  content.append(el('p',parcialCopy.imc),btn('Sim, quero saber minha composição',()=>render(),'primary'),
+  content.append(el('strong','O IMC não distingue gordura de músculo. Quer conhecer sua composição corporal?','imc-callout'),btn('Sim, quero saber minha composição',()=>render(),'primary'),
     btn('Não, só isso está bom',()=>{photoAgreementAt=null;photoFiles.clear();contact(r);}),
     btn('Rever respostas',()=>{current=0;render();}));
   result.replaceChildren(content);window.scrollTo(0,0);heading.focus({preventScroll:true});
@@ -276,8 +313,8 @@ function complete(r,dados=answers,analysis={}){
     ['Altura',format(dados.altura,2)+' m'],['Peso',format(dados.peso,1)+' kg'],
     ['Treinos por semana',dados.treinos],['Objetivo principal',dados.objetivo],
     ['Cintura',dados.cintura===null?'Não informada':format(dados.cintura,1)+' cm'],
-    ['IMC',format(r.imc,1)+' · '+r.categoria],['IMC × cintura',r.risco],
-    ['E-mail',contactValues.email],['WhatsApp',contactValues.whatsapp],
+    ['IMC',format(r.imc,1)+' · '+r.categoria],
+    ...resultIndicators(r,dados).map(([label,,value,,detail])=>[label,detail?value+' · '+detail:value]),
     ['Fotos',photoAgreementAt?'Três fotos selecionadas':'Sem fotos']
   ]){
     if(value!==undefined&&value!=='')summary.append(el('dt',label),el('dd',String(value)));
