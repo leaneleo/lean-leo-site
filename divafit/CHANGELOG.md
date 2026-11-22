@@ -1,3 +1,7 @@
+## Avaliação grátis · revisão da alimentação e do encerramento
+
+- Distingue verduras e legumes, alterna o encerramento do tópico, aplica a aprovação da etapa 17 e reserva o e-book nas duas prévias de e-mail.
+
 ## Avaliação grátis na prévia
 
 - Centraliza a etapa 13, corrige a prioridade das dicas alimentares, acrescenta emojis e move o download manual em PDF para o fim. A etapa 17 está em revisão.

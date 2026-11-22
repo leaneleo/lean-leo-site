@@ -37,15 +37,18 @@ export function topicosParciais(respostas,resultado,copy,limite=3){
     selecao.has('carboExcesso'),selecao.has('gorduraExcesso'),selecao.has('doces')||selecao.has('ultraprocessados'),
     selecao.has('bebidas'),selecao.has('alcool'),selecao.has('beliscos')||selecao.has('puloRefeicoes')
   ].flatMap((marcado,i)=>marcado?[copy.food[i+3]]:[]);
+  const verduras=selecao.has('verduras'), legumes=selecao.has('legumes');
+  const dicaVegetais=verduras?(legumes?null:copy.vegetais.soVerduras):(legumes?copy.vegetais.soLegumes:copy.food[1]);
   const faltantes=[
-    [0,!selecao.has('frutas')],[1,!selecao.has('verduras')&&!selecao.has('legumes')],
-    [2,!selecao.has('proteina')],[9,!selecao.has('agua')]
-  ].flatMap(([i,falta])=>falta?[copy.food[i]]:[]);
+    !selecao.has('proteina')&&copy.food[2],dicaVegetais,
+    !selecao.has('frutas')&&copy.food[0],!selecao.has('agua')&&copy.food[9]
+  ].filter(Boolean);
   const dicas=negativos.length?negativos:faltantes;
+  const encerramento=negativos.length?copy.food[11]:copy.finalSemNegativos;
   return [
     ['Risco à saúde',[copy.risk[risco]].filter(Boolean)],
     ['Nível de condicionamento',[copy.activity[['Sedentária','Pouco ativa','Ativa','Muito ativa'].indexOf(p.condicionamento)].replace('{min}',p.minutos)]],
     ['Sono',[copy.sleep[respostas.sono<=5?0:respostas.sono===6?1:2].replace('{h}',respostas.sono)]],
-    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):['Nada a corrigir']),copy.food[11]]]
+    ['Alimentação',[...(dicas.length?dicas.slice(0,limite):[copy.food[10]]),encerramento]]
   ];
 }

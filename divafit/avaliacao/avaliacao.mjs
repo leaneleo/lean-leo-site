@@ -39,8 +39,8 @@ const fields=[
  {key:'cintura',label:'Medida da cintura',placeholder:'Ex.: 82',unit:'cm',min:40,max:250},
  {key:'fotos',label:'Quer incluir fotos?'}
 ];
-const thanksPreview=window.DIVAFIT_PUBLIC_BODY?.thanksPreview===true;
-const total=fields.length+(thanksPreview?4:3), answers={}, photoFiles=new Map();
+const thanksEnabled=window.DIVAFIT_PUBLIC_BODY?.thanksPreview===true;
+const total=fields.length+(thanksEnabled?4:3), answers={}, photoFiles=new Map();
 let current=0, photoAgreementAt=null;
 progress.max=total;
 const el=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node;};
@@ -297,7 +297,7 @@ function contact(r){
     }
     for(const control of box.elements)control.disabled=true;
     previous.disabled=true;
-    if(thanksPreview)setProgress(fields.length+2);
+    if(thanksEnabled)setProgress(fields.length+2);
     status.textContent=photoAgreementAt?'Analisando as fotos. Isso pode levar alguns instantes.':'Enviando a avaliação inicial.';
     try{
       const response=await sendPublicPhotos(window.DIVAFIT_PUBLIC_BODY,answers,photoFiles,{
@@ -349,10 +349,9 @@ async function baixarParcial(r){
 
 function complete(r,dados=answers,analysis={}){
   setProgress(total,'Etapa '+total+' de '+total+' · Concluída');
-  if(thanksPreview&&!analysis.error){
+  if(thanksEnabled&&!analysis.error){
     const heading=title(`Obrigado, ${dados.nome}! 🧡`);
     const content=el('div',undefined,'panel result-layout reveal thanks-page');
-    content.dataset.approval='pending';
     content.append(heading,el('p','Sua participação é muito importante para nós.'));
     if(analysis.emailSent){
       const message=el('p','📩 ');
@@ -361,8 +360,8 @@ function complete(r,dados=answers,analysis={}){
     }else if(publicEnabled){
       content.append(el('p','O envio do e-mail não foi confirmado.','notice'));
     }
-    const instagram=el('a','Voltar para o Instagram @leaneleofit','primary');
-    instagram.href='https://instagram.com/leaneleofit';
+    const instagram=el('a','Voltar para o Instagram @leeleofit','primary');
+    instagram.href='https://instagram.com/leeleofit';
     content.append(instagram,el('p','Leandro e Leonardo · Le&LeoFit'));
     if(!photoAgreementAt)content.append(btn('Baixar avaliação parcial',()=>baixarParcial(r)));
     result.replaceChildren(content);

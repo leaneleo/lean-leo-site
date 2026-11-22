@@ -29,5 +29,10 @@ export const parcialCopy={
     "Sua alimentação tem uma base boa. O próximo passo é ajustar as quantidades para o seu objetivo.",
     "Antes de culpar a genética, olhe para o básico. É nos pontos acima que está o seu resultado."
   ],
+  "vegetais": {
+    "soVerduras": "Verduras são ótimas. Os legumes completam o prato: cenoura, abóbora, abobrinha, beterraba e brócolis somam mais fibra, vitaminas e saciedade.",
+    "soLegumes": "Legumes são ótimos. Sem verduras, porém, pode faltar fibra no prato. Uma salada de folhas no almoço e no jantar ajuda a chegar aos 25 g de fibra por dia recomendados."
+  },
+  "finalSemNegativos": "Você já faz o mais difícil, que é comer bem no dia a dia. Com esses pequenos ajustes, seu resultado aparece mais rápido. 🧡",
   "imc": "O IMC é um parâmetro genérico: ele não diferencia gordura de músculo, e a ciência já mostrou que, sozinho, ele não define sua saúde. Vamos analisar sua composição corporal para ter uma referência mais confiável?"
 };

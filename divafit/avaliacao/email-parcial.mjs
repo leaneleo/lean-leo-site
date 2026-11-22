@@ -2,7 +2,7 @@ import {avaliar} from './calculos.mjs';
 import {perfilParcial,topicosParciais} from './perfil-parcial.mjs';
 import {parcialCopy} from './parcial-textos.mjs';
 import {email2Copy} from './email2-textos.mjs';
-import {escapar,substituir} from './email-textos.mjs';
+import {escapar,substituir,presenteEbook} from './email-textos.mjs';
 
 export function blocosParciais(dados){
   const p=perfilParcial(dados), r=avaliar(dados);
@@ -17,7 +17,7 @@ export function blocosParciais(dados){
   };
 }
 
-export function emailParcial(dados,{nome='',preview=false,checkout=null}={}){
+export function emailParcial(dados,{nome='',preview=false,checkout=null,ebookUrl=null}={}){
   const {cards,topicos}=blocosParciais(dados);
   const instrucoes=email2Copy.body.match(/^O que fazer esta semana: .+$/gm);
   const paragrafo=texto=>`<p>${escapar(texto).replaceAll('\n','<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')}</p>`;
@@ -37,5 +37,6 @@ export function emailParcial(dados,{nome='',preview=false,checkout=null}={}){
   ${cards}${paragrafo(substituir(greeting,{nome}))}
   ${topicos.map(([titulo,frases],i)=>`<h2>${titulo}</h2>${frases.map(paragrafo).join('')}${paragrafo(instrucoes[i])}`).join('')}
   ${paragrafo(closing)}<section style="padding:22px;background:#191211;color:#fff7f2;border:1px solid #673322;border-radius:16px">${offer}</section>
+  ${presenteEbook(ebookUrl,preview)}
   ${paragrafo(email2Copy.footer)}</main></body></html>`;
 }

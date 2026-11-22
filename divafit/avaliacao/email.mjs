@@ -1,5 +1,5 @@
 import {blocosParciais} from './email-parcial.mjs';
-import {trelloCopy,escapar,substituir} from './email-textos.mjs';
+import {trelloCopy,escapar,substituir,presenteEbook} from './email-textos.mjs';
 import {avaliar, composicao, linhasMeta} from './calculos.mjs';
 
 const fmt=(value,digits=1)=>value.toLocaleString('pt-BR',{minimumFractionDigits:digits,maximumFractionDigits:digits});
@@ -7,7 +7,7 @@ const fmt=(value,digits=1)=>value.toLocaleString('pt-BR',{minimumFractionDigits:
 /** HTML para envio futuro com o PNG do velocímetro anexado como CID imc-gauge. */
 export const assuntoAvaliacao=nome=>substituir(trelloCopy.avaliacao.subject,{nome});
 
-export function emailAvaliacao(dados,{gordura=null,exemplo=false,nome='',checkout=null}={}){
+export function emailAvaliacao(dados,{gordura=null,exemplo=false,nome='',checkout=null,ebookUrl=null}={}){
   const r=avaliar(dados), c=composicao(dados,gordura);
   const cintura=dados.cintura===null?'Não informada':fmt(dados.cintura)+' cm';
   const bloqueado='Envie suas fotos para desbloquear';
@@ -42,6 +42,7 @@ export function emailAvaliacao(dados,{gordura=null,exemplo=false,nome='',checkou
   ${topicos}<table role="presentation" style="width:100%;border-spacing:0 8px">${cards}</table>
   ${final?`<p>${escapar(final)}</p>`:''}
   <p>${escapar(texto.offer)}</p><p><a href="${escapar(checkout??'https://deploy-preview-7--consultoria-divafit.netlify.app/checkout/divafit/')}">${escapar(texto.button)}</a></p>
+  ${presenteEbook(ebookUrl,exemplo)}
   <p style="padding:10px;font-size:13px">${texto.footer.map(escapar).join('<br>')}</p></td></tr>
   </table></body></html>`;
 }

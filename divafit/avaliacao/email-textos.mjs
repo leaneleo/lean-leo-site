@@ -41,3 +41,19 @@ export const trelloCopy={
 export const trelloAprovado={avaliacao:true,desafio:true};
 export const escapar=texto=>String(texto).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 export const substituir=(texto,valores)=>texto.replace(/\{(\w+)\}/g,(_,chave)=>String(valores[chave]??''));
+
+// Sem URL aprovada, a reserva só aparece na amostra interna do e-mail.
+export function presenteEbook(ebookUrl,preview=false){
+  const titulo='Os 7 segredos da definição muscular';
+  if(ebookUrl){
+    try{
+      const url=new URL(ebookUrl);
+      if(url.protocol==='https:'&&!url.username&&!url.password){
+        return `<p><a href="${escapar(url.href)}">${titulo}</a></p>`;
+      }
+    }catch{
+      // URLs inválidas deixam o presente oculto no envio.
+    }
+  }
+  return preview?`<p><strong>${titulo}</strong> · [LINK DO PDF PENDENTE]</p>`:'';
+}
