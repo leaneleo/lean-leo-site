@@ -1,7 +1,7 @@
 import {svgToPdf} from './download-pdf.mjs';
 import {perfilParcial,alternarAlimento,topicosParciais,alimentosFavoraveis} from './perfil-parcial.mjs';
 import {parcialCopy} from './parcial-textos.mjs';
-import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs';
+import {photoChallenge,sendPublicPhotos,publicPhotosEnabled} from './public-photos.mjs?v=orientacao-fotos';
 import {avaliar,faixasAdulto,parseMeasure,objetivos} from './calculos.mjs';
 
 const $=selector=>document.querySelector(selector);
@@ -317,7 +317,7 @@ function contact(r){
       },challenge);
       complete(r,answers,{emailSent:response.email_enviado===true,awaitingApproval:response.aguardando_aprovacao===true});
     }catch(error){
-      complete(r,answers,{error:error.message});
+      complete(r,answers,{error:error.message,photoProblems:error.photoProblems});
     }
   });
 }
@@ -400,6 +400,11 @@ function complete(r,dados=answers,analysis={}){
     content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! O convite do Desafio Black foi enviado ao seu e-mail.','notice'));
   }else if(photoAgreementAt){
     content.append(el('p',analysis.error||(analysis.awaitingApproval?'O envio da avaliação aguarda aprovação.':'O envio da sua avaliação por e-mail não foi confirmado.'),'notice'));
+    if(analysis.photoProblems?.length){
+      const list=el('ul');
+      for(const problem of analysis.photoProblems)list.append(el('li',problem));
+      content.append(list);
+    }
     if(analysis.error)content.append(btn('← Rever fotos',()=>render()));
   }
   if(!photoAgreementAt){

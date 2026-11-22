@@ -9,3 +9,5 @@ A página do Desafio permanece com vendas fechadas. O link do e-book é omitido 
 O lançamento contém só a avaliação, a página fechada do Desafio e seus arquivos de suporte.
 
 A etapa 7 aceita várias atividades e “Nada” é exclusivo. A frequência semanal é multiplicada pela média de minutos equivalentes por modalidade marcada. O contato aparece acima da verificação de segurança.
+
+Quando a avaliação recusa as fotos, o código 422 inclui até três instruções padronizadas, exibidas abaixo do aviso e registradas no log sem dados pessoais.

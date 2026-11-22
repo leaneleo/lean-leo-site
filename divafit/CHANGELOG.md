@@ -1,3 +1,7 @@
+## Avaliação grátis · orientação para refazer fotos
+
+- Mostra até três instruções de correção e registra apenas instruções padronizadas no log do 422.
+
 ## Avaliação grátis · contato e atividades
 
 - Separa visualmente os campos de contato e a verificação de segurança. A etapa 7 permite várias atividades.

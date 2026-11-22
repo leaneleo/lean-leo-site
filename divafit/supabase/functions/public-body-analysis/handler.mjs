@@ -2,6 +2,8 @@ import {perfilParcial} from '../../../avaliacao/perfil-parcial.mjs';
 import {objetivos} from '../../../avaliacao/calculos.mjs';
 import {ANGLES,generateEstimate,readForm,readMeasures} from '../body-analysis/handler.mjs';
 
+const photoInstructions=new Set(["Mostre o corpo inteiro, da cabeça aos pés.","Envie uma foto de frente.","Envie uma foto de lado.","Envie uma foto de costas.","Refaça a foto com luz suficiente para mostrar o contorno do corpo.","as medidas não parecem combinar com as fotos"]);
+
 export function contacts(form) {
   const email=String(form.get('email')??'').trim().toLowerCase();
   const phone=String(form.get('whatsapp')??'').trim();
@@ -13,6 +15,7 @@ export function contacts(form) {
 
 export function createPublicHandler(deps) {
   return async req => {
+    const estimateDeadline=Date.now()+95000;
     const origin=req.headers.get('origin');
     const headers={'Vary':'Origin','Cache-Control':'no-store','Content-Type':'application/json'};
     const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
@@ -83,12 +86,14 @@ export function createPublicHandler(deps) {
         const reply=await deps.call(...args);
         for(const key of ['input_tokens','output_tokens'])usage[key]+=Number(reply.usage?.[key])||0;
         return reply;
-      },photos,measures);
+      },photos,measures,estimateDeadline);
+      const problemas_fotos=[...new Set(result.problemas_fotos.filter(problem=>photoInstructions.has(problem)))].slice(0,3);
+      if(!result.fotos_ok)console.error(JSON.stringify({event:'public_body_photos_rejected',stage:'estimate',problemas_fotos}));
       const percentage=result.gordura_percentual;
       keep=result.fotos_ok&&percentage?.estimado>0&&percentage.estimado<100;
       const emailSent=keep&&!isTest&&deps.email?await deps.email(identity[0],{...measures,...profile,objective,nome:nome.slice(0,120)},percentage.estimado,id,origin).catch(()=>false):false;
       return json(keep?{gordura:percentage,confianca:result.confianca,...(emailSent?{email_enviado:true}:{}),...(profile&&!emailSent&&deps.approvalPending?.()?{aguardando_aprovacao:true}:{}),...diagnostics()}:
-        {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',...diagnostics()},keep?200:422);
+        {message:'As fotos precisam ser refeitas com boa luz, corpo inteiro e nos três ângulos.',problemas_fotos,...diagnostics()},keep?200:422);
     }catch(error){
       const status=Number.isInteger(error?.status)&&error.status>=400&&error.status<=599?error.status:null;
       const allowedReasons=['max_tokens','refusal','invalid_json','invalid_schema'];

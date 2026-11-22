@@ -61,7 +61,13 @@ export async function sendPublicPhotos(config,data,photos,contacts,challenge){
   }catch{
     throw Error('Não foi possível concluir a análise. Você ainda pode ver os demais indicadores.');
   }
-  if(!response.ok&&typeof result?.message==='string')throw Error(result.message);
+  if(!response.ok&&typeof result?.message==='string'){
+    const error=Error(result.message);
+    if(response.status===422&&Array.isArray(result.problemas_fotos)){
+      error.photoProblems=result.problemas_fotos.filter(problem=>typeof problem==='string'&&problem.trim()).slice(0,3);
+    }
+    throw error;
+  }
   if(response.ok&&!photos.size&&typeof result?.email_enviado==='boolean')return result;
   const {min,estimado,max}=result?.gordura??{};
   if(!response.ok||![min,estimado,max].every(Number.isFinite)||min<0||max>100||estimado<=0||
