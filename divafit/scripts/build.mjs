@@ -52,7 +52,7 @@ if(process.env.CONTEXT==='deploy-preview'){
  await copyFile('avaliacao/imc-exemplo.svg','public/avaliacao/imc-exemplo.svg');
  const origin='https://deploy-preview-7--consultoria-divafit.netlify.app';
  for(const [name,full] of [['email-avaliacao',true],['email-desafio',false]]){
-   await writeFile('public/avaliacao/'+name+'.html',shortEmail({nome:'Marina Teste',full,origin,checkout:process.env.DIVAFIT_CHALLENGE_CHECKOUT}).html);
+   await writeFile('public/avaliacao/'+name+'.html',shortEmail({nome:'Marina Teste',full,origin,now:new Date('2026-11-25T03:00:00Z'),checkout:process.env.DIVAFIT_CHALLENGE_CHECKOUT}).html);
  }
  await mkdir('public/consultoria',{recursive:true});
  await copyFile('consultoria/index.html','public/consultoria/index.html');

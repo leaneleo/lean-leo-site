@@ -15,7 +15,7 @@ const turnstile=env('PUBLIC_BODY_TURNSTILE_SECRET')||dummyTurnstile;
 const testMode=turnstile===dummyTurnstile;
 const salt=env('PUBLIC_BODY_CONTACT_SECRET')||(testMode?(keys.default||env('SUPABASE_SERVICE_ROLE_KEY')):'');
 const resend=env('RESEND_API_KEY'), from=env('PUBLIC_BODY_EMAIL_FROM')||'avaliacao@envios.leeleo.com.br';
-const challengeCheckout=env('PUBLIC_BODY_CHALLENGE_CHECKOUT');
+const challengeCheckout=env('PUBLIC_BODY_CHALLENGE_CHECKOUT_PREVIEW');
 const ebook=env('PUBLIC_BODY_EBOOK_URL');
 
 const preview='https://deploy-preview-7--consultoria-divafit.netlify.app';

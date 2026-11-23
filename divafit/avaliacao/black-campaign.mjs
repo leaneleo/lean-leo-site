@@ -6,7 +6,7 @@ export function blackCheckoutAt(url,now=new Date()){
   if(!blackConsultoriaAt(now)||+now<blackStarts||!url)return null;
   try{
     const link=new URL(url);
-    return link.protocol==='https:'&&['link.infinitepay.io','checkout.infinitepay.io','buy.infinitepay.io'].includes(link.hostname)&&
+    return link.protocol==='https:'&&['link.infinitepay.io','checkout.infinitepay.io','buy.infinitepay.io','loja.infinitepay.io'].includes(link.hostname)&&
       !link.username&&!link.password&&!link.port&&link.pathname.length>1?link.href:null;
   }catch{return null;}
 }
