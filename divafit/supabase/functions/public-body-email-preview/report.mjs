@@ -89,7 +89,7 @@ export async function assessmentPdf(dados,nome,gordura,fontBytes,gaugeBytes){
       ['Taxa metabólica de repouso',n(c.tmr,0)+' kcal/dia'],
       ['Gordura corporal',n(c.gordura)+'% · '+c.classeGordura],
       ['Massa magra',n(c.magra)+'% · '+n(c.magraKg,2)+' kg'],
-      ['Massa gorda',n(100-c.magra)+'% · '+n(c.gordaKg,2)+' kg'],
+      ['Massa gorda',n(100-c.magra)+'% · '+n(c.gorduraKg,2)+' kg'],
       ['IMLG',n(c.imlg)+' · '+c.classeImlg],
       ['Objetivo principal',c.objetivo],...linhasMeta(c)
     ]);
