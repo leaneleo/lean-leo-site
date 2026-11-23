@@ -122,3 +122,7 @@ Textos de alimentação conforme o [card atualizado](https://trello.com/c/ekcJMk
 ## Prévia dos e-mails em PDF
 
 O PR 7 usa a função isolada public-body-email-preview. Definir o destinatário autorizado em PUBLIC_BODY_PDF_PREVIEW_RECIPIENT. E-book acima de 3 MB ou sem download direto válido é oferecido por link. A produção permanece em public-body-analysis.
+
+## Campanha Black em revisão
+
+O Desafio e o downsell aceitam o link InfinitePay em `DIVAFIT_CHALLENGE_CHECKOUT` no contexto Deploy Preview, entre 25/11 e 30/11, horário de Goiânia. E-mail 2 usa o mesmo link em `PUBLIC_BODY_CHALLENGE_CHECKOUT` e volta à página do Desafio quando fechado. Selo da Consultoria e E-mail 1 expiram em 01/12. A página /consultoria/ é uma prévia da oferta em revisão, com link para o checkout existente. Publicação em produção depende do ok do Leandro.

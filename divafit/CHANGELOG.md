@@ -1,3 +1,7 @@
+## Black Friday · prévia
+
+- Prepara o botão do Desafio e o downsell para 25–30/11, além do selo da Consultoria e da linha temporária do E-mail 1.
+
 ## Prévia · avaliação por e-mail em PDF
 
 - Adiciona dois modelos curtos com PDF gerado no servidor e botão de download para e-books acima de 3 MB.
