@@ -1,14 +1,23 @@
 const config=window.DIVAFIT_CONFIG||{},endpoint=config.supabaseUrl+'/functions/v1/divafit-checkout';const form=document.querySelector('#checkout'),pay=document.querySelector('#pay'),message=document.querySelector('#message'),couponMessage=document.querySelector('#coupon-message');let lastError='',current=null,code='',challenge='',requestId=crypto.randomUUID();const money=c=>(c/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});async function call(route,body,token){const r=await fetch(endpoint+'?route='+route,{method:'POST',headers:{'content-type':'application/json',apikey:config.supabaseKey||'',...(token?{'x-checkout-token':token}:{})},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw Error(data.error||'Não foi possível concluir.');return data}async function refresh(candidate=code){pay.disabled=true;try{current=await call('quote',{plan:form.elements.plan.value,coupon:candidate});code=current.coupon||'';document.querySelector('#duration').textContent=current.months+(current.months===1?' mês':' meses');document.querySelector('#pix').textContent=money(current.pix);document.querySelector('#card').textContent=money(current.card);document.querySelector('#discount').textContent=code?`${code} (-${current.discount_bps/100}%)`:'';document.querySelector('#list').textContent=money(current.list_card??current.card);const off=(current.list_card??current.card)-current.card;document.querySelector('#coupon-row').hidden=!code;document.querySelector('#coupon-off').textContent='- '+money(off);const igual=current.pix===current.card;document.querySelector('#pix-row').hidden=igual;document.querySelector('#total-label').textContent=igual?'Total a pagar':'Total no cartão';document.querySelector('#preview').hidden=current.enabled;const vagasEl=document.querySelector('#vagas'),v=current.vagas;if(vagasEl){vagasEl.hidden=!v;if(v)vagasEl.textContent=v.restantes>0?`Lote atual: ${v.restantes===1?'resta 1 vaga':`restam ${v.restantes} vagas`} de ${v.total}`:'As vagas deste lote acabaram.';}message.textContent=current.enabled?'Você confere as parcelas na próxima etapa.':'Estamos preparando a abertura das vendas.';if(current.enabled&&current.turnstile_site_key&&!window.turnstile){const script=document.createElement('script');script.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';script.onload=()=>window.turnstile.render('#challenge',{sitekey:current.turnstile_site_key,callback:value=>{challenge=value;pay.disabled=!current.enabled},'expired-callback':()=>{challenge='';pay.disabled=true}});document.head.append(script)}pay.disabled=!current.enabled||!challenge||(current.vagas&&current.vagas.restantes<1);return true}catch(e){lastError=e.message;if(!candidate)message.textContent=e.message;return false}}form.elements.plan.forEach(el=>el.addEventListener('change',()=>{requestId=crypto.randomUUID();refresh()}));document.querySelector('#apply').addEventListener('click',async()=>{const candidate=document.querySelector('#coupon').value.trim().toUpperCase();if(await refresh(candidate)){couponMessage.textContent=candidate?'Cupom aplicado ao resumo.':'Cupom removido.';requestId=crypto.randomUUID()}else{couponMessage.textContent=(lastError||'Não foi possível aplicar esse cupom.')+' O resumo anterior foi preservado.';await refresh(code)}});form.addEventListener('submit',async event=>{event.preventDefault();if(!current?.enabled||!challenge)return;pay.disabled=true;message.textContent='Preparando seu pagamento…';try{const input=Object.fromEntries(new FormData(form));sessionStorage.setItem('divafit.checkout.request',requestId);const result=await call('create',{...input,coupon:code,request_id:requestId,accepted:form.elements.accepted.checked,whatsapp_consent:form.elements.whatsapp_consent.checked,challenge});if(result.checkout_url){const url=new URL(result.checkout_url);if(url.protocol!=='https:'||!['checkout.infinitepay.io','buy.infinitepay.io'].includes(url.hostname))throw Error('Link de pagamento inválido.');location.assign(url.href)}else message.textContent='Esse pedido já foi pago. Confira suas instruções de entrada.'}catch(e){message.textContent=e.message;challenge='';requestId=crypto.randomUUID();window.turnstile?.reset();pay.disabled=true}});if(config.supabaseUrl)refresh();
 
 import {checkoutDesafioAte} from './desafio-saida.mjs';
-const challengeCheckout=checkoutDesafioAte(window.DIVAFIT_CHALLENGE_CHECKOUT);
-if(challengeCheckout){
-  const exit=document.createElement('details');
-  const label=document.createElement('summary');
-  label.textContent='Desafio Black · Emagrecimento e Definição';
-  const link=document.createElement('a');
-  link.href=challengeCheckout;
-  link.textContent='Quero entrar no Desafio';
-  exit.append(label,link);
-  form.after(exit);
+import {blackStarts,blackEnds} from '/avaliacao/black-campaign.mjs';
+const exit=document.createElement('details');
+const label=document.createElement('summary');
+label.textContent='Desafio Black · Emagrecimento e Definição';
+const link=document.createElement('a');
+link.textContent='Quero entrar no Desafio';
+exit.append(label,link);
+form.after(exit);
+function updateDownsell(){
+  const target=checkoutDesafioAte(window.DIVAFIT_CHALLENGE_CHECKOUT);
+  exit.hidden=!target;
+  if(target)link.href=target;
+  else link.removeAttribute('href');
 }
+updateDownsell();
+for(const date of [blackStarts,blackEnds]){
+  const delay=date-Date.now();
+  if(delay>0&&delay<2147483647)setTimeout(updateDownsell,delay);
+}
+window.addEventListener('pageshow',updateDownsell);

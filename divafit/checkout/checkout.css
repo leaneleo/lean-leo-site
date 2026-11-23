@@ -9,3 +9,5 @@
 .summary .total dt,.summary .total dd{font-weight:700;font-size:16px;color:#282626}
 .summary .total{border-top:1px solid #ead9cc;padding-top:8px}
 .summary .pix-row{border-top:0;padding-top:0}
+
+.black-campaign-badge{width:fit-content;padding:.55rem .8rem;border-radius:.7rem;background:#fff0e8;color:#a23822;font-weight:700}
