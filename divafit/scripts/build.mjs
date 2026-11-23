@@ -1,6 +1,7 @@
 import {mkdir,copyFile,writeFile,readdir,stat} from 'node:fs/promises';
 import {buildIcons} from './icons.mjs';
 import {shortEmail} from '../supabase/functions/public-body-email-preview/template.mjs';
+const blackPreviewCheckout=process.env.CONTEXT==='deploy-preview'&&process.env.REVIEW_ID==='7'?(process.env.DIVAFIT_CHALLENGE_CHECKOUT||"https://loja.infinitepay.io/romeland/bnm5245-desafio-black"):'';
 const url=process.env.DIVAFIT_SUPABASE_URL||'', key=process.env.DIVAFIT_SUPABASE_PUBLIC_KEY||'';
 if (url && !/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) throw Error('URL Supabase inválida');
 if(key.startsWith('sb_secret_'))throw Error('Use somente a chave pública');
@@ -52,18 +53,18 @@ if(process.env.CONTEXT==='deploy-preview'){
  await copyFile('avaliacao/imc-exemplo.svg','public/avaliacao/imc-exemplo.svg');
  const origin='https://deploy-preview-7--consultoria-divafit.netlify.app';
  for(const [name,full] of [['email-avaliacao',true],['email-desafio',false]]){
-   await writeFile('public/avaliacao/'+name+'.html',shortEmail({nome:'Marina Teste',full,origin,now:new Date('2026-11-25T03:00:00Z'),checkout:process.env.DIVAFIT_CHALLENGE_CHECKOUT}).html);
+   await writeFile('public/avaliacao/'+name+'.html',shortEmail({nome:'Marina Teste',full,origin,now:new Date('2026-11-25T03:00:00Z'),checkout:blackPreviewCheckout}).html);
  }
  await mkdir('public/consultoria',{recursive:true});
  await copyFile('consultoria/index.html','public/consultoria/index.html');
 }
 
 await writeFile('public/checkout/divafit/desafio-config.js','window.DIVAFIT_CHALLENGE_CHECKOUT = '+JSON.stringify(
- process.env.CONTEXT==='deploy-preview'?process.env.DIVAFIT_CHALLENGE_CHECKOUT||'':''
+ blackPreviewCheckout
 )+';');
 
 const campaignPreview=process.env.CONTEXT==='deploy-preview'&&process.env.REVIEW_ID==='7';
 await writeFile('public/avaliacao/black-config.js','window.DIVAFIT_BLACK_PREVIEW = '+JSON.stringify(
- campaignPreview?{checkout:process.env.DIVAFIT_CHALLENGE_CHECKOUT||''}:null
+ campaignPreview?{checkout:blackPreviewCheckout}:null
 )+';');
 await writeFile('public/checkout/divafit/desafio-saida.mjs',"export {blackCheckoutAt as checkoutDesafioAte} from '/avaliacao/black-campaign.mjs';");
