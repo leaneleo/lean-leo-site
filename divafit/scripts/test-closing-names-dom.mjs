@@ -8,7 +8,7 @@ const api={financeWorkspace:async()=>({clients:[],rates:[],entries:[]}),financeC
 const ui=createFinanceWorkspace({api,isAdmin:()=>true,payments:()=>[],notice:x=>notices.push(x)});await ui.mount();
 const box=document.querySelector('#family-finance'),click=label=>[...box.querySelectorAll('button')].find(b=>b.textContent===label).click();
 box.querySelectorAll('.fp-source:not(.fp-family)')[1].click();click('Fechamentos');await new Promise(r=>setTimeout(r,0));
-assert(box.querySelector('textarea').value.includes('Você treinou sozinho em 6 aulas.'));assert(!box.querySelector('textarea').value.includes('aula(s)'));
+assert(box.querySelector('textarea').value.includes('Pessoa A teve 6 aulas.'));assert(!box.querySelector('textarea').value.includes('aula(s)'));
 snapshot.rows=[{unresolved:true,quantity:2}];snapshot.unknown=1;
 click('Aprovar texto');await new Promise(r=>setTimeout(r,0));assert.equal(approvals,0);assert(notices.at(-1).includes('participantes'));
 console.log('DOM: mensagem humana renderizada; aprovação bloqueada com participantes pendentes.');

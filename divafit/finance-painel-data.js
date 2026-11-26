@@ -31,6 +31,7 @@ export function saudacao(now=new Date()){const h=Number(new Intl.DateTimeFormat(
 export function closingDetails(snapshot){
  if(snapshot.format_version!==2)return {text:'Atualize o fechamento para conferir os participantes das aulas.',unresolved:true};
  const rows=snapshot.rows??[],lines=[],compact=[],count=n=>`${n} ${n===1?'aula':'aulas'}`;
+ if(rows.length&&rows.every(r=>!r.service&&!r.unresolved&&r.people?.length===1&&r.people[0].code===rows[0].people?.[0]?.code)){const quantity=rows.reduce((sum,r)=>sum+(r.quantity??0),0);return {text:quantity?`${rows[0].people[0].name} teve ${count(quantity)}.`:'',unresolved:false};}
  let unresolved=false;
  const join=names=>names.length<3?names.join(' e '):names.slice(0,-1).join(', ')+' e '+names.at(-1);
  for(const row of rows){
@@ -85,6 +86,20 @@ export function calculatorPeople(data,contacts,bucket,all=false){
   if(clients.some(base=>base.id!==c.id&&normalize(base.code)===normalize(c.code.slice(0,-1))&&/[AR]$/.test(c.code)))return false;
   return all||!codes.size||codes.has(c.code);
  }).map(c=>({...c,label:c.name})).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR'));
+}
+export function studentRateRows(data,contacts,bucket,day){
+ const clients=(data.clients??[]).filter(c=>c.bucket===bucket&&!c.archived),rules=contacts.filter(c=>c.bucket===bucket&&c.source?.calculator?.active===true&&c.source.calculator.starts_on<=day),configured=contacts.some(c=>c.bucket===bucket&&typeof c.source?.calculator?.active==='boolean');
+ const label=code=>{const contact=rules.find(c=>c.source.calculator.people?.includes(code));return contact?.source?.closing?.people?.[code]?.name||clients.find(c=>c.code===code)?.name||code;};
+ const rows=[],seen=new Set();
+ const add=(code,title,kind)=>{const client=clients.find(c=>c.code===code);if(!client||seen.has(client.id))return;seen.add(client.id);rows.push({...client,label:title,kind});};
+ for(const contact of rules){const rule=contact.source.calculator;
+  if(rule.kind==='servico'){for(const code of rule.people??[])add(code,label(code),'servico');continue;}
+  if(rule.kind!=='pessoa')continue;
+  for(const code of rule.people??[])add(code,label(code),'pessoa');
+  for(const [size,code]of Object.entries(rule.tariffs??{})){if(!['2','3'].includes(size))continue;add(code,'Grupo de '+(rule.people??[]).map(label).join(', ')+' · '+(size==='2'?'dupla':'trio'),'grupo');}
+ }
+ if(!configured)for(const c of calculatorPeople(data,contacts,bucket))add(c.code,c.label,'pessoa');
+ const order={pessoa:0,grupo:1,servico:2};return rows.sort((a,b)=>order[a.kind]-order[b.kind]||a.label.localeCompare(b.label,'pt-BR'));
 }
 export function calculatorTap(groups,id,join=false){
  if(groups.some(g=>g.includes(id)))throw Error('Esse aluno já está no visor.');

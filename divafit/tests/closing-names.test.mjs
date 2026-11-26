@@ -20,5 +20,11 @@ test('fechamento: não expõe código antigo e marca combinação desconhecida p
 });
 test('fechamento: quebra de linha importada, tratamento e valor preservados',()=>{
  const text=closingText({month:'2026-11-01',snapshot:{format_version:2,address:'gata',contact:'Pessoa B',rows:[row([b],1)],total_cents:12300,template:'{saudacao} {tratamento}\\\\n{detalhes}\\\\nTotal: {valor}'}},new Date('2026-11-19T23:00:00Z'));
- assert.equal(text,'Boa noite, gata.\nPessoa B treinou sozinha em 1 aula.\nTotal: R$ 123,00');assert(!text.includes('\\'));
+ assert.equal(text,'Boa noite, gata.\nPessoa B teve 1 aula.\nTotal: R$ 123,00');assert(!text.includes('\\'));
+});
+
+test('fechamento: somente aulas individuais usa nome e teve, sem sozinho',()=>{
+ assert.equal(closingDetails({format_version:2,rows:[row([a],5)]}).text,'Pessoa A teve 5 aulas.');
+ assert.equal(closingDetails({format_version:2,rows:[row([b],1)]}).text,'Pessoa B teve 1 aula.');
+ assert.equal(closingDetails({format_version:2,rows:[row([a],2),row([a],3)]}).text,'Pessoa A teve 5 aulas.');
 });
