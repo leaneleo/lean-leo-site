@@ -1,66 +1,11 @@
-## Fechamentos por pessoas — 25/11/2026
-
-- Texto discrimina aulas individuais, duplas e trios pelos participantes, com tratamento do destinatário e resumo compacto opcional.
-- Códigos históricos sem composição confirmada ficam a conferir; aprovação bloqueada enquanto houver pendências.
-- Nova migração `supabase/financeiro_fechamentos_nomes.sql`; sem habilitar envio.
-
-## Financeiro · cancelamentos e faturamento mensal por personal — 25/11/2026
-
-- Agenda oculta registros cancelados e arquivados, preservando o histórico privado.
-- Painel reconhece relatórios mensais por personal sem inventar aulas nem duplicar faturamento de aulas cobertas.
-- Teste de regressão para relatórios, cancelamento, arquivamento e contagem de aulas.
-
-## Avaliação grátis · orientação para refazer fotos
-
-- Mostra até três instruções de correção e registra apenas instruções padronizadas no log do 422.
-
-## Avaliação grátis · contato e atividades
-
-- Separa visualmente os campos de contato e a verificação de segurança. A etapa 7 permite várias atividades.
-
-## Avaliação grátis em produção
-
-- Publica a avaliação física gratuita, a página fechada do Desafio e a entrega por e-mail no domínio oficial. A prévia conserva a lista de testes.
-
 # Histórico DivaFit
 
-## CRM, Família e relatórios InfinitePay — 20/11/2026
+## Financeiro: acumulado anual
 
-- Aba CRM (administradores): situação de cada aluna (cobrar, devendo treino, renovar/prorrogar, em preparo, em dia, reativar), prorrogação de R$ 20 em um clique (fica Pendente), custo estimado de prescrição (R$ 50 por treino novo) e funil de leads com alertas de follow-up e atalho de WhatsApp sem envio automático.
-- Financeiro ganhou o card Família: entradas x saídas, saldo, ranking de gastos por categoria e lançamento rápido de gastos.
-- Relatórios InfinitePay 2024–2026 aparecem no card Le&LeoFit, sem somar duas vezes pagamentos do mesmo período. Detalhes em docs/CRM-FAMILIA.md.
+- Os três cartões principais mostram o faturamento anual até a data atual.
+- A pizza usa a soma dos três no mesmo período.
+- Os doze cartões inferiores mantêm os totais mensais combinados.
+- Registros futuros ficam fora do acumulado até hoje.
+- Validação: 14 testes de financeiro passaram; sintaxe e build passaram.
 
-## Pessoas e famílias confirmadas — 19/11/2026
-
-- Configuração privada ditada por Leandro: pessoas separadas dos responsáveis por cobrança e regras automáticas por família. Laboral fica no teclado e fora da contagem de alunos; nomes que deixaram de treinar saem da lista principal.
-- Fechamento distingue as pessoas de cada composição. Atualização automática fica pausada na calculadora para não apagar a seleção durante o preenchimento.
-- Valores novos com vigência a partir de 19/11, somente para próximos registros. Todos os lançamentos anteriores preservados e comparados por hash. Nenhum recálculo de outros meses.
-
-## Calculadora de atendimentos — 19/11/2026
-
-- Botões com nomes, visor animado, + para dupla/trio, limpar, desfazer e = Registrar no dia escolhido. Grupos exigem tarifa cadastrada; combinações já registradas reutilizam a modalidade, respeitando a vigência.
-- Retirada a contagem estimada de 20 ativos: ela confundia modalidades e atividade recente com pessoas. A planilha não define status ativo; o cartão indica A confirmar.
-- Histórico importado e valores preservados. Sem mensagens enviadas.
-
-
-## Painel anual, produtos e fechamentos — 19/11/2026
-
-- Pizza anual, destaque do ano, três cards e meses abaixo; páginas exclusivas e botão Voltar. Marca online Le&LeoFit e nome Leandro Romacheli corrigidos.
-- Agenda semanal, registro em lote/grupo por tarifa cadastrada, reajustes por vigência e tratamentos da planilha com saudação pelo horário.
-- Catálogo privado editável e preparação mensal de rascunhos, sem WhatsApp.
-- Integração InfinitePay do Claude preservada integralmente; presencial só contabilizado. Importação do histórico externo online ainda depende dos relatórios.
-- 78 testes Node da versão integrada, banco isolado e DOM aprovados. Detalhes em docs/FINANCEIRO-PAINEL.md.
-
-- Publicado no Netlify (c0f2940); conferidos autenticado gráfico, 12 meses, páginas, catálogo e prévia sem salvar dados fictícios. Console sem erros.
-
-## Financeiro familiar — 19/11/2026, ativado após autorização
-
-- Três cards de renda, mês/ano, aulas e recebimentos separados, despesas e consolidado por aluno/plano.
-- Registro de aula pelo formulário ou preenchimento por texto, com confirmação e tarifa histórica.
-- Migração privada com RLS, administrador verificado, idempotência e cancelamento com histórico.
-- Extração de Excel e preparação de SQL privado sem execução. Dados reais não versionados.
-- 67 testes Node, banco isolado e DOM aprovados. Build aprovado; teste visual bloqueado pelo ambiente.
-- Após autorização explícita de Leandro: migração aplicada no banco DivaFit, importação privada conferida e publicação confirmada no Netlify. Teste transacional real confirmou cálculo/cancelamento e bloqueio da treinadora, com rollback dos testes. Dados desconhecidos continuam a conferir; planilha original preservada. Conferência visual autenticada em andamento.
-
-- Conferência autenticada: cartões carregaram e totais anuais foram comparados ao banco. Filtro ganhou botão Aplicar período para aplicar ano/mês de uma vez, sem depender de sair do campo.
-- Conferência final no site autenticado: totais mensais/anuais comparados ao banco, troca de ano pelo botão Aplicar período e preenchimento por texto com tarifa correta; nenhum lançamento fictício salvo.
+As versões anteriores deste documento permanecem no histórico do Git.

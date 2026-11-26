@@ -22,6 +22,9 @@ export function faturamento(data,payments,period){
  const cents=p.import_data?.principal_cents??(p.amount===null||p.amount===''?null:Math.round(Number(p.amount)*100));if(valid(cents))sums.divafit+=cents;}
  return {sums,counts,pending,total:Object.values(sums).reduce((a,b)=>a+b,0)};
 }
+export function annualRevenueToDate(data,payments,year,asOf){
+ return faturamento({...data,entries:(data.entries??[]).filter(e=>e.day&&e.day<=asOf)},(payments??[]).filter(p=>p.paid_on&&p.paid_on<=asOf),String(year));
+}
 export function annualSeries(data,payments,year){return MONTHS.map((name,i)=>{const period=year+'-'+String(i+1).padStart(2,'0');return {name,period,...faturamento(data,payments,period)};});}
 export function rateFor(rates,id,day){return rates.filter(r=>r.client_id===id&&r.starts_on<=day).sort((a,b)=>b.starts_on.localeCompare(a.starts_on))[0]?.cents??null;}
 export function saudacao(now=new Date()){const h=Number(new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',hourCycle:'h23'}).format(now));return h>=5&&h<12?'Bom dia':h>=12&&h<18?'Boa tarde':'Boa noite';}
