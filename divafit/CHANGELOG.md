@@ -1,3 +1,9 @@
+## Fechamentos por pessoas — 25/11/2026
+
+- Texto discrimina aulas individuais, duplas e trios pelos participantes, com tratamento do destinatário e resumo compacto opcional.
+- Códigos históricos sem composição confirmada ficam a conferir; aprovação bloqueada enquanto houver pendências.
+- Nova migração `supabase/financeiro_fechamentos_nomes.sql`; sem habilitar envio.
+
 ## Financeiro · cancelamentos e faturamento mensal por personal — 25/11/2026
 
 - Agenda oculta registros cancelados e arquivados, preservando o histórico privado.

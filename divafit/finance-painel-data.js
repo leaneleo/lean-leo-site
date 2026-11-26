@@ -25,11 +25,35 @@ export function faturamento(data,payments,period){
 export function annualSeries(data,payments,year){return MONTHS.map((name,i)=>{const period=year+'-'+String(i+1).padStart(2,'0');return {name,period,...faturamento(data,payments,period)};});}
 export function rateFor(rates,id,day){return rates.filter(r=>r.client_id===id&&r.starts_on<=day).sort((a,b)=>b.starts_on.localeCompare(a.starts_on))[0]?.cents??null;}
 export function saudacao(now=new Date()){const h=Number(new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',hourCycle:'h23'}).format(now));return h>=5&&h<12?'Bom dia':h>=12&&h<18?'Boa tarde':'Boa noite';}
+export function closingDetails(snapshot){
+ if(snapshot.format_version!==2)return {text:'Atualize o fechamento para conferir os participantes das aulas.',unresolved:true};
+ const rows=snapshot.rows??[],lines=[],compact=[],count=n=>`${n} ${n===1?'aula':'aulas'}`;
+ let unresolved=false;
+ const join=names=>names.length<3?names.join(' e '):names.slice(0,-1).join(', ')+' e '+names.at(-1);
+ for(const row of rows){
+  const quantity=row.quantity??0;
+  if(row.unresolved||(!row.service&&!row.people?.length)){unresolved=true;lines.push(`${count(quantity)} com participantes a conferir.`);continue;}
+  if(row.service){if(quantity)lines.push(`${row.label}: ${count(quantity)}.`);continue;}
+  if(!quantity)continue;
+  const people=[...row.people].sort((a,b)=>Number(Boolean(b.recipient))-Number(Boolean(a.recipient))||a.name.localeCompare(b.name,'pt-BR'));
+  if(snapshot.compact_person&&people.some(p=>p.code===snapshot.compact_person)){compact.push({...row,people});continue;}
+  const names=people.map(p=>p.recipient?'você':p.name),subject=join(names).replace(/^você/,'Você');
+  if(people.length===1){const gender=people[0].gender,mode=gender==='f'?'sozinha':gender==='m'?'sozinho':'individualmente';lines.push(`${subject} treinou ${mode} em ${count(quantity)}.`);}
+  else{const mode=people.every(p=>p.gender==='f')?'juntas':people.every(p=>['f','m'].includes(p.gender))?'juntos':people.length===2?'em dupla':people.length===3?'em trio':'em grupo';lines.push(`${subject} treinaram ${mode} em ${count(quantity)}.`);}
+ }
+ if(compact.length){
+  const person=compact[0].people.find(p=>p.code===snapshot.compact_person),bySize=new Map();
+  for(const row of compact)bySize.set(row.people.length,(bySize.get(row.people.length)||0)+row.quantity);
+  const segments=[...bySize].sort(([a],[b])=>a-b).map(([size,quantity])=>`${size===1?(person.gender==='f'?'sozinha':person.gender==='m'?'sozinho':'individualmente'):size===2?'em dupla':size===3?'em trio':'em grupo'} em ${count(quantity)}`);
+  lines.unshift(`${person.name} treinou ${join(segments)}.`);
+ }
+ return {text:lines.join('\n'),unresolved};
+}
 export function closingText(closing,now=new Date()){
  const s=closing.snapshot,month=Number(closing.month.slice(5,7))-1;
  const money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(n/100);
- const vars={saudacao:saudacao(now),tratamento:s.address||s.contact,mes:MONTHS[month].toLocaleUpperCase('pt-BR'),ano:closing.month.slice(0,4),detalhes:(s.rows??[]).map(r=>r.code+': '+(r.quantity??0)+' aula(s) · '+(r.cents==null?'a conferir':money(r.cents))).join('\n'),valor:money(s.total_cents),despedida:s.closing||''};
- return String(s.template||'{saudacao} {tratamento}\n*FECHAMENTO {mes} - {ano}*\n{detalhes}\nTotal: {valor}\n{despedida}').replace(/\\n/g,'\n').replace(/\{([a-z_]+)\}/g,(all,key)=>vars[key]??all).trim();
+ const vars={saudacao:saudacao(now),tratamento:s.address||s.contact,mes:MONTHS[month].toLocaleUpperCase('pt-BR'),ano:closing.month.slice(0,4),detalhes:closingDetails(s).text,valor:money(s.total_cents),despedida:s.closing||''};
+ return String(s.template||'{saudacao} {tratamento}\n*FECHAMENTO {mes} - {ano}*\n{detalhes}\nTotal: {valor}\n{despedida}').replace(/\\+n/g,'\n').replace(/\{saudacao\}\s+\{tratamento\}/,'{saudacao}, {tratamento}.').replace(/\{([a-z_]+)\}/g,(all,key)=>vars[key]??all).trim();
 }
 export function parseClassNames(text,clients,bucket){
  let s=normalize(text).replace(/^[\s]*(hoje|ontem)\s+/,'').replace(/\s+trein(?:ou|aram)(?:\s+com\s+(?:leandro|leonardo))?[.!]?$/,'').trim();

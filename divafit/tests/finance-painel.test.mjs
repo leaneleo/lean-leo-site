@@ -8,7 +8,7 @@ test('painel: faturamento não duplica recebimento de aula nem juros do comprado
 test('fechamento: saudação considera horário de São Paulo e tratamento é preservado',()=>{
  assert.equal(saudacao(new Date('2026-11-19T11:00:00Z')),'Bom dia');assert.equal(saudacao(new Date('2026-11-19T18:00:00Z')),'Boa tarde');assert.equal(saudacao(new Date('2026-11-19T23:00:00Z')),'Boa noite');
  const s=closingText({month:'2026-11-01',snapshot:{contact:'Aluno A',address:'grande Doutor Aluno A',closing:'Até mais!',total_cents:11000,rows:[{code:'Aluno A',quantity:1,cents:11000}]}},new Date('2026-11-19T23:00:00Z'));
- assert(s.startsWith('Boa noite grande Doutor Aluno A'));assert(s.includes('NOVEMBRO'));assert(s.includes('110,00'));assert(s.endsWith('Até mais!'));
+ assert(s.startsWith('Boa noite, grande Doutor Aluno A.'));assert(s.includes('NOVEMBRO'));assert(s.includes('110,00'));assert(s.endsWith('Até mais!'));
 });
 test('agenda: texto aceita várias pessoas, mas não decide tarifa de grupo nem inventa nome',()=>{
  const clients=[{id:'a',bucket:'leandro',name:'Vitória',code:'Vitória'},{id:'b',bucket:'leandro',name:'Alexsander',code:'Alexsander'},{id:'c',bucket:'leandro',name:'Vanessa',code:'Vanessa'}];

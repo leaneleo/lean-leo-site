@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+const {JSDOM}=await import(process.env.JSDOM_MODULE_PATH||'jsdom');
+const dom=new JSDOM('<div id="family-finance"></div>');globalThis.document=dom.window.document;globalThis.Node=dom.window.Node;
+const {createFinanceWorkspace}=await import('../finance-painel-ui.js');
+let approvals=0;const notices=[];
+const snapshot={format_version:2,contact:'Pessoa A',address:'doutor',total_cents:10000,unknown:0,rows:[{people:[{code:'a',name:'Pessoa A',recipient:true,gender:'m'}],quantity:6,cents:10000}]};
+const api={financeWorkspace:async()=>({clients:[],rates:[],entries:[]}),financeCatalog:async()=>({contacts:[],products:[]}),financeClosings:async()=>[{id:'f',bucket:'leandro',status:'rascunho',version:1,month:'2026-11-01',snapshot}],financeClosingApprove:async()=>{approvals++;}};
+const ui=createFinanceWorkspace({api,isAdmin:()=>true,payments:()=>[],notice:x=>notices.push(x)});await ui.mount();
+const box=document.querySelector('#family-finance'),click=label=>[...box.querySelectorAll('button')].find(b=>b.textContent===label).click();
+box.querySelectorAll('.fp-source:not(.fp-family)')[1].click();click('Fechamentos');await new Promise(r=>setTimeout(r,0));
+assert(box.querySelector('textarea').value.includes('Você treinou sozinho em 6 aulas.'));assert(!box.querySelector('textarea').value.includes('aula(s)'));
+snapshot.rows=[{unresolved:true,quantity:2}];snapshot.unknown=1;
+click('Aprovar texto');await new Promise(r=>setTimeout(r,0));assert.equal(approvals,0);assert(notices.at(-1).includes('participantes'));
+console.log('DOM: mensagem humana renderizada; aprovação bloqueada com participantes pendentes.');
