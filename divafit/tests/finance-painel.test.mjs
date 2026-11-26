@@ -35,3 +35,14 @@ test('famílias: contagem usa pessoas confirmadas e preço novo não retroage',(
  assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','b'],'2026-11-18'),null);assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','b'],'2026-11-19'),'d');assert.equal(configuredGroupRate({clients},contacts,'leandro',['b','a','c'],'2026-11-20'),'t');assert.equal(configuredGroupRate({clients},contacts,'leandro',['a','s'],'2026-11-19'),null);
  const rates=[{client_id:'a',starts_on:'2026-01-01',cents:16000},{client_id:'a',starts_on:'2026-11-19',cents:14000}];assert.equal(rateFor(rates,'a','2026-10-31'),16000);assert.equal(rateFor(rates,'a','2026-11-18'),16000);assert.equal(rateFor(rates,'a','2026-11-19'),14000);
 });
+
+test('painel: relatório mensal pertence ao personal, sem duplicar aulas nem inventar contagem',()=>{
+ const report={bucket:'leonardo',kind:'recebimento',day:'2026-01-01',cents:75000,status:'confirmado',source:{type:'personal_monthly_revenue',month:'2026-01'}};
+ const aula={bucket:'leonardo',kind:'aula',day:'2026-01-05',cents:5000,quantity:1,status:'confirmado'};
+ const entries=[report,aula,{...report,day:'2026-02-01',status:'cancelado',source:{...report.source,month:'2026-02'}},{...report,day:'2026-03-01',archived:true,source:{...report.source,month:'2026-03'}}];
+ const jan=faturamento({entries},[],'2026-01');assert.equal(jan.sums.leonardo,75000);assert.equal(jan.sums.leandro,0);assert.equal(jan.counts.leonardo,1);assert.equal(jan.total,75000);
+ assert.equal(faturamento({entries:[report]},[],'2026').counts.leonardo,0);
+ assert.equal(faturamento({entries},[],'2026').total,75000);
+ assert.equal(faturamento({entries},[],'2026-11').total,0);
+ assert.equal(faturamento({entries:[entries[2],{...aula,day:'2026-02-05'}]},[],'2026-02').total,5000);
+});

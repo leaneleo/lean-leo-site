@@ -7,10 +7,13 @@ const isReport=e=>e.kind==='recebimento'&&e.source?.rotulo===ONLINE_REPORT_LABEL
 export function reportCoverageEnd(entries){let end='';for(const e of entries??[])if(isReport(e)&&!e.archived&&e.status!=='cancelado'&&(e.source?.cobertura_fim??'')>end)end=e.source.cobertura_fim;return end;}
 export const MONTHS=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 export function faturamento(data,payments,period){
+ const reports=(data.entries??[]).filter(e=>e.kind==='recebimento'&&e.source?.type==='personal_monthly_revenue'&&['leandro','leonardo'].includes(e.bucket)&&!e.archived&&e.status==='confirmado'&&valid(e.cents)&&e.source?.month===e.day?.slice(0,7));
+ const coveredPersonal=new Set(reports.map(e=>e.bucket+'|'+e.source.month));
  const sums={divafit:0,leandro:0,leonardo:0},counts={leandro:0,leonardo:0},pending={leandro:0,leonardo:0};
  for(const e of data.entries??[]){if(e.kind!=='aula'||e.archived||e.status==='cancelado'||!e.day?.startsWith(period)||!(e.bucket in counts))continue;
-  if(e.status!=='confirmado'||!valid(e.cents)){pending[e.bucket]++;continue;}sums[e.bucket]+=e.cents;counts[e.bucket]+=e.quantity;
+  if(e.status!=='confirmado'||!valid(e.cents)){pending[e.bucket]++;continue;}if(!coveredPersonal.has(e.bucket+'|'+e.day.slice(0,7)))sums[e.bucket]+=e.cents;counts[e.bucket]+=e.quantity;
  }
+ for(const e of reports)if(e.day.startsWith(period))sums[e.bucket]+=e.cents;
  // Relatórios mensais da InfinitePay (consultoria online): contam como Le&LeoFit.
  for(const e of data.entries??[]){if(!isReport(e)||e.archived||e.status!=='confirmado'||!e.day?.startsWith(period)||!valid(e.cents))continue;sums.divafit+=e.cents;}
  // Pagamentos dentro do período já coberto por relatório não são somados outra vez.

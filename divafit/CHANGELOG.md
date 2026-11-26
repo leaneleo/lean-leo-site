@@ -1,3 +1,9 @@
+## Financeiro · cancelamentos e faturamento mensal por personal — 25/11/2026
+
+- Agenda oculta registros cancelados e arquivados, preservando o histórico privado.
+- Painel reconhece relatórios mensais por personal sem inventar aulas nem duplicar faturamento de aulas cobertas.
+- Teste de regressão para relatórios, cancelamento, arquivamento e contagem de aulas.
+
 ## Avaliação grátis · orientação para refazer fotos
 
 - Mostra até três instruções de correção e registra apenas instruções padronizadas no log do 422.
