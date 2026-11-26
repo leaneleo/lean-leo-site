@@ -1,4 +1,7 @@
-export const PLANS=Object.freeze({monthly:{name:'Mensal',months:1,bonus:0,original:19700,card:15760,pix:15760},quarterly:{name:'Trimestral',months:3,bonus:1,original:59100,card:38415,pix:36000}});
+export const BLACK_START = Date.parse('2026-11-27T00:00:00-03:00');
+export const BLACK_END = Date.parse('2026-12-01T00:00:00-03:00');
+export const blackOpen = now => now >= BLACK_START && now < BLACK_END;
+export const PLANS=Object.freeze({monthly:{name:'Mensal',months:1,bonus:0,original:19700,card:15760,pix:15760},quarterly:{name:'Trimestral',months:3,bonus:0,original:59100,card:38415,pix:36000}});
 export function quote(planKey,coupon=null,now=new Date()){
  const plan=PLANS[planKey];if(!plan)throw Error('Escolha um plano válido.');
  let discount=0;

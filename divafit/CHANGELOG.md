@@ -1,5 +1,10 @@
 # Histórico DivaFit
 
+## Black Friday · 26/11/2026
+
+- Prévia da consultoria com janela de 27 a 30/11, trimestral sem bônus e preços mantidos.
+- Desafio em janeiro com vendas fechadas. E-mail 2 usa a oferta da consultoria somente durante a Black.
+
 ## Texto de aulas individuais
 
 - Quando o fechamento contém apenas aulas individuais da mesma pessoa, usa nome e quantidade: Pessoa teve 5 aulas.
