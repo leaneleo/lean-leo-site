@@ -13,4 +13,4 @@
 - Sintaxe e build passaram. A bateria geral mantém uma falha preexistente em copy-summary.test.mjs.
 
 ## Publicação
-- Publicação autorizada pelo responsável. Validação da versão publicada em andamento.
+- Publicação autorizada pelo responsável e concluída no commit 408864d9eed4d163cadd800e392bd6a990faff47. Os módulos publicados foram comparados byte a byte com os arquivos testados: idênticos. Deploy de produção confirmado como atual e pronto. Conferência visual autenticada continua pendente.
