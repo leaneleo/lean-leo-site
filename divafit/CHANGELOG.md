@@ -1,5 +1,7 @@
 # Histórico DivaFit
 
+- Prévia da lista de espera de janeiro com captura e etiqueta no CRM. E-mail 2 apresenta a lista abaixo da Black até 30/11 e só a lista a partir de dezembro.
+
 ## Black Friday · 26/11/2026
 
 - Prévia da consultoria com janela de 27 a 30/11, trimestral sem bônus e preços mantidos.

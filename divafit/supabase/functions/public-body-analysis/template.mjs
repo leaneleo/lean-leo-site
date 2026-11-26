@@ -16,11 +16,15 @@ export function shortEmail({nome,full,ebookUrl,origin,now=Date.now()}){
     ? '<section style="padding:18px;background:#191211;color:#fff7f2;border:1px solid #a23822;border-radius:12px">'+
       blackConsultoria.split('\n\n').map(p).join('')+button('Quero minha consultoria',origin+'/checkout/divafit/')+'</section>'
     : '';
+  const waitlist='<section style="padding:18px;background:#191211;color:#fff7f2;border:1px solid #a23822;border-radius:12px">'+
+    p('**Prefere começar em grupo?**')+
+    p('O Desafio volta em janeiro, de 04 a 24/01/2027. As vagas abrem em pequenos lotes.')+
+    button('Quero entrar na lista de espera',origin+'/desafio-21-dias/')+'</section>';
   const footer=full?trelloCopy.avaliacao.footer.slice(0,3).map(p).join(''):p(email2Copy.footer);
   return {
     subject:firstName+', sua avaliação '+(full?'física':'parcial')+' chegou 🧡',
     html:'<!doctype html><html lang="pt-BR"><meta charset="utf-8"><body style="font:16px Comfortaa,Arial,sans-serif;color:#29201d"><main style="max-width:560px;margin:auto;padding:20px">'+
-      p('Oi, '+firstName+'!')+p(opening)+gift+(full?consultation:offer)+p('Leandro e Leonardo · Le&LeoFit')+footer+'</main></body></html>'
+      p('Oi, '+firstName+'!')+p(opening)+gift+(full?consultation:offer+waitlist)+p('Leandro e Leonardo · Le&LeoFit')+footer+'</main></body></html>'
   };
 }
 

@@ -42,7 +42,7 @@ if(productionAssessment&&!/^0x[A-Za-z0-9_-]+$/.test(assessmentSitekey))throw Err
 const assessmentEndpoint='https://ycchdswqaekdupmrnszz.supabase.co/functions/v1/public-body-analysis';
 for(const [folder,files] of [
   ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs','download-pdf.mjs']],
-  ['desafio-21-dias',['index.html','desafio.js']]
+  ['desafio-21-dias',['index.html','desafio.js','waitlist.js']]
 ]){
   await mkdir('public/'+folder,{recursive:true});
   for(const file of files)await copyFile(folder+'/'+file,'public/'+folder+'/'+file);
@@ -53,3 +53,18 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
   endpoint:assessmentEnabled?assessmentEndpoint:'',
   sitekey:assessmentEnabled?assessmentSitekey:''
 })+';');
+
+await writeFile('public/desafio-21-dias/waitlist-config.js','window.DIVAFIT_WAITLIST = '+JSON.stringify({
+  preview:!productionAssessment,
+  endpoint:productionAssessment?'https://ycchdswqaekdupmrnszz.supabase.co/functions/v1/desafio-waitlist':'',
+  sitekey:productionAssessment?assessmentSitekey:''
+})+';');
+
+if(previewAssessment){
+  const {shortEmail}=await import('../supabase/functions/public-body-analysis/template.mjs');
+  for(const [name,at] of [['email-2-black','2026-11-28T12:00:00-03:00'],['email-2-dezembro','2026-12-01T00:00:00-03:00']]){
+    await writeFile('public/desafio-21-dias/'+name+'.html',shortEmail({
+      nome:'Pessoa Teste',full:false,origin:'',now:Date.parse(at)
+    }).html);
+  }
+}

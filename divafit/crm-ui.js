@@ -68,6 +68,8 @@ export function createCrm({api,db,isAdmin,notice,reload,openStudent}){
    for(const l of items){if(editing===l.id){col.append(editor(l));continue;}
     const c=e('article',null,'crm-lead'),alert=leadAlert(l,t);
     c.append(e('strong',l.name),e('small',l.interest+' · '+l.origin+' · '+l.responsible));
+    if(l.campaign_tag)c.append(e('small',l.campaign_tag));
+    if(l.waitlist_email)c.append(e('small',l.waitlist_email));
     if(alert)c.append(e('span',alert.text,'crm-alert alert-'+alert.kind));else if(l.next_on)c.append(e('small','Próximo contato: '+dateLabel(l.next_on)));
     if(l.notes)c.append(e('p',l.notes.length>140?l.notes.slice(0,140)+'…':l.notes,'crm-note'));
     const a=e('div',null,'crm-actions');const next=nextStage(l.stage);

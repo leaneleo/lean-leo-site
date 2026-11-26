@@ -10,7 +10,10 @@ test('E-mail 2 usa a oferta aprovada na janela e ignora o checkout do Desafio',(
   ['2026-11-30T23:59:59-03:00',true],['2026-12-01T00:00:00-03:00',false]]) {
   const html=render(at);
   assert.equal(html.includes('https://app.leeleo.com.br/checkout/divafit/'),expected);
-  assert.doesNotMatch(html,/infinitepay|desafio-21-dias|Quero entrar no Desafio/i);
+  assert.doesNotMatch(html,/infinitepay|Quero entrar no Desafio/i);
+  assert.match(html,/Prefere começar em grupo/);
+  assert.match(html,/https:\/\/app\.leeleo\.com\.br\/desafio-21-dias\//);
+  if(expected)assert.ok(html.indexOf('checkout/divafit')<html.indexOf('desafio-21-dias'));
  }
 });
 
