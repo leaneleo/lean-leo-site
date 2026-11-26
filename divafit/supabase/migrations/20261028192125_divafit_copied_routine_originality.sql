@@ -1,0 +1,2 @@
+create function private.divafit_copied_routine_kind() returns trigger language plpgsql set search_path='' as $$begin if cardinality(new.source_ids)>0 and exists(select 1 from public.workouts w where w.id=new.workout_id and not w.count_as_new) then new.routine_kind:='Igual';end if;return new;end;$$;
+revoke all on function private.divafit_copied_routine_kind() from public;create trigger copied_routine_kind before insert on public.assignments for each row execute function private.divafit_copied_routine_kind();
