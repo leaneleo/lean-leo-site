@@ -27,3 +27,39 @@ begin
  return to_jsonb(result);
 end;$$;
 
+CREATE OR REPLACE FUNCTION public.confirm_checkout_payment(p_order uuid, p_transaction text, p_slug text, p_paid integer, p_method text, p_installments integer)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SET search_path TO ''
+AS $function$
+declare o public.checkout_orders;sid uuid;matches integer;pid uuid;amount integer;d date:=(now() at time zone 'America/Sao_Paulo')::date;
+begin
+ select * into o from public.checkout_orders where id=p_order for update;
+ if not found then raise exception 'Pedido inexistente';end if;
+ if o.status='paid' then
+  if o.transaction_nsu<>p_transaction then raise exception 'Outra transação neste pedido';end if;
+  return o.payment_id;
+ end if;
+ if o.status in ('refunded','canceled') then raise exception 'Pedido encerrado exige revisão';end if;
+ if p_method not in ('pix','credit_card') or p_paid<(case when p_method='pix' then o.pix_cents else o.card_cents end) then raise exception 'Valor ou método divergente';end if;
+ -- Uma identidade por e-mail/telefone, sem sobrescrever dados fornecidos pela equipe/Mfit.
+ perform pg_advisory_xact_lock(hashtextextended('checkout-customer-match',0));
+ select count(*),(array_agg(id))[1] into matches,sid from public.students where not archived and (
+  lower(training_profile->>'email')=lower(o.customer->>'email') or phone=o.customer->>'phone');
+ if matches>1 then
+  update public.checkout_orders set needs_review=true,onboarding_status='revisar_identidade',status='paid',transaction_nsu=p_transaction,invoice_slug=p_slug,paid_cents=p_paid,payment_method=p_method,installments=p_installments,paid_at=now(),updated_at=now() where id=o.id;
+  return null;
+ end if;
+ if matches=0 then
+  insert into public.students(name,phone,status,modality,training_profile,whatsapp_consent,consent_note,import_data)
+  values(o.customer->>'name',o.customer->>'phone','A revisar','Online',jsonb_build_object('email',o.customer->>'email'),coalesce((o.customer->>'whatsapp_consent')::boolean,false),case when (o.customer->>'whatsapp_consent')::boolean then 'Aceite no checkout DIVAFIT em '||now()::text else null end,jsonb_build_object('source','Checkout DivaFit','order',o.id)) returning id into sid;
+ end if;
+ amount:=case when p_method='pix' then o.pix_cents else o.card_cents end;
+ insert into public.payments(student_ids,plan,reference,amount,paid_on,status,payment_method,notes,import_key,import_data)
+ values(array[sid],case when o.plan='monthly' then 'Mensal · 1 mês' when o.months=4 then 'Trimestral + 1 mês bônus · 4 meses' else 'Trimestral · 3 meses' end,'Checkout DIVAFIT',p_paid::numeric/100,d,'Pago',case when p_method='pix' then 'Pix' else 'Crédito' end,'Período inicia após conferência da entrada. Taxa líquida não informada pelo provedor.','checkout:'||o.id,jsonb_build_object('order',o.id,'principal_cents',amount,'paid_cents',p_paid,'transaction',p_transaction,'installments',p_installments)) returning id into pid;
+ update public.checkout_orders set status='paid',onboarding_status='conferir_forms_e_mfit',transaction_nsu=p_transaction,invoice_slug=p_slug,paid_cents=p_paid,payment_method=p_method,installments=p_installments,student_id=sid,payment_id=pid,paid_at=now(),updated_at=now() where id=o.id;
+ if o.coupon is not null then update public.checkout_coupons set uses=uses+1 where code=o.coupon;end if;
+ insert into public.tasks(name,student_id,due_on,responsible,notes)
+ values('Entrada DIVAFIT · conferir formulário, fotos e acesso Mfit',sid,d,'Elisângela','Compra confirmada. Enviar instruções de boas-vindas; usar WhatsApp oficial somente com consentimento. Pedido '||o.id||'. Duração contratada: '||o.months||' meses. Datas de início e fim precisam ser combinadas.');
+ return pid;
+end;$function$;
