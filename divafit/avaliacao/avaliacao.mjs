@@ -404,7 +404,7 @@ function complete(r,dados=answers,analysis={}){
   }
   content.append(heading,summary);
   if(analysis.emailSent){
-    content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Parabéns! O convite do Desafio Black foi enviado ao seu e-mail.','notice'));
+    content.append(el('p',photoAgreementAt?'Parabéns! Sua avaliação mais aprofundada está no seu e-mail.':'Sua avaliação parcial chegou ao seu e-mail.','notice'));
   }else if(photoAgreementAt){
     content.append(el('p',analysis.error||(analysis.awaitingApproval?'O envio da avaliação aguarda aprovação.':'O envio da sua avaliação por e-mail não foi confirmado.'),'notice'));
     if(analysis.photoProblems?.length){

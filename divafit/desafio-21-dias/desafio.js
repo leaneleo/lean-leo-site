@@ -1,6 +1,6 @@
 import {desafioBlack} from '../desafio-config.js';
 
-for (const field of ['name','theme','dates','status']) {
+for (const field of ['name','theme','status']) {
   document.querySelector('[data-challenge="'+field+'"]').textContent=desafioBlack[field];
 }
 
@@ -10,3 +10,5 @@ for(const benefit of desafioBlack.benefits){
   item.textContent=benefit;
   list.append(item);
 }
+
+import './waitlist.js';

@@ -1,7 +1,7 @@
-import {quote,customer,verifiedPayment,providerPayload} from './pricing.mjs';
+import {quote,customer,verifiedPayment,providerPayload,blackOpen,BLACK_END} from './pricing.mjs';
 const sha=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)))).map(v=>v.toString(16).padStart(2,'0')).join('');
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export function createHandler({env,fetcher=fetch}){
+export function createHandler({env,fetcher=fetch,now=Date.now}){
  return async req=>{
   const origin=req.headers.get('origin');const allowed=!origin||['https://app.leeleo.com.br','https://leeleo.com.br','https://www.leeleo.com.br'].includes(origin);
   const headers={'content-type':'application/json; charset=utf-8','cache-control':'no-store','x-content-type-options':'nosniff',...(allowed&&origin?{'access-control-allow-origin':origin,'vary':'Origin','access-control-allow-headers':'content-type,apikey,x-checkout-token','access-control-allow-methods':'POST,OPTIONS'}:{})};
@@ -13,7 +13,7 @@ export function createHandler({env,fetcher=fetch}){
    const raw=await req.text();if(raw.length>16000)return reply({error:'Solicitação muito grande.'},413);const input=JSON.parse(raw);const route=new URL(req.url).searchParams.get('route')||'quote';
    const paymentReady=env.CHECKOUT_RECEIVER_VERIFIED==='true'&&Boolean(env.INFINITEPAY_API_KEY&&env.INFINITEPAY_HANDLE);
    const termsReady=env.CHECKOUT_TERMS_APPROVED==='true'&&Boolean(env.CHECKOUT_TERMS_VERSION&&env.CHECKOUT_TERMS_VERSION!=='rascunho'&&env.CHECKOUT_TERMS_VERSION.length<=80);
-   const enabled=env.CHECKOUT_ENABLED==='true'&&paymentReady&&termsReady&&Boolean(env.TURNSTILE_SECRET_KEY&&env.TURNSTILE_SITE_KEY);
+   const enabled=blackOpen(now())&&env.CHECKOUT_ENABLED==='true'&&paymentReady&&termsReady&&Boolean(env.TURNSTILE_SECRET_KEY&&env.TURNSTILE_SITE_KEY);
    // Vagas em lotes (decisão de 19/11): cada lote tem CHECKOUT_LOTE_SLOTS vagas (padrão 5). Cada pagamento confirmado ocupa uma;
    // quando o lote fecha, abre outro do mesmo tamanho. Pedidos arquivados (ex.: compra de teste) não contam. CHECKOUT_LOTE_SLOTS=0 desliga.
    const vagas=async()=>{const total=Number(env.CHECKOUT_LOTE_SLOTS??5);if(!Number.isInteger(total)||total<1||!env.SUPABASE_URL)return null;const rows=await db('checkout_orders?status=eq.paid&archived=eq.false&select=id',null,'GET');return {total,restantes:total-(rows.length%total),lote:Math.floor(rows.length/total)+1}};
@@ -28,9 +28,10 @@ export function createHandler({env,fetcher=fetch}){
     const captcha=await fetcher('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',body:new URLSearchParams({secret:env.TURNSTILE_SECRET_KEY,response:String(input.challenge||'')}),signal:AbortSignal.timeout(8000)}).then(r=>r.json());if(!captcha.success||!['app.leeleo.com.br','leeleo.com.br','www.leeleo.com.br'].includes(captcha.hostname))throw Error('Confirme a verificação de segurança.');
     const fingerprint=await sha(JSON.stringify({person,plan:input.plan,coupon:String(input.coupon||'').trim().toUpperCase()}));const token=String(input.request_id);const tokenHash=await sha(token);
     const order=await db('rpc/create_checkout_order',{p_request:input.request_id,p_hash:fingerprint,p_token:tokenHash,p_plan:input.plan,p_customer:person,p_coupon:String(input.coupon||'').trim().toUpperCase(),p_terms:env.CHECKOUT_TERMS_VERSION});
-    if(order.status==='paid')return reply({status:'paid'});if(['canceled','refunded'].includes(order.status))return reply({error:'Este pedido foi encerrado. Atualize a página para começar de novo.'},409);if(order.checkout_url)return reply({checkout_url:order.checkout_url});
+    if(!blackOpen(now()))return reply({error:'Vendas fechadas.'},503);
+    if(order.status==='paid')return reply({status:'paid'});if(['canceled','refunded'].includes(order.status))return reply({error:'Este pedido foi encerrado. Atualize a página para começar de novo.'},409);if(order.months!==quote(input.plan).months)return reply({error:'As condições do pedido precisam ser atualizadas.'},503);if(order.checkout_url)return reply({checkout_url:order.checkout_url});
     // Se o link falhar, o pedido é cancelado para não prender cupom nem vaga.
-    let url;try{const payment=await provider('links',providerPayload(order,env));url=new URL(payment.url||payment.checkout_url||'');if(url.protocol!=='https:'||!['checkout.infinitepay.io','buy.infinitepay.io'].includes(url.hostname))throw Error('Link de pagamento inválido.');}catch(e){await db('checkout_orders?id=eq.'+order.id+'&status=eq.creating',{status:'canceled'},'PATCH').catch(()=>{});throw Error((e instanceof TypeError?'Link de pagamento inválido.':e.message)+' Nenhuma cobrança foi feita; tente de novo.');}
+    let url;try{const payment=await provider('links',providerPayload({...order,expires_at:new Date(Math.min(Date.parse(order.expires_at),BLACK_END)).toISOString()},env));url=new URL(payment.url||payment.checkout_url||'');if(url.protocol!=='https:'||!['checkout.infinitepay.io','buy.infinitepay.io'].includes(url.hostname))throw Error('Link de pagamento inválido.');}catch(e){await db('checkout_orders?id=eq.'+order.id+'&status=eq.creating',{status:'canceled'},'PATCH').catch(()=>{});throw Error((e instanceof TypeError?'Link de pagamento inválido.':e.message)+' Nenhuma cobrança foi feita; tente de novo.');}
     await db('checkout_orders?id=eq.'+order.id,{checkout_url:url.href,status:'pending'},'PATCH');return reply({checkout_url:url.href});
    }
    if(route==='status'){

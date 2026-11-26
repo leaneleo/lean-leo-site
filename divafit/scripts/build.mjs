@@ -8,7 +8,7 @@ await mkdir('public',{recursive:true});
 for(const file of ['index.html','style.css','student-style.css','app.js','finance-domain.js','finance-ui.js','finance-painel-data.js','finance-painel-ui.js','finance-painel.css','crm-domain.js','crm-ui.js','crm.css','production-domain.js','production-ui.js','student-domain.js','student-ui.js','domain.js','api.js','forms-domain.js','forms-ui.js','copy-domain.js','copy-ui.js'])await copyFile(file,'public/'+file);
 for(const file of ['brand.css','manifest.webmanifest','mobile.js','mobile.css','sw.js','offline.html','offline.css'])await copyFile(file,'public/'+file);
 await buildIcons('public/icons');
-await writeFile('public/config.js','window.DIVAFIT_CONFIG = '+JSON.stringify({supabaseUrl:url,supabaseKey:key})+';');
+await writeFile('public/config.js','window.DIVAFIT_CONFIG = '+JSON.stringify({supabaseUrl:url,supabaseKey:key,checkoutPreview:process.env.CONTEXT!=='production'})+';');
 // Apenas mídia pública; documentos e dados de alunos não fazem parte do site.
 async function copyMedia(source, destination) {
   let entries; try { entries=await readdir(source,{withFileTypes:true}); }
@@ -30,6 +30,7 @@ console.log(url&&key?'Interface preparada. Valide o banco antes de usar dados re
 
 await mkdir('public/checkout/divafit/retorno',{recursive:true});
 for(const file of ['index.html','checkout.css','checkout.js','retorno.js','retorno.css'])await copyFile('checkout/'+file,'public/checkout/divafit/'+file);
+await copyFile('supabase/functions/divafit-checkout/pricing.mjs','public/checkout/divafit/preview-pricing.mjs');
 await copyFile('checkout/retorno.html','public/checkout/divafit/retorno/index.html');
 
 
@@ -41,7 +42,7 @@ if(productionAssessment&&!/^0x[A-Za-z0-9_-]+$/.test(assessmentSitekey))throw Err
 const assessmentEndpoint='https://ycchdswqaekdupmrnszz.supabase.co/functions/v1/public-body-analysis';
 for(const [folder,files] of [
   ['avaliacao',['index.html','avaliacao.css','avaliacao.mjs','calculos.mjs','public-photos.mjs','perfil-parcial.mjs','parcial-textos.mjs','download-pdf.mjs']],
-  ['desafio-21-dias',['index.html','desafio.js']]
+  ['desafio-21-dias',['index.html','desafio.js','waitlist.js']]
 ]){
   await mkdir('public/'+folder,{recursive:true});
   for(const file of files)await copyFile(folder+'/'+file,'public/'+folder+'/'+file);
@@ -52,3 +53,18 @@ await writeFile('public/avaliacao/public-body-config.js','window.DIVAFIT_PUBLIC_
   endpoint:assessmentEnabled?assessmentEndpoint:'',
   sitekey:assessmentEnabled?assessmentSitekey:''
 })+';');
+
+await writeFile('public/desafio-21-dias/waitlist-config.js','window.DIVAFIT_WAITLIST = '+JSON.stringify({
+  preview:!productionAssessment,
+  endpoint:productionAssessment?'https://ycchdswqaekdupmrnszz.supabase.co/functions/v1/desafio-waitlist':'',
+  sitekey:productionAssessment?assessmentSitekey:''
+})+';');
+
+if(previewAssessment){
+  const {shortEmail}=await import('../supabase/functions/public-body-analysis/template.mjs');
+  for(const [name,at] of [['email-2-black','2026-11-28T12:00:00-03:00'],['email-2-dezembro','2026-12-01T00:00:00-03:00']]){
+    await writeFile('public/desafio-21-dias/'+name+'.html',shortEmail({
+      nome:'Pessoa Teste',full:false,origin:'',now:Date.parse(at)
+    }).html);
+  }
+}

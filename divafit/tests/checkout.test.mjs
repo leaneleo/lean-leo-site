@@ -1,5 +1,6 @@
-import {test} from 'node:test';import assert from 'node:assert/strict';import {quote,customer,verifiedPayment,providerPayload} from '../supabase/functions/divafit-checkout/pricing.mjs';import {createHandler} from '../supabase/functions/divafit-checkout/handler.mjs';
+import {test} from 'node:test';import assert from 'node:assert/strict';import {quote,customer,verifiedPayment,providerPayload} from '../supabase/functions/divafit-checkout/pricing.mjs';import {createHandler as createCheckoutHandler} from '../supabase/functions/divafit-checkout/handler.mjs';
 const readyEnv={CHECKOUT_LOTE_SLOTS:'0',CHECKOUT_ENABLED:'true',CHECKOUT_TERMS_APPROVED:'true',CHECKOUT_TERMS_VERSION:'oferta-v1',CHECKOUT_RECEIVER_VERIFIED:'true',INFINITEPAY_API_KEY:'mock-key',INFINITEPAY_HANDLE:'mock-account',TURNSTILE_SECRET_KEY:'mock-secret',TURNSTILE_SITE_KEY:'mock-site',SUPABASE_URL:'https://database.example',SUPABASE_SERVICE_ROLE_KEY:'mock-server-key'};
+const createHandler=options=>createCheckoutHandler({now:()=>Date.parse('2026-11-28T12:00:00-03:00'),...options});
 const request=(route,body={})=>new Request('https://test/?route='+route,{method:'POST',body:JSON.stringify(body)});
 
 test('Vendas exigem recebedor conferido, termos versionados e proteção completa',async()=>{
@@ -30,12 +31,12 @@ test('Webhook não registra pagamento com valor divergente confirmado pelo prove
  }});
  const r=await handler(request('webhook',{order_nsu:id,invoice_slug:'invoice',transaction_nsu:'transaction'}));assert.equal(r.status,200);assert.equal((await r.json()).confirmed,false);assert.equal(confirmed,0);
 });
-test('Preços inteiros e desconto de cupom calculados no servidor',()=>{assert.equal(quote('monthly').pix,15760);const q=quote('quarterly');assert.equal(q.months,4);assert.equal(q.card,38415);assert.equal(q.pix,36000);assert.equal(quote('quarterly',{code:'DIVA10',active:true,percent_bps:1000}).pix,32400);assert.throws(()=>quote('quarterly',{code:'FIM',active:true,percent_bps:1000,max_uses:1,uses:1}),/esgotado/);assert.throws(()=>quote('quarterly',{active:true,percent_bps:1000,ends_at:'2020-01-01'}));assert.throws(()=>quote('fake'))});
+test('Preços inteiros e desconto de cupom calculados no servidor',()=>{assert.equal(quote('monthly').pix,15760);const q=quote('quarterly');assert.equal(q.months,3);assert.equal(q.card,38415);assert.equal(q.pix,36000);assert.equal(quote('quarterly',{code:'DIVA10',active:true,percent_bps:1000}).pix,32400);assert.throws(()=>quote('quarterly',{code:'FIM',active:true,percent_bps:1000,max_uses:1,uses:1}),/esgotado/);assert.throws(()=>quote('quarterly',{active:true,percent_bps:1000,ends_at:'2020-01-01'}));assert.throws(()=>quote('fake'))});
 test('Valores pagos não são confundidos com principal ou taxas líquidas',()=>{const o={card_cents:38415,pix_cents:36000};assert.equal(verifiedPayment({success:true,paid:true,amount:38415,paid_amount:40000,capture_method:'credit_card'},o),true);assert.equal(verifiedPayment({success:true,paid:true,amount:38415,paid_amount:36000,capture_method:'pix'},o),true);for(const value of [{success:true,paid:false,amount:38415,paid_amount:40000,capture_method:'credit_card'},{success:true,paid:true,amount:15760,paid_amount:38415,capture_method:'credit_card'},{success:true,paid:true,amount:38415,paid_amount:35999,capture_method:'pix'}])assert.equal(verifiedPayment(value,o),false)});
 test('Retorno e webhook não liberam acompanhamento com integração desativada',async()=>{let calls=0;const handler=createHandler({env:{},fetcher:async()=>{calls++;throw Error('Não deveria conectar')}});for(const route of ['create','confirm','webhook']){const r=await handler(new Request('https://test/?route='+route,{method:'POST',body:'{}'}));assert.equal(r.status,503)}assert.equal(calls,0)});
 test('Dados incompletos, consentimento implícito e origem externa são rejeitados',async()=>{assert.throws(()=>customer({name:'Teste',email:'x@y.com',phone:'62999999999'}));const c=customer({name:'Pessoa Teste',email:'X@y.com',phone:'62999999999',accepted:true});assert.equal(c.whatsapp_consent,false);assert.equal(c.email,'x@y.com');const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',headers:{Origin:'https://evil.example'},body:'{}'}));assert.equal(r.status,403)});
 test('Link usa valores persistidos, cobrança única, expiração e taxa das parcelas paga pela cliente (decisão de 19/11)',()=>{const payload=providerPayload({id:'order',plan:'quarterly',card_cents:38415,pix_cents:36000,months:4,expires_at:'2026-12-01T00:00:00Z',customer:{name:'Teste',email:'t@example.com',phone:'5562999999999'}},{INFINITEPAY_HANDLE:'teste',SUPABASE_URL:'https://example.supabase.co'});assert.equal(payload.items[0].price,38415);assert.equal(payload.options.single_payment,true);assert.equal(payload.options.assured_installments,0);assert.equal(Math.round(38415*(1-payload.options.discounts.pix/100)),36000)});
-test('O navegador não determina preço, duração ou confirmação na cotação',async()=>{const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',body:JSON.stringify({plan:'quarterly',card:1,pix:1,months:99,paid:true})}));const q=await r.json();assert.equal(q.card,38415);assert.equal(q.months,4);assert.equal(q.enabled,false)});
+test('O navegador não determina preço, duração ou confirmação na cotação',async()=>{const r=await createHandler({env:{}})(new Request('https://test/?route=quote',{method:'POST',body:JSON.stringify({plan:'quarterly',card:1,pix:1,months:99,paid:true})}));const q=await r.json();assert.equal(q.card,38415);assert.equal(q.months,3);assert.equal(q.enabled,false)});
 
 
 test('Vagas em lotes de 5: cada pagamento ocupa uma e, ao fechar o lote, abre outro; teste arquivado não conta',async()=>{
@@ -87,4 +88,17 @@ test('Falha no link cancela o pedido (não prende cupom) e o motivo real do banc
  const fechado=async(url,init)=>url.endsWith('/rpc/create_checkout_order')?Response.json({id:'d5763e2a-21e0-44c3-8a08-1d3f00af8ee0',status:'canceled'}):base(url,init);
  const r3=await createHandler({env:readyEnv,fetcher:fechado})(request('create',corpo));
  assert.equal(r3.status,409);
+});
+
+test('Black Friday usa a janela de Brasília e protege a criação fora da janela', async () => {
+ const cases=[['2026-11-26T23:59:59-03:00',false],['2026-11-27T00:00:00-03:00',true],
+  ['2026-11-30T23:59:59-03:00',true],['2026-12-01T00:00:00-03:00',false]];
+ for(const [at,enabled] of cases){
+  const handler=createHandler({env:readyEnv,now:()=>Date.parse(at),fetcher:()=>assert.fail('Chamada externa')});
+  const response=await (await handler(request('quote',{plan:'quarterly'}))).json();
+  assert.equal(response.enabled,enabled,at);
+  assert.equal(response.months,3);
+  assert.equal(response.bonus,0);
+  if(!enabled)assert.equal((await handler(request('create'))).status,503);
+ }
 });

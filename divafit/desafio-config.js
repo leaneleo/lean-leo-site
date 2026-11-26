@@ -1,7 +1,7 @@
 export const desafioBlack = Object.freeze({
-  name: 'Desafio Black',
+  name: 'Desafio Le&LeoFit',
   theme: 'Emagrecimento e Definição',
-  dates: '30 de novembro a 20 de dezembro de 2026',
+  dates: '4 a 24 de janeiro de 2027',
   delivery: 'Dieta em grupo',
   benefits: Object.freeze([
     'Treino de musculação',
